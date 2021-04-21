@@ -1,0 +1,19 @@
+{
+	"Service": {
+		"name": "WebPortalService",
+		"hostname": "127.0.0.1",
+		"port": 4090,
+		"debug_mode": true
+	},
+	"Backend": {
+		"hostname": "127.0.0.1",
+		"port": 40075
+	},
+	"Redis": {
+	    "hostname": "127.0.0.1",
+	    "port": 6379,
+	    "db": 0,
+	    "username": "",
+	    "password": ""
+	}
+}
