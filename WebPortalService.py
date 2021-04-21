@@ -1,13 +1,13 @@
 # Twisted
 from twisted.internet import reactor, defer
 from twisted.python import log
-import opentera.messages.python as messages
+
 import sys
 import uuid
 import json
 import logging
 
-from flask_babel import gettext
+from FlaskModule import flask_app
 
 # Configuration 
 from ConfigManager import ConfigManager
@@ -20,6 +20,10 @@ from opentera.services.ServiceOpenTera import ServiceOpenTera
 
 # Local
 
+# Database
+import Globals
+from sqlalchemy.exc import OperationalError
+from libwebportal.db.DBManager import DBManager
 
 class WebPortalService(ServiceOpenTera):
     def __init__(self, config_man: ConfigManager, service_info: dict):
@@ -69,6 +73,18 @@ if __name__ == '__main__':
     config_man.service_config['ServiceUUID'] = service_info['service_uuid']
     config_man.service_config['port'] = service_info['service_port']
     config_man.service_config['hostname'] = service_info['service_hostname']
+
+    # DATABASE CONFIG AND OPENING
+    #############################
+    Globals.db_man = DBManager(config_man)
+    try:
+        Globals.db_man.open()
+    except OperationalError as e:
+        print("Unable to connect to database - please check settings in config file!", e)
+        quit()
+
+    with flask_app.app_context():
+        DBManager.create_defaults()
 
     # Create the service
     service = WebPortalService(config_man, service_info)
