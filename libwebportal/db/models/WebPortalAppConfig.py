@@ -19,7 +19,7 @@ class WebPortalAppConfig(db.Model, BaseModel):
 
     @staticmethod
     def create_defaults():
-        default_participant_uuid = 'e846a6d8-03f2-4eff-95ad-ad3f04f79f21' # Hard coded, change for real value
+        default_participant_uuid = 'e846a6d8-03f2-4eff-95ad-ad3f04f79f21'  # Hard coded, change for real value
 
         base_config = WebPortalAppConfig()
         base_config.id_app = 1     # Hard coded for now
@@ -42,3 +42,7 @@ class WebPortalAppConfig(db.Model, BaseModel):
     @staticmethod
     def get_apps_configs_for_participant(part_uuid: str):
         return WebPortalAppConfig.query.filter_by(participant_uuid=part_uuid).all()
+
+    @staticmethod
+    def get_app_config_for_participant(part_uuid: str, app_id: int):
+        return WebPortalAppConfig.query.filter_by(participant_uuid=part_uuid, id_app=app_id).first()

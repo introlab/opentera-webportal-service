@@ -21,6 +21,14 @@ class WebPortalApp(db.Model, BaseModel):
     app_static_url = db.Column(db.String, nullable=True)
     app_service_key = db.Column(db.String, nullable=True)
 
+    def to_json(self, ignore_fields=None, minimal=False):
+        if ignore_fields is None:
+            ignore_fields = []
+        ignore_fields.extend(['WebPortalAppType'])
+
+        rval = super().to_json(ignore_fields=ignore_fields)
+        return rval
+
     @staticmethod
     def create_defaults():
         base_app = WebPortalApp()
