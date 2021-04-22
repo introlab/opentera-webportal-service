@@ -1,0 +1,56 @@
+.profile {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  .dot {
+    margin-right: 10px;
+    line-height: 40px;
+    height: 40px;
+    width: 40px;
+    font-family: Nunito, sans-serif;
+    font-weight: 600;
+    color: var(--accent-color);
+    background-color: var(--accent-lighter-color);
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .infos {
+    display: flex;
+    flex-direction: column;
+
+    span {
+      font-weight: 700;
+      font-family: Nunito, sans-serif;
+    }
+
+    a {
+      cursor: pointer;
+      font-size: 13px;
+      transition: color ease-in-out 0.3s;
+
+      &:hover {
+        color: var(--accent-color);
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .profile {
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 20px;
+
+    .dot {
+      margin-right: 0;
+      line-height: 60px;
+      height: 60px;
+      width: 60px;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+  }
+}

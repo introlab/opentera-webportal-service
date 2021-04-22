@@ -1,0 +1,15 @@
+footer {
+  display: flex;
+  font-size: 11px;
+  color: var(--text);
+  align-items: center;
+  box-sizing: border-box;
+  background-color: var(--background);
+  justify-content: space-between;
+  min-height: var(--app-content-padding);
+  padding: 0 calc(var(--app-content-padding) / 2);
+
+  span:last-of-type {
+    text-align: right;
+  }
+}

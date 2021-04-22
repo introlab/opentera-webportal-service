@@ -1,1 +1,81 @@
-/* You can add global styles to this file, and also import other style files */
+html, body {
+  min-height: 100vh;
+  height: auto;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  width: 100%;
+  position: relative;
+}
+
+body {
+  background-color: #ffffff;
+  --text: #41424a;
+  --field-background: #f1f1f9;
+  --background: #f8f7fc;
+  --border: #eceef4;
+  --light-text: #787e8a;
+  --header-height: 80px;
+  --app-content-padding: 40px;
+}
+
+/****** FORM FIELDS ******/
+.mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
+.mat-form-field-appearance-outline {
+
+  &.mat-focused {
+    .mat-form-field-outline-thick {
+      color: var(--accent-color);
+    }
+  }
+
+  .mat-form-field-outline {
+    color: var(--accent-lighter-color);
+
+    &:hover {
+      color: var(--accent-color);
+    }
+  }
+
+  .mat-form-field-outline-start,
+  .mat-form-field-outline-gap,
+  .mat-form-field-outline-end {
+    background-color: var(--field-background);
+  }
+}
+
+.mat-select-panel {
+  .mat-option.mat-selected:not(.mat-option-multiple) {
+    background: var(--accent-lighter-color);
+    color: var(--text);
+  }
+}
+
+.mat-form-field {
+  .mat-form-field-label {
+    color: var(--text);
+  }
+
+  &.mat-focused {
+    .mat-form-field-label {
+      color: var(--text);
+      transform: translateY(-1.59375em) scale(0.75);
+    }
+  }
+}
+
+mat-error {
+  padding-bottom: 3px;
+  margin-top: 15px;
+}
+
+@media screen and (min-width: 850px) {
+  .mat-form-field-appearance-outline .mat-form-field-subscript-wrapper {
+    width: 400px;
+  }
+}

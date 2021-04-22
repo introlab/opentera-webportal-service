@@ -1,0 +1,70 @@
+nav {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+
+  a {
+    cursor: pointer;
+    display: block;
+    width: 120px;
+    line-height: 80px;
+    text-align: center;
+    text-decoration: none;
+    border-top: 4px solid transparent;
+    font-family: 'Nunito',sans-serif;
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: none;
+
+    &::before {
+      content: '';
+      display: block;
+      width: 0;
+      margin: auto;
+      height: 4px;
+      background: var(--accent-color);
+      transition: width .3s;
+      box-sizing: border-box;
+    }
+
+    &:hover::before {
+      width: 100%;
+    }
+  }
+}
+
+.is-active {
+  display: block;
+  box-sizing: border-box;
+  color: var(--accent-color) !important;
+  box-shadow: inset 0 4px 0 var(--accent-color);
+}
+
+
+@media screen and (max-width: 700px) {
+  nav {
+    align-items: center;
+    flex-direction: column;
+    height: auto;
+
+    a {
+      width: 50%;
+      line-height: initial;
+      padding: 20px 0;
+
+      &:hover {
+        color: var(--accent-color);
+      }
+
+      &:hover::before {
+        width: 0;
+      }
+    }
+  }
+
+  .is-active {
+    box-shadow: none;
+  }
+}

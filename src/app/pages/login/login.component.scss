@@ -1,0 +1,62 @@
+.login-container {
+  background-color: var(--background);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-card {
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    padding: 40px 0 80px;
+    -webkit-box-shadow: 0 6px 10px 0 #E7E7E7;
+    box-shadow: 0 6px 10px 0 #E7E7E7;
+
+    form {
+      padding-top: 20px;
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    mat-form-field {
+      display: block;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+    }
+
+    button {
+      width: 100%;
+    }
+
+    footer {
+      left: 0;
+      bottom: 0;
+      height: 60px;
+      width: 100%;
+      display: flex;
+      font-size: 12px;
+      position: absolute;
+      align-items: center;
+      padding-bottom: 20px;
+      color: var(--light-text);
+      justify-content: space-between;
+
+      .version {
+        min-width: 20%;
+        margin-left: 10%;
+        text-align: left;
+      }
+
+      .organism {
+        text-align: right;
+        margin-right: 10%;
+      }
+
+      a {
+        color: var(--light-text);
+        text-decoration: none;
+      }
+    }
+  }
+}

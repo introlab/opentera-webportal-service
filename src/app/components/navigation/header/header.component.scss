@@ -1,0 +1,48 @@
+header {
+  height: var(--header-height);
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  justify-content: space-between;
+
+  app-logo {
+    width: calc(100% / 3);
+    cursor: pointer;
+    text-align: left;
+  }
+
+  app-navigation {
+    width: calc(100% / 3);
+    text-align: center;
+  }
+
+  app-profile {
+    width: calc(100% / 3);
+  }
+
+  app-menu-hamburger {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  header {
+    justify-content: space-between;
+
+    app-logo {
+      width: 80%;
+    }
+
+    app-navigation,
+    app-profile {
+      display: none;
+    }
+
+    app-menu-hamburger {
+      text-align: right;
+      display: block !important;
+    }
+  }
+}

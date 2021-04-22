@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  img_prefix: 'static/'
 };
