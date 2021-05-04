@@ -86,6 +86,16 @@ if __name__ == '__main__':
     with flask_app.app_context():
         DBManager.create_defaults()
 
+    # Update Service Access information
+    from opentera.services.ServiceAccessManager import ServiceAccessManager
+    ServiceAccessManager.api_user_token_key = redis_client.redisGet(RedisVars.RedisVar_UserTokenAPIKey)
+    ServiceAccessManager.api_device_token_key = redis_client.redisGet(RedisVars.RedisVar_DeviceTokenAPIKey)
+    ServiceAccessManager.api_device_static_token_key = redis_client.redisGet(RedisVars.RedisVar_DeviceStaticTokenAPIKey)
+    ServiceAccessManager.api_participant_token_key = redis_client.redisGet(RedisVars.RedisVar_ParticipantTokenAPIKey)
+    ServiceAccessManager.api_participant_static_token_key = \
+        redis_client.redisGet(RedisVars.RedisVar_ParticipantStaticTokenAPIKey)
+    ServiceAccessManager.config_man = config_man
+
     # Create the service
     service = WebPortalService(config_man, service_info)
 
