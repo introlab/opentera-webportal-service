@@ -40,10 +40,11 @@ class QueryUserInfos(Resource):
             if participant_info and 'participant_name' in participant_info:
                 user_infos['fullname'] = participant_info['participant_name']
                 user_infos['project_id'] = participant_info['id_project']
-                response = current_participant_client.do_get_request_to_backend(
-                    '/webportal/api/apps?with_config=true&id_project=' + str(participant_info['id_project']))
-                if response.status_code == 200:
-                    user_infos['apps'] = response.json()
+                if participant_info['id_project']:
+                    response = current_participant_client.do_get_request_to_backend(
+                        '/webportal/api/apps?with_config=true&id_project=' + str(participant_info['id_project']))
+                    if response.status_code == 200:
+                        user_infos['apps'] = response.json()
 
         if current_login_type == LoginType.USER_LOGIN:
             user_infos['uuid'] = current_user_client.user_uuid
