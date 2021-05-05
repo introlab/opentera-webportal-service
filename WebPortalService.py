@@ -30,6 +30,8 @@ class WebPortalService(BaseWebRTCService):
     def __init__(self, config_man: ConfigManager, service_info: dict):
         BaseWebRTCService.__init__(self, config_man, service_info)
 
+        super().__init__(config_man, service_info)
+
         # Create REST backend
         self.flaskModule = FlaskModule(config_man)
 
