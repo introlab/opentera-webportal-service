@@ -1,4 +1,5 @@
 # Twisted
+from opentera.services.ServiceOpenTera import ServiceOpenTera
 from twisted.internet import reactor, defer
 from twisted.python import log
 
@@ -26,11 +27,9 @@ from sqlalchemy.exc import OperationalError
 from libwebportal.db.DBManager import DBManager
 
 
-class WebPortalService(BaseWebRTCService):
+class WebPortalService(ServiceOpenTera):
     def __init__(self, config_man: ConfigManager, service_info: dict):
-        BaseWebRTCService.__init__(self, config_man, service_info)
-
-        super().__init__(config_man, service_info)
+        ServiceOpenTera.__init__(self, config_man, service_info)
 
         # Create REST backend
         self.flaskModule = FlaskModule(config_man)
