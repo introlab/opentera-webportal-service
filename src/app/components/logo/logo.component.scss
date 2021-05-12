@@ -5,46 +5,24 @@
   justify-content: flex-start;
 
   &.login {
-    flex-direction: column;
+    text-transform: lowercase;
+
+    .text {
+      font-size: 14px !important;
+    }
   }
 
   svg,
   svg-icon {
     height: 60px;
     width: 40px;
-  }
-
-  #logo {
-    fill: var(--accent-color);
+    display: none;
   }
 
   .text {
-    text-align-last: justify;
-    display: flex;
-    height: 80px;
-    align-items: center;
-    flex-direction: column;
-    margin-left: 5px;
-    justify-content: center;
-    color: var(--text);
-
-    span {
-      display: block;
-    }
-
-    .first-line {
-      text-transform: lowercase;
-      font-family: 'Quicksand', sans-serif;
-      font-size: 40px;
-      line-height: 40px;
-      font-weight: 700;
-      letter-spacing: -1px;
-    }
-
-    .second-line {
-      font-size: 16px;
-      font-family: 'Quicksand', sans-serif;
-      font-weight: 600;
-    }
+    color: var(--accent-lighter-color);
+    font-weight: 700;
+    font-size: 20px;
+    font-family: 'Nunito', sans-serif;
   }
 }

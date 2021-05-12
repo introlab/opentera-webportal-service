@@ -9,6 +9,10 @@ footer {
   min-height: var(--app-content-padding);
   padding: 0 calc(var(--app-content-padding) / 2);
 
+  a:hover {
+    color: var(--accent-lighter-color);
+  }
+
   span:last-of-type {
     text-align: right;
   }

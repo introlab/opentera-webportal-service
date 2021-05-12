@@ -1,0 +1,45 @@
+a {
+  cursor: pointer;
+  display: block;
+  width: 120px;
+  line-height: var(--header-height);
+  text-align: center;
+  text-decoration: none;
+  font-family: 'Nunito', sans-serif;
+  color: var(--text);
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  text-transform: none;
+  transition: color 0.3s ease-in-out;
+
+  &:hover {
+    color: var(--accent-lighter-color);
+  }
+
+  &:active {
+    color: var(--accent-lighter-color);
+  }
+}
+
+.active {
+  font-weight: 700;
+  color: var(--background) !important;
+  background-color: var(--accent-lighter-color);
+}
+
+
+@media screen and (max-width: 700px) {
+  a {
+    width: 50%;
+    line-height: initial;
+    padding: 20px 0;
+
+    &:hover {
+      color: var(--accent-lighter-color);
+    }
+  }
+
+  .active {
+    box-shadow: none;
+  }
+}

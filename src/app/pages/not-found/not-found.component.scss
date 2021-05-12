@@ -1,0 +1,43 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--app-content-padding);
+
+  svg,
+  svg-icon {
+    max-width: 600px;
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+
+    & > * {
+      margin: 20px 0;
+    }
+
+    .four-o-four {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      color: var(--accent-lighter-color);
+      line-height: 80px;
+      font-size: 80px;
+    }
+
+    .message {
+      font-size: 20px;
+    }
+
+    button {
+      width: 120px;
+      align-self: flex-end;
+
+      mat-icon {
+        font-size: 14px;
+        height: 14px;
+      }
+    }
+  }
+
+}

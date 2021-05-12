@@ -9,6 +9,8 @@ import {GlobalConstants} from '@core/utils/global-constants';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  title = 'Promo Santé';
+
   constructor(private cookieService: CookieService,
               private authService: AuthenticationService) {
   }

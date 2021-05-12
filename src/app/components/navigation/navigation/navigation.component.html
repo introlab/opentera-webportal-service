@@ -1,3 +1,6 @@
 <nav>
-  <a routerLink='/' [routerLinkActive]="'is-active'">Accueil</a>
+  <ng-container *ngFor="let app of apps;index as i; trackBy: trackByFn">
+    <app-link [app]="app"></app-link>
+  </ng-container>
 </nav>
+

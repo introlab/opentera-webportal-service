@@ -5,21 +5,34 @@ import {LoginLayoutComponent} from '@shared/layout/login-layout/login-layout.com
 import {LoginComponent} from '@pages/login/login.component';
 import {AuthGuardService} from '@services/guards/auth-guard.service';
 import {HomeComponent} from '@pages/home/home.component';
+import {NotFoundComponent} from '@pages/not-found/not-found.component';
+import {EmailsComponent} from '@pages/emails/emails.component';
+import {SeanceComponent} from '@pages/seance/seance.component';
+import {ExercisesComponent} from '@pages/exercices/exercises.component';
 
 const routes: Routes = [
+  {
+    path: '', redirectTo: '/calendrier', pathMatch: 'full'
+  },
   {
     path: '',
     component: AppLayoutComponent,
     canActivate: [AuthGuardService],
     children: [
       {
-        path: 'accueil',
-        component: HomeComponent
+        path: 'calendrier', component: HomeComponent
       },
       {
-        path: '',
-        redirectTo: '',
-        pathMatch: 'full'
+        path: 'courriel', component: EmailsComponent
+      },
+      {
+        path: 'seance', component: SeanceComponent
+      },
+      {
+        path: 'exercices', component: ExercisesComponent
+      },
+      {
+        path: '404', component: NotFoundComponent
       },
     ]
   },
@@ -28,12 +41,13 @@ const routes: Routes = [
     component: LoginLayoutComponent,
     children: [
       {
-        path: 'connexion',
-        component: LoginComponent
-      }
+        path: 'connexion', component: LoginComponent
+      },
     ]
   },
-  {path: '**', redirectTo: 'connexion'}
+  {
+    path: '**', redirectTo: '/404'
+  }
 ];
 
 @NgModule({

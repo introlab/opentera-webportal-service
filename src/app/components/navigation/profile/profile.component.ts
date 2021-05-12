@@ -1,23 +1,36 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthenticationService} from '@services/authentication.service';
+import {UserInfosService} from '@services/user-infos.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   initial = '';
-  username = 'username';
+  name = 'name';
+  private subscription!: Subscription;
 
-  constructor(private authService: AuthenticationService) {
+  constructor(private authService: AuthenticationService,
+              private userInfosService: UserInfosService) {
   }
 
   ngOnInit(): void {
-    this.initial = this.username.charAt(0);
+    this.subscription = this.userInfosService.userInfos$().subscribe((res) => {
+      if (res.fullname != null) {
+        this.name = res.fullname;
+        this.initial = this.name.charAt(0);
+      }
+    });
   }
 
   logout(): void {
-    this.authService.logOut().subscribe();
+    this.authService.logout().subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {environment} from '../../../environments/environment';
+import {GlobalConstants} from '@core/utils/global-constants';
 
 @Component({
   selector: 'app-logo',
@@ -9,6 +10,7 @@ import {environment} from '../../../environments/environment';
 export class LogoComponent implements OnInit {
   @Input() style!: string;
   logoPath = environment.img_prefix + 'assets/images/logo.svg';
+  title = GlobalConstants.title;
 
   constructor() {
   }

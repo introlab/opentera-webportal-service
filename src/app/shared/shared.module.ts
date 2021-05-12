@@ -10,6 +10,14 @@ import {FooterComponent} from '@components/footer/footer.component';
 import {RouterModule} from '@angular/router';
 import {LogoComponent} from '@components/logo/logo.component';
 import {AngularSvgIconModule} from 'angular-svg-icon';
+import {FrameComponent} from '@components/frame/frame.component';
+import {HomeComponent} from '@pages/home/home.component';
+import {NotFoundComponent} from '@pages/not-found/not-found.component';
+import {LinkComponent} from '@components/navigation/link/link.component';
+import {EmailsComponent} from '@pages/emails/emails.component';
+import {SeanceComponent} from '@pages/seance/seance.component';
+import {ExercisesComponent} from '@pages/exercices/exercises.component';
+import {SafeUrlPipe} from '@core/pipes/safe-url.pipe';
 
 
 @NgModule({
@@ -20,20 +28,29 @@ import {AngularSvgIconModule} from 'angular-svg-icon';
     MenuHamburgerComponent,
     ProfileComponent,
     FooterComponent,
-    LogoComponent
+    LogoComponent,
+    FrameComponent,
+    HomeComponent,
+    EmailsComponent,
+    SeanceComponent,
+    ExercisesComponent,
+    NotFoundComponent,
+    LinkComponent,
+    SafeUrlPipe,
   ],
   exports: [
     HeaderComponent,
     ResponsiveNavigationComponent,
     FooterComponent,
-    LogoComponent
+    LogoComponent,
   ],
   imports: [
     CommonModule,
     MaterialModule,
     RouterModule,
     AngularSvgIconModule.forRoot(),
-  ]
+  ],
+  providers: []
 })
 export class SharedModule {
 }

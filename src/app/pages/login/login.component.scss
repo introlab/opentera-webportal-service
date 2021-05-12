@@ -1,61 +1,130 @@
 .login-container {
-  background-color: var(--background);
-  height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 100%;
+  width: 100%;
+  background-image: url('../../../assets/images/riski-andriansyah-Gl6GljPtJpo-unsplash.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: absolute;
+  justify-content: flex-end;
 
-  mat-card {
-    width: 100%;
-    max-width: 500px;
-    text-align: center;
-    padding: 40px 0 80px;
-    -webkit-box-shadow: 0 6px 10px 0 #E7E7E7;
-    box-shadow: 0 6px 10px 0 #E7E7E7;
+  .wrapper {
+    width: 70%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background: var(--background);
+    padding: 0 var(--header-height);
+    box-sizing: border-box;
 
-    form {
-      padding-top: 20px;
-      width: 80%;
-      margin: 0 auto;
+    app-logo {
+      margin-bottom: 10px;
     }
 
-    mat-form-field {
-      display: block;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-    }
-
-    button {
-      width: 100%;
-    }
-
-    footer {
-      left: 0;
-      bottom: 0;
-      height: 60px;
+    .row {
       width: 100%;
       display: flex;
-      font-size: 12px;
-      position: absolute;
-      align-items: center;
-      padding-bottom: 20px;
-      color: var(--light-text);
-      justify-content: space-between;
+      justify-content: center;
 
-      .version {
-        min-width: 20%;
-        margin-left: 10%;
-        text-align: left;
+      .column {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+
+        &:first-of-type {
+          max-width: 400px;
+          padding-right: var(--app-content-padding);
+
+          span {
+            line-height: 40px;
+            font-weight: 700;
+            font-size: 36px;
+            font-family: 'Nunito', sans-serif;
+          }
+        }
+
+        &:last-of-type {
+          form {
+            display: flex;
+            flex-direction: column;
+
+            mat-form-field {
+              display: block;
+              margin-bottom: 20px;
+              padding-bottom: 10px;
+            }
+
+            button {
+              align-self: flex-end;
+            }
+          }
+
+          .divider {
+            height: 1px;
+            background-color: var(--border);
+            margin: calc(var(--app-content-padding) * 2) 0 var(--app-content-padding);
+          }
+
+          span {
+            font-size: 12px;
+            opacity: 0.5;
+            cursor: pointer;
+            transition: opacity 0.3s ease-in-out, color 0.3s ease-in-out;
+
+            &:hover {
+              opacity: 1;
+              color: var(--primary-lighter-color);
+            }
+          }
+        }
       }
+    }
+  }
+}
 
-      .organism {
-        text-align: right;
-        margin-right: 10%;
+@media screen and (max-width: 850px) {
+  .login-container {
+    .wrapper {
+      padding: 0 calc(var(--header-height) / 2);
+
+      .row {
+        flex-direction: column;
+
+        .column {
+          width: 100%;
+
+          &:first-of-type {
+            padding-right: 0;
+            padding-bottom: var(--app-content-padding);
+          }
+
+          &:last-of-type {
+            .divider {
+              margin: var(--app-content-padding) 0;
+            }
+          }
+        }
       }
+    }
+  }
+}
 
-      a {
-        color: var(--light-text);
-        text-decoration: none;
+@media screen and (max-width: 500px) {
+  .login-container {
+    .wrapper {
+      width: 100%;
+      border-radius: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .login-container {
+    .column:first-of-type {
+      span {
+        font-size: 24px !important;
+        line-height: 30px !important;
       }
     }
   }

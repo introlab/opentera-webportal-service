@@ -32,31 +32,33 @@ export class AuthenticationService {
     return this.isLoggedIn;
   }
 
-  logIn(username: string, password: string): Observable<any> {
+  login(username: string, password: string, isManager: boolean = false): Observable<any> {
+    const apiUrl = isManager ? `${this.API_URL}user/login` : `${this.API_URL}participant/login`;
     const header = new HttpHeaders().set('Authorization', 'Basic ' + btoa(username + ':' + password));
-    return this.http.get(this.API_URL + 'user/login', {headers: header}).pipe(
+    return this.http.get(apiUrl, {headers: header}).pipe(
       tap((response: any) => {
-          this.isLoggedIn = true;
-          this.router.navigate([this._lastAuthenticatedPath]);
-          this.cookieService.set(this.cookieValue, response.user_token, 0.5, '/');
-          this.startRefreshTokenTimer();
-        }
-      )
+        const token = isManager ? response.user_token : response.participant_token;
+        this.isLoggedIn = true;
+        this.cookieService.set(this.cookieValue, token, 0.5, '/');
+        this.router.navigate([this._lastAuthenticatedPath]);
+        this.startRefreshTokenTimer();
+      })
     );
   }
 
-  logOut(): Observable<any> {
-    return this.http.get(this.API_URL + 'user/logout').pipe(
+  logout(isManager: boolean = false): Observable<any> {
+    const apiUrl = isManager ? `${this.API_URL}user/logout` : `${this.API_URL}participant/logout`;
+    return this.http.get(apiUrl).pipe(
       tap(() => {
-          this.isLoggedIn = false;
-          this.router.navigate(['/connexion']);
-          this.cookieService.delete(this.cookieValue, '/');
-          this.stopRefreshTokenTimer();
-        }
-      )
+        this.isLoggedIn = false;
+        this.router.navigate(['/connexion']);
+        this.cookieService.delete(this.cookieValue, '/');
+        this.stopRefreshTokenTimer();
+      })
     );
   }
 
+  // TODO make it work for PARTICIPANT and USER
   startRefreshTokenTimer(): void {
     const token = this.cookieService.get(this.cookieValue);
 
@@ -72,8 +74,9 @@ export class AuthenticationService {
     }), timeout);
   }
 
-  refreshToken(): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}user/refresh_token`)
+  refreshToken(isManager: boolean = false): Observable<any> {
+    const apiUrl = isManager ? `${this.API_URL}user/refresh_token` : `${this.API_URL}participant/refresh_token`;
+    return this.http.get<any>(apiUrl)
       .pipe(map((user) => {
         this.startRefreshTokenTimer();
         return user;

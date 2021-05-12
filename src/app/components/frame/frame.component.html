@@ -1,0 +1,7 @@
+<ng-template class="frame-container" [ngIf]="outsideSource" [ngIfElse]="loading">
+  <iframe width="100%" height="100%" [src]="outsideSource | safeUrl" frameborder="0" scrolling="no"></iframe>
+</ng-template>
+
+<ng-template #loading>
+  <div>Aucune page à afficher</div>
+</ng-template>

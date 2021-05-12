@@ -1,27 +1,44 @@
 html, body {
-  min-height: 100vh;
-  height: auto;
+  height: 100%;
   margin: 0;
   padding: 0;
+  width: 100vw;
 }
 
 html {
-  width: 100%;
   position: relative;
 }
 
 body {
-  background-color: #ffffff;
-  --text: #41424a;
-  --field-background: #f1f1f9;
-  --background: #f8f7fc;
-  --border: #eceef4;
-  --light-text: #787e8a;
+  --text: #fdfdfd;
+  --field-background: #36373b;
+  --background: #262729;
+  --border: #42454c;
   --header-height: 80px;
   --app-content-padding: 40px;
+  color: var(--text);
+  background-color: var(--background);
+}
+
+a {
+  text-decoration: none;
+
+  &:visited {
+    color: inherit;
+  }
+
+  &:hover {
+    color: inherit;
+  }
 }
 
 /****** FORM FIELDS ******/
+.login-container {
+  .mat-form-field-appearance-outline .mat-form-field-infix {
+    padding: 1.2em 0 1.2em 1em;
+  }
+}
+
 .mat-form-field-wrapper {
   padding-bottom: 0;
 }
@@ -35,7 +52,7 @@ body {
   }
 
   .mat-form-field-outline {
-    color: var(--accent-lighter-color);
+    color: var(--border);
 
     &:hover {
       color: var(--accent-color);
@@ -52,7 +69,7 @@ body {
 .mat-select-panel {
   .mat-option.mat-selected:not(.mat-option-multiple) {
     background: var(--accent-lighter-color);
-    color: var(--text);
+    color: var(--background);
   }
 }
 
@@ -79,3 +96,4 @@ mat-error {
     width: 400px;
   }
 }
+

@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   version = GlobalConstants.version;
   organism = GlobalConstants.organism;
   private formSubmitAttempt = false;
-  private subscription!: Subscription;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -36,18 +36,24 @@ export class LoginComponent implements OnInit, OnDestroy {
       password: ['', Validators.required]
     });
 
-    this.subscription = this.loginButtonService.isDisabled().subscribe((isDisabled) => {
+    this.subscriptions.push(this.loginButtonService.isDisabled().subscribe((isDisabled) => {
       this.isButtonDisabled = isDisabled;
-    });
+    }));
+
+    this.subscriptions.push(this.form.valueChanges.subscribe(x => {
+      if (this.isButtonDisabled) {
+        this.loginButtonService.disableButton(false);
+      }
+    }));
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   private redirect(): void {
     if (this.authService.isAuthenticated()) {
-      //this.router.navigate(['/']);
+      this.router.navigate(['/']);
     }
   }
 
@@ -60,7 +66,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       try {
         const username = this.form.controls.username.value;
         const password = this.form.controls.password.value;
-        this.authService.logIn(username, password).subscribe(() => {
+        this.authService.login(username, password).subscribe((res) => {
+          console.log('login', res);
           this.loginButtonService.disableButton(false);
         });
       } catch (err) {
