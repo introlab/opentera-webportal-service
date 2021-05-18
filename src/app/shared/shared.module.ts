@@ -36,7 +36,7 @@ import {SafeUrlPipe} from '@core/pipes/safe-url.pipe';
     ExercisesComponent,
     NotFoundComponent,
     LinkComponent,
-    SafeUrlPipe,
+    SafeUrlPipe
   ],
   exports: [
     HeaderComponent,
