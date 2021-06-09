@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {environment} from '../../../environments/environment';
+import {environment} from '@src/environments/environment';
 import {GlobalConstants} from '@core/utils/global-constants';
 
 @Component({
