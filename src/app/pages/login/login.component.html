@@ -1,12 +1,10 @@
 <div class="login-container">
-
   <div class="wrapper">
     <div class="row">
       <div class="column">
         <app-logo [style]="'login'"></app-logo>
         <span>Se connecter pour accéder à ses séances</span>
       </div>
-
       <div class="column">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <mat-error *ngIf="loginInvalid">
@@ -29,9 +27,7 @@
           </mat-form-field>
           <button mat-raised-button color="primary" [disabled]="isButtonDisabled">Se connecter</button>
         </form>
-
         <div class="divider"></div>
-
         <span><a target="_blank" href="https://www.cdrv.ca/accueil/"
                  title="Centre de recherche sur le vieillissement">{{organism}}</a></span>
       </div>
