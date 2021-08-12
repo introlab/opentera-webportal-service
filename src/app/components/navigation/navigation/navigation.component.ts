@@ -1,8 +1,18 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {ShowResponsiveNavigationService} from '@services/show-responsive-navigation.service';
-import {UserInfosService} from '@services/user-infos.service';
+import {AccountService} from '@services/account.service';
 import {Subscription} from 'rxjs';
 import {App} from '@shared/models/app.model';
+import {isUser} from '@core/utils/utility-functions';
+import {GlobalConstants} from '@core/utils/global-constants';
+
+const links: any = [
+  {
+    id: 1,
+    name: 'Calendrier',
+    path: GlobalConstants.calendarPage,
+  }
+];
 
 @Component({
   selector: 'app-navigation',
@@ -10,7 +20,9 @@ import {App} from '@shared/models/app.model';
   styleUrls: ['./navigation.component.scss']
 })
 export class NavigationComponent implements OnInit, OnDestroy {
-  apps: App[] = [];
+  participantApps: App[] = [];
+  userLinks: any[] = [];
+  isUser = true;
   private subscription!: Subscription;
 
   @HostListener('click') onClick(): void {
@@ -18,14 +30,16 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   constructor(private showResponsiveNavigationService: ShowResponsiveNavigationService,
-              private userInfosService: UserInfosService) {
+              private accountService: AccountService) {
   }
 
   ngOnInit(): void {
-    this.subscription = this.userInfosService.userInfos$().subscribe((res) => {
-      if (res.apps && res.apps.length > 0) {
-        console.log(res.apps);
-        this.apps = res.apps;
+    this.subscription = this.accountService.account$().subscribe((account) => {
+      this.isUser = isUser(account);
+      if (this.isUser) {
+        this.userLinks = links;
+      } else {
+        this.participantApps = account.apps;
       }
     });
   }

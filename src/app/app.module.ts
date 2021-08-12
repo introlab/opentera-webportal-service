@@ -13,6 +13,11 @@ import {MaterialModule} from '@shared/material.module';
 import {TokenInterceptor} from '@core/interceptors/token.interceptor';
 import localeFr from '@angular/common/locales/fr';
 import {registerLocaleData} from '@angular/common';
+import {AccountResolver} from '@services/resolvers/account.resolver';
+import {CalendarComponent} from '@pages/calendar/calendar.component';
+import {ParticipantLayoutComponent} from '@shared/layout/participant-layout/participant-layout.component';
+import {CalendarModule, DateAdapter} from 'angular-calendar';
+import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -21,7 +26,9 @@ registerLocaleData(localeFr, 'fr');
     AppComponent,
     AppLayoutComponent,
     LoginLayoutComponent,
+    ParticipantLayoutComponent,
     LoginComponent,
+    CalendarComponent
   ],
   imports: [
     BrowserModule,
@@ -31,8 +38,10 @@ registerLocaleData(localeFr, 'fr');
     HttpClientModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
   ],
   providers: [
+    AccountResolver,
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
     {provide: LOCALE_ID, useValue: 'FR-fr'},
   ],

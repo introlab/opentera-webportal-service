@@ -1,3 +1,5 @@
+import {Account} from '@shared/models/account.model';
+
 export function dateToISOLikeButLocal(date: Date): string {
   const offsetMs = date.getTimezoneOffset() * 60 * 1000;
   const msLocal = date.getTime() - offsetMs;
@@ -16,4 +18,8 @@ export function getDuration(startTime: Date, endTime: Date, date: Date): number 
   const end = setDate(date, endTime);
   const diffMs = end.getTime() - start.getTime();
   return Math.floor(diffMs / 60000);
+}
+
+export function isUser(account: Account): boolean {
+  return account.login_type === 'user';
 }

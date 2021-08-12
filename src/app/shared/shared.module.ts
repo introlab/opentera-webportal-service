@@ -11,13 +11,17 @@ import {RouterModule} from '@angular/router';
 import {LogoComponent} from '@components/logo/logo.component';
 import {AngularSvgIconModule} from 'angular-svg-icon';
 import {FrameComponent} from '@components/frame/frame.component';
-import {HomeComponent} from '@pages/home/home.component';
 import {NotFoundComponent} from '@pages/not-found/not-found.component';
-import {LinkComponent} from '@components/navigation/link/link.component';
+import {AppLinkComponent} from '@components/navigation/app-link/app-link.component';
 import {EmailsComponent} from '@pages/emails/emails.component';
 import {SeanceComponent} from '@pages/seance/seance.component';
 import {ExercisesComponent} from '@pages/exercices/exercises.component';
 import {SafeUrlPipe} from '@core/pipes/safe-url.pipe';
+import {SpinnerComponent} from '@components/spinner/spinner.component';
+import {CallbackComponent} from '@components/callback/callback.component';
+import {SiteSelectorComponent} from '@components/site-selector/site-selector.component';
+import {ProjectSelectorComponent} from '@components/project-selector/project-selector.component';
+import {TruncatePipe} from '@core/pipes/truncate.pipe';
 
 
 @NgModule({
@@ -30,19 +34,26 @@ import {SafeUrlPipe} from '@core/pipes/safe-url.pipe';
     FooterComponent,
     LogoComponent,
     FrameComponent,
-    HomeComponent,
     EmailsComponent,
     SeanceComponent,
     ExercisesComponent,
     NotFoundComponent,
-    LinkComponent,
-    SafeUrlPipe
+    AppLinkComponent,
+    SpinnerComponent,
+    SafeUrlPipe,
+    TruncatePipe,
+    CallbackComponent,
+    SiteSelectorComponent,
+    ProjectSelectorComponent
   ],
   exports: [
     HeaderComponent,
     ResponsiveNavigationComponent,
     FooterComponent,
     LogoComponent,
+    SpinnerComponent,
+    SiteSelectorComponent,
+    ProjectSelectorComponent,
   ],
   imports: [
     CommonModule,

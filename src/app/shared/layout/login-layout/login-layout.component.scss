@@ -1,5 +1,18 @@
-.layout {
-  height: 100%;
-  width: 100%;
-  position: absolute;
+.glass-container {
+  width: var(--glass-login-width);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 850px) {
+  .glass-container {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .glass-container {
+    width: 100%;
+    border-radius: 0;
+  }
 }

@@ -1,10 +1,8 @@
-<div class="container">
+<div class="glass-container">
   <app-header></app-header>
   <app-responsive-navigation></app-responsive-navigation>
-
   <div class="content" *ngIf="!navigationOpened">
     <router-outlet></router-outlet>
   </div>
-
   <app-footer></app-footer>
 </div>

@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthenticationService} from '@services/authentication.service';
-import {UserInfosService} from '@services/user-infos.service';
+import {AccountService} from '@services/account.service';
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -14,11 +14,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private subscription!: Subscription;
 
   constructor(private authService: AuthenticationService,
-              private userInfosService: UserInfosService) {
+              private accountService: AccountService) {
   }
 
   ngOnInit(): void {
-    this.subscription = this.userInfosService.userInfos$().subscribe((res) => {
+    this.subscription = this.accountService.account$().subscribe((res) => {
       if (res.fullname != null) {
         this.name = res.fullname;
         this.initial = this.name.charAt(0);

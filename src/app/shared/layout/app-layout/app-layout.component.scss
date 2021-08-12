@@ -1,28 +1,16 @@
-.container {
-  //height: 100vh;
-  width: 100%;
-  display: flex;
+.glass-container {
+  height: 100%;
+  min-height: var(--viewport-height);
+  border-radius: 0;
   flex-direction: column;
-  background: var(--background);
-
-  app-header {
-    width: 100%;
-    top: 0;
-    left: 0;
-    position: absolute;
-  }
+  justify-content: space-between;
+  background: linear-gradient(
+      to right bottom,
+      rgba(255, 255, 255, 0.95),
+      rgba(255, 255, 255, 0.8)
+  );
 
   .content {
-    width: 100%;
-    min-height: calc(100vh - var(--header-height) - var(--app-content-padding));
-    margin-top: var(--header-height);
-
-    & > * {
-      height: 100%;
-    }
-  }
-
-  app-footer {
-    width: 100%;
+    flex: 1;
   }
 }

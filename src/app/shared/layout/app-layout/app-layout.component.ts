@@ -1,7 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ShowResponsiveNavigationService} from '@services/show-responsive-navigation.service';
 import {Subscription} from 'rxjs';
-import {UserInfosService} from '@services/user-infos.service';
+import {AccountService} from '@services/account.service';
+import {Account} from '@shared/models/account.model';
 
 @Component({
   selector: 'app-app-layout',
@@ -11,18 +12,17 @@ import {UserInfosService} from '@services/user-infos.service';
 export class AppLayoutComponent implements OnInit, OnDestroy {
   navigationOpened = false;
   private subscription!: Subscription;
+  private account!: Account;
 
   constructor(private showNavService: ShowResponsiveNavigationService,
-              private userInfosService: UserInfosService) {
+              private accountService: AccountService) {
   }
 
   ngOnInit(): void {
-    this.subscription = this.showNavService.showNavigation().subscribe((res) => {
-      this.navigationOpened = res;
-    });
+    const showNav$ = this.showNavService.showNavigation();
 
-    this.userInfosService.getWithToken().subscribe((res) => {
-      console.log(res);
+    this.subscription = showNav$.subscribe((showNav) => {
+      this.navigationOpened = showNav;
     });
   }
 

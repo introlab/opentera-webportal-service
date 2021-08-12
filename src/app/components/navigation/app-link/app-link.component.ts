@@ -3,10 +3,10 @@ import {App} from '@shared/models/app.model';
 
 @Component({
   selector: 'app-link',
-  templateUrl: './link.component.html',
-  styleUrls: ['./link.component.scss']
+  templateUrl: './app-link.component.html',
+  styleUrls: ['./app-link.component.scss']
 })
-export class LinkComponent implements OnInit {
+export class AppLinkComponent implements OnInit {
   @Input() app!: App;
   link: any;
 

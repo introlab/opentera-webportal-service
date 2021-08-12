@@ -1,6 +1,12 @@
 <nav>
-  <ng-container *ngFor="let app of apps;index as i; trackBy: trackByFn">
-    <app-link [app]="app"></app-link>
+  <ng-container *ngIf="!isUser">
+    <ng-container *ngFor="let app of participantApps;index as i; trackBy: trackByFn">
+      <app-link [app]="app"></app-link>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="isUser">
+    <ng-container *ngFor="let link of userLinks;index as i">
+      <a [routerLink]="link.path" [title]="link.name">{{link.name}}</a>
+    </ng-container>
   </ng-container>
 </nav>
-
