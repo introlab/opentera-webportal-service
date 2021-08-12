@@ -1,99 +1,134 @@
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  width: 100vw;
+:root {
+  --header-height: 80px;
+  --app-padding: 2em;
+  --transition: 0.3s;
+  --hue-color: 190;
+  --white: #fff;
+  --pink: #FF9ED3;
+  --dark-green: #073120;
+  --text-color: #122F2B;
+
+  /* Font and typography */
+  --body-font: 'Open Sans', sans-serif;
+  --title-font: 'Raleway', sans-serif;
+  --biggest-font-size: 2.5rem;
+  --h1-font-size: 1.5rem;
+  --h2-font-size: 1.25rem;
+  --h3-font-size: 1rem;
+  --normal-font-size: .938rem;
+  --small-font-size: .813rem;
+  --smaller-font-size: .75rem;
+  --font-medium: 500;
+  --font-semi-bold: 600;
+
+  --glass-login-width: 70%;
+  --glass-min-height: 90vh;
+  --border-radius: 2rem;
+  --viewport-height: 100vh;
 }
 
-html {
-  position: relative;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 body {
-  --text: #fdfdfd;
-  --field-background: #36373b;
-  --background: #262729;
-  --border: #42454c;
-  --header-height: 80px;
-  --app-content-padding: 40px;
-  color: var(--text);
-  background-color: var(--background);
+  height: 100%;
+  width: 100%;
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
+  color: var(--text-color);
+  min-height: var(--viewport-height);
+  background: var(--primary-color); /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right top, var(--accent-color), var(--primary-color)); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right top, var(--accent-color), var(--primary-color)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 a {
   text-decoration: none;
+}
 
-  &:visited {
-    color: inherit;
-  }
+p {
+  opacity: 0.8;
+}
+
+h1, h2, h3 {
+  color: var(--title-color);
+  font-weight: var(--font-semi-bold);
+  font-family: var(--title-font);
+  opacity: 0.8;
+}
+
+h1 {
+  font-size: var(--h1-font-size);
+}
+
+h2 {
+  font-size: var(--h2-font-size);
+}
+
+h2 {
+  font-size: var(--h2-font-size);
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  transition: color var(--transition) ease-in-out;
 
   &:hover {
-    color: inherit;
+    color: var(--accent-darker-color);
+  }
+
+  &:active {
+    color: var(--accent-darker-color);
   }
 }
 
-/****** FORM FIELDS ******/
-.login-container {
-  .mat-form-field-appearance-outline .mat-form-field-infix {
-    padding: 1.2em 0 1.2em 1em;
-  }
+img, video {
+  max-width: 100%;
+  height: auto;
 }
 
-.mat-form-field-wrapper {
-  padding-bottom: 0;
+button, input {
+  border: none;
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
 }
 
-.mat-form-field-appearance-outline {
-
-  &.mat-focused {
-    .mat-form-field-outline-thick {
-      color: var(--accent-color);
-    }
-  }
-
-  .mat-form-field-outline {
-    color: var(--border);
-
-    &:hover {
-      color: var(--accent-color);
-    }
-  }
-
-  .mat-form-field-outline-start,
-  .mat-form-field-outline-gap,
-  .mat-form-field-outline-end {
-    background-color: var(--field-background);
-  }
+button {
+  cursor: pointer;
 }
 
-.mat-select-panel {
-  .mat-option.mat-selected:not(.mat-option-multiple) {
-    background: var(--accent-lighter-color);
-    color: var(--background);
-  }
+input {
+  outline: none;
 }
 
-.mat-form-field {
-  .mat-form-field-label {
-    color: var(--text);
-  }
+/*=============== REUSABLE CSS CLASSES ===============*/
 
-  &.mat-focused {
-    .mat-form-field-label {
-      color: var(--text);
-      transform: translateY(-1.59375em) scale(0.75);
-    }
-  }
+.glass-container {
+  position: relative;
+  background: white;
+  min-height: var(--glass-min-height);
+  width: 100%;
+  background: linear-gradient(
+      to right bottom,
+      rgba(255, 255, 255, 0.7),
+      rgba(255, 255, 255, 0.3)
+  );
+  z-index: 2;
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(1rem);
+  display: flex;
 }
-
-mat-error {
-  padding-bottom: 3px;
-  margin-top: 15px;
-}
-
-@media screen and (min-width: 850px) {
-  .mat-form-field-appearance-outline .mat-form-field-subscript-wrapper {
-    width: 400px;
-  }
-}
-
