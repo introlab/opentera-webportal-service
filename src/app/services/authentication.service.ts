@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {GlobalConstants} from '@core/utils/global-constants';
 import {makeApiURL} from '@core/utils/make-api-url';
 import {Router} from '@angular/router';
 import {CookieService} from 'ngx-cookie-service';
+import {AccountService} from '@services/account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient,
               private cookieService: CookieService,
+              private accountService: AccountService,
               private router: Router) {
   }
 
@@ -51,16 +53,15 @@ export class AuthenticationService {
     return this.http.get(apiUrl).pipe(
       tap(() => {
         this.isLoggedIn = false;
-        this.router.navigate(['/connexion']);
+        this.router.navigate([GlobalConstants.loginPage]);
         this.cookieService.delete(this.cookieValue, '/');
         this.stopRefreshTokenTimer();
       })
     );
   }
 
-  // TODO make it work for PARTICIPANT and USER
   startRefreshTokenTimer(): void {
-    const token = this.cookieService.get(this.cookieValue);
+    const token = this.cookieService.get(GlobalConstants.cookieValue);
 
     // Parse json object from base64 encoded jwt token
     const jwtToken = JSON.parse(atob(token.split('.')[1]));
@@ -70,17 +71,21 @@ export class AuthenticationService {
     const timeout = expires.getTime() - Date.now() - (60 * 1000);
 
     this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(response => {
-      this.cookieService.set(this.cookieValue, response.refresh_token, 0.5, '/');
+      this.cookieService.set(GlobalConstants.cookieValue, response.refresh_token, 0.5, '/', undefined, true, 'None');
     }), timeout);
   }
 
-  refreshToken(isManager: boolean = false): Observable<any> {
-    const apiUrl = isManager ? `${this.API_URL}user/refresh_token` : `${this.API_URL}participant/refresh_token`;
-    return this.http.get<any>(apiUrl)
-      .pipe(map((user) => {
-        this.startRefreshTokenTimer();
-        return user;
-      }));
+  refreshToken(): Observable<any> {
+    return this.accountService.account$().pipe(
+      switchMap((account) => {
+        const apiUrl = account.login_type === 'user' ? `${this.API_URL}user/refresh_token` : `${this.API_URL}participant/refresh_token`;
+        return this.http.get<any>(apiUrl)
+          .pipe(map((user) => {
+            this.startRefreshTokenTimer();
+            return user;
+          }));
+      })
+    );
   }
 
   private stopRefreshTokenTimer(): void {

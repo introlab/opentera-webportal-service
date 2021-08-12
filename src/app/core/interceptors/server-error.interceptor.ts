@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import {AuthenticationService} from '@services/authentication.service';
 import {LoginButtonService} from '@services/login-button.service';
 import {NotificationService} from '@services/notification.service';
+import {GlobalConstants} from '@core/utils/global-constants';
 
 @Injectable()
 export class ServerErrorInterceptor implements HttpInterceptor {
@@ -24,12 +25,12 @@ export class ServerErrorInterceptor implements HttpInterceptor {
       retry(1),
       catchError((error: HttpErrorResponse) => {
         if (error.url && error.url.includes('/login')) {
-          loginButton.disableButton(false);
+          loginButton.enableButton(false);
           notifier.showError('Mauvais nom d\'utilisateur ou mot de passe.');
         }
         if (error.status === 401) {
           authService.logout().subscribe();
-          ngZone.run(() => this.router.navigate(['/connexion']));
+          ngZone.run(() => this.router.navigate([GlobalConstants.loginPage]));
         }
         return throwError(error);
       })

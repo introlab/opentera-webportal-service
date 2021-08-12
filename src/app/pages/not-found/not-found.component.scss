@@ -2,7 +2,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--app-content-padding);
 
   svg,
   svg-icon {
@@ -18,9 +17,8 @@
     }
 
     .four-o-four {
-      font-family: 'Nunito', sans-serif;
       font-weight: 700;
-      color: var(--accent-lighter-color);
+      color: var(--accent-color);
       line-height: 80px;
       font-size: 80px;
     }
@@ -30,10 +28,9 @@
     }
 
     button {
-      width: 120px;
-      align-self: flex-end;
+      min-width: 150px;
 
-      mat-icon {
+      i {
         font-size: 14px;
         height: 14px;
       }

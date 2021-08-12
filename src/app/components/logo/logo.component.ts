@@ -9,7 +9,7 @@ import {GlobalConstants} from '@core/utils/global-constants';
 })
 export class LogoComponent implements OnInit {
   @Input() style!: string;
-  logoPath = environment.img_prefix + 'assets/images/logo.svg';
+  imagePath = environment.img_prefix + 'assets/images/leaf.svg';
   title = GlobalConstants.title;
 
   constructor() {
