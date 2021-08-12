@@ -1,36 +1,57 @@
-<div class="login-container">
-  <div class="wrapper">
-    <div class="row">
-      <div class="column">
-        <app-logo [style]="'login'"></app-logo>
-        <span>Se connecter pour accéder à ses séances</span>
-      </div>
-      <div class="column">
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <mat-error *ngIf="loginInvalid">
-            Le nom d'utilisateur et le mot de passe que vous avez saisis ne correspondaient pas à nos enregistrements.
-            Veuillez vérifier et réessayer.
-          </mat-error>
-          <mat-form-field appearance="outline">
-            <mat-label>Nom d'utilisateur</mat-label>
-            <input matInput placeholder="Nom d'utilisateur" formControlName="username" required>
-            <mat-error>
-              Le nom d'utilisateur est obligatoire.
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Mot de passe</mat-label>
-            <input matInput type="password" placeholder="Mot de passe" formControlName="password" required>
-            <mat-error>
-              Le mot de passe est obligatoire.
-            </mat-error>
-          </mat-form-field>
-          <button mat-raised-button color="primary" [disabled]="isButtonDisabled">Se connecter</button>
-        </form>
-        <div class="divider"></div>
-        <span><a target="_blank" href="https://www.cdrv.ca/accueil/"
-                 title="Centre de recherche sur le vieillissement">{{organism}}</a></span>
-      </div>
+<div class="wrapper">
+
+  <section class="form">
+    <div class="title">
+      <h2>Connexion</h2>
+      <p>Gérer son calendrier</p>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-error *ngIf="loginInvalid">
+        Le nom d'utilisateur et le mot de passe que vous avez saisis ne correspondaient pas à nos enregistrements.
+        Veuillez vérifier et réessayer.
+      </mat-error>
+      <mat-form-field appearance="outline">
+        <mat-label>Nom d'utilisateur</mat-label>
+        <input matInput placeholder="Nom d'utilisateur" formControlName="username" required>
+        <mat-error>
+          Le nom d'utilisateur est obligatoire.
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Mot de passe</mat-label>
+        <input matInput type="password" placeholder="Mot de passe" formControlName="password" required>
+        <mat-error>
+          Le mot de passe est obligatoire.
+        </mat-error>
+      </mat-form-field>
+      <button mat-flat-button color="primary" [disabled]="isButtonDisabled">Se connecter</button>
+    </form>
+    <span>
+      <a target="_blank" href="https://www.cdrv.ca/accueil/"
+         title="Centre de recherche sur le vieillissement">{{organism}}</a>
+    </span>
+  </section>
+  <section class="banner">
+    <app-logo></app-logo>
+    <h1>
+      Promo<br>Santé
+    </h1>
+  </section>
+</div>
+
+<!--
+<div class="wrapper">
+  <div class="row">
+    <div class="column">
+      <app-logo [style]="'login'"></app-logo>
+      <span>Se connecter pour gérer son calendrier</span>
+    </div>
+    <div class="column">
+
+      <div class="divider"></div>
+      <span><a target="_blank" href="https://www.cdrv.ca/accueil/"
+               title="Centre de recherche sur le vieillissement">{{organism}}</a></span>
     </div>
   </div>
 </div>
+-->

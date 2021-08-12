@@ -1,82 +1,68 @@
-.login-container {
-  display: flex;
-  height: 100%;
+:host {
   width: 100%;
-  background-image: url('../../../assets/images/riski-andriansyah-Gl6GljPtJpo-unsplash.jpg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  position: absolute;
-  justify-content: flex-end;
+}
 
-  .wrapper {
-    width: 70%;
-    height: 100%;
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  height: 100%;
+
+  section {
+    flex: 1;
     display: flex;
-    align-items: center;
-    background: var(--background);
-    padding: 0 var(--header-height);
-    box-sizing: border-box;
+    justify-content: center;
 
-    app-logo {
-      margin-bottom: 10px;
+    &.banner {
+      flex-direction: column;
+      align-items: center;
+      background-image: url('~assets/images/riski-andriansyah-Gl6GljPtJpo-unsplash.jpg');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      border-radius: 0 var(--border-radius) var(--border-radius) 0;
+
+      h1 {
+        font-weight: bolder;
+        font-size: 4rem;
+        line-height: 3rem;
+        opacity: 0.9;
+        color: var(--white);
+      }
     }
 
-    .row {
-      width: 100%;
-      display: flex;
-      justify-content: center;
+    &.form {
+      padding: var(--app-padding);
+      flex-direction: column;
 
-      .column {
+      .title {
+        margin-bottom: 50px;
+      }
+
+      h2 {
+        font-size: 2rem;
+        line-height: 2rem;
+        font-weight: bolder;
+        color: var(--dark-green);
+        margin: 0;
+      }
+
+      form {
         display: flex;
         flex-direction: column;
-        width: 50%;
+        margin-bottom: 50px;
 
-        &:first-of-type {
-          max-width: 400px;
-          padding-right: var(--app-content-padding);
-
-          span {
-            line-height: 40px;
-            font-weight: 700;
-            font-size: 36px;
-            font-family: 'Nunito', sans-serif;
-          }
+        button {
+          padding: 1rem;
         }
+      }
 
-        &:last-of-type {
-          form {
-            display: flex;
-            flex-direction: column;
+      a {
+        color: #777;
+        font-size: var(--small-font-size);
+        transition: color ease-in-out var(--transition);
 
-            mat-form-field {
-              display: block;
-              margin-bottom: 20px;
-              padding-bottom: 10px;
-            }
-
-            button {
-              align-self: flex-end;
-            }
-          }
-
-          .divider {
-            height: 1px;
-            background-color: var(--border);
-            margin: calc(var(--app-content-padding) * 2) 0 var(--app-content-padding);
-          }
-
-          span {
-            font-size: 12px;
-            opacity: 0.5;
-            cursor: pointer;
-            transition: opacity 0.3s ease-in-out, color 0.3s ease-in-out;
-
-            &:hover {
-              opacity: 1;
-              color: var(--primary-lighter-color);
-            }
-          }
+        &:hover {
+          color: #333;
         }
       }
     }
@@ -84,48 +70,25 @@
 }
 
 @media screen and (max-width: 850px) {
-  .login-container {
-    .wrapper {
-      padding: 0 calc(var(--header-height) / 2);
+  .wrapper {
+    flex-direction: column-reverse;
 
-      .row {
-        flex-direction: column;
-
-        .column {
-          width: 100%;
-
-          &:first-of-type {
-            padding-right: 0;
-            padding-bottom: var(--app-content-padding);
-          }
-
-          &:last-of-type {
-            .divider {
-              margin: var(--app-content-padding) 0;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-@media screen and (max-width: 500px) {
-  .login-container {
-    .wrapper {
+    section {
       width: 100%;
-      border-radius: 0;
+
+      &.banner {
+        padding: var(--app-padding);
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+      }
     }
   }
 }
 
 @media screen and (max-width: 350px) {
-  .login-container {
-    .column:first-of-type {
-      span {
-        font-size: 24px !important;
-        line-height: 30px !important;
-      }
+  .wrapper {
+    section.banner {
+      border-radius: 0;
     }
   }
 }
+

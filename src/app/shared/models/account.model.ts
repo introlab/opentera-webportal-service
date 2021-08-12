@@ -1,6 +1,7 @@
 import {App} from '@shared/models/app.model';
+import {Site} from '@shared/models/site.model';
 
-export class UserInfos {
+export class Account {
   id?: number;
   login_type?: string;
   fullname?: string;
@@ -8,4 +9,6 @@ export class UserInfos {
   is_super_admin?: boolean;
   project_id?: number;
   apps?: App[];
+  user?: any;
+  sites?: Site[];
 }

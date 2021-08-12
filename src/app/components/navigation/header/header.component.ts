@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import {environment} from '@src/environments/environment';
+import {GlobalConstants} from '@core/utils/global-constants';
 
 @Component({
   selector: 'app-header',
@@ -7,6 +9,7 @@ import {Router} from '@angular/router';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  imagePath = environment.img_prefix + 'assets/images/leaf.svg';
 
   constructor(public router: Router) {
   }
@@ -15,6 +18,6 @@ export class HeaderComponent implements OnInit {
   }
 
   goHome(): void {
-    this.router.navigate(['/']);
+    this.router.navigate([GlobalConstants.homePage]);
   }
 }

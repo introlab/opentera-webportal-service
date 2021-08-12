@@ -1,17 +1,13 @@
 header {
   height: var(--header-height);
+  background: white;
   box-sizing: border-box;
   background: var(--background);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 var(--app-padding);
   justify-content: space-between;
-
-  app-logo {
-    cursor: pointer;
-    text-align: left;
-  }
 
   app-navigation {
     text-align: center;

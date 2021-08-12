@@ -12,6 +12,7 @@ import {Subscription} from 'rxjs';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  title = GlobalConstants.title;
   form!: FormGroup;
   loginInvalid = false;
   isButtonDisabled = true;
@@ -42,7 +43,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(this.form.valueChanges.subscribe(x => {
       if (this.isButtonDisabled) {
-        this.loginButtonService.disableButton(false);
+        this.loginButtonService.enableButton(false);
       }
     }));
   }
@@ -53,22 +54,21 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   private redirect(): void {
     if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/']);
+      this.router.navigate([GlobalConstants.homePage]);
     }
   }
 
   onSubmit(): void {
     this.loginInvalid = false;
     this.formSubmitAttempt = false;
-    this.loginButtonService.disableButton(true);
+    this.loginButtonService.enableButton(true);
     this.isButtonDisabled = true;
     if (this.form.valid) {
       try {
         const username = this.form.controls.username.value;
         const password = this.form.controls.password.value;
-        this.authService.login(username, password).subscribe((res) => {
-          console.log('login', res);
-          this.loginButtonService.disableButton(false);
+        this.authService.login(username, password, true).subscribe((res) => {
+          this.loginButtonService.enableButton(false);
         });
       } catch (err) {
         this.loginInvalid = true;
