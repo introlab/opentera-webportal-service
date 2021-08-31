@@ -236,12 +236,16 @@ class FlaskModule(BaseModule):
 
         from API.QueryVersion import QueryVersion
         from API.QueryApps import QueryApps
-        from API.QueryUserInfos import QueryUserInfos
-  
+        from API.QueryAccountInfos import QueryAccountInfos
+        from API.QueryCalendar import QueryCalendar
+        from API.QueryPermissions import QueryPermissions
+
         # Resources
         default_api_ns.add_resource(QueryVersion, '/version', resource_class_kwargs=kwargs)
         default_api_ns.add_resource(QueryApps, '/apps', resource_class_kwargs=kwargs)
-        default_api_ns.add_resource(QueryUserInfos, '/userinfos', resource_class_kwargs=kwargs)
+        default_api_ns.add_resource(QueryAccountInfos, '/me', resource_class_kwargs=kwargs)
+        default_api_ns.add_resource(QueryCalendar, '/calendar', resource_class_kwargs=kwargs)
+        default_api_ns.add_resource(QueryPermissions, '/permissions', resource_class_kwargs=kwargs)
 
     def init_views(self):
         from Views.Index import Index

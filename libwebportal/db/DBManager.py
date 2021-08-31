@@ -11,8 +11,11 @@ from opentera.modules.BaseModule import BaseModule
 from .DBGlobals import db
 
 # All at once to make sure all files are registered.
+from .DBManagerCalendarAccess import DBManagerCalendarAccess
+from .DBManagerAppAccess import DBManagerAppAccess
 from .models.WebPortalApp import WebPortalApp
 from .models.WebPortalAppConfig import WebPortalAppConfig
+from .models.WebPortalCalendarEvent import WebPortalCalendarEvent
 
 from FlaskModule import flask_app
 
@@ -50,10 +53,20 @@ class DBManager (BaseModule):
     #     return access
 
     @staticmethod
-    def participantAccess(participant: TeraParticipant):
+    def participant_access(participant: TeraParticipant):
         # access = DBManagerTeraParticipantAccess(participant=participant)
         # return access
         return None
+
+    @staticmethod
+    def calendar_access():
+        access = DBManagerCalendarAccess()
+        return access
+
+    @staticmethod
+    def app_access():
+        access = DBManagerAppAccess()
+        return access
 
     @staticmethod
     def create_defaults():
@@ -64,6 +77,10 @@ class DBManager (BaseModule):
         if WebPortalAppConfig.get_count() == 0:
             print('No app configs - creating defaults')
             WebPortalAppConfig.create_defaults()
+
+        if WebPortalCalendarEvent.get_count() == 0:
+            print('No calendar events - creating defaults')
+            WebPortalCalendarEvent.create_defaults()
 
     def open(self, echo=False):
         self.db_uri = 'postgresql://%(username)s:%(password)s@%(url)s:%(port)s/%(name)s' % self.config.db_config

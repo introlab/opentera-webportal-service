@@ -101,7 +101,7 @@ if __name__ == '__main__':
     ServiceAccessManager.config_man = config_man
 
     # Create the service
-    service = WebPortalService(config_man, service_info)
+    Globals.service = WebPortalService(config_man, service_info)
 
     # Start App/ reactor events
     reactor.run()
