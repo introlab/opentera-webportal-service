@@ -8,7 +8,7 @@ from opentera.db.models.TeraParticipant import TeraParticipant
 
 # Must include all Database objects here to be properly initialized and created if needed
 from opentera.modules.BaseModule import BaseModule
-from .DBGlobals import db
+from opentera.db.Base import db
 
 # All at once to make sure all files are registered.
 from .DBManagerCalendarAccess import DBManagerCalendarAccess

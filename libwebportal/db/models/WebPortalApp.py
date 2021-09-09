@@ -1,5 +1,4 @@
-from opentera.db.Base import BaseModel
-from libwebportal.db.DBGlobals import db
+from opentera.db.Base import BaseModel, db
 from enum import Enum, unique
 
 
@@ -17,7 +16,7 @@ class WebPortalApp(db.Model, BaseModel):
     id_project = db.Column(db.Integer, nullable=False)
     app_name = db.Column(db.String, nullable=False)
     app_icon = db.Column(db.String, nullable=False)
-    app_type = db.Column(db.Integer, nullable=False)    # App type - 0 = External, 1 = OpenTera Service
+    app_type = db.Column(db.Integer, nullable=False)  # App type - 0 = External, 1 = OpenTera Service
     app_static_url = db.Column(db.String, nullable=True)
     app_service_key = db.Column(db.String, nullable=True)
     app_enabled = db.Column(db.Boolean, nullable=False, default=True)
@@ -36,7 +35,7 @@ class WebPortalApp(db.Model, BaseModel):
     def create_defaults():
         base_app = WebPortalApp()
         base_app.app_deletable = False  # Can't delete calendar app, only disable it
-        base_app.id_project = 1     # Hard coded for now
+        base_app.id_project = 1  # Hard coded for now
         base_app.app_name = 'Calendrier'
         base_app.app_icon = 'event'
         base_app.app_order = 1

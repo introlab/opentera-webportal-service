@@ -1,5 +1,4 @@
-from opentera.db.Base import BaseModel
-from libwebportal.db.DBGlobals import db
+from opentera.db.Base import BaseModel, db
 import datetime
 from datetime import timedelta
 
