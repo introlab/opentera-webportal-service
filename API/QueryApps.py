@@ -43,7 +43,7 @@ class QueryApps(Resource):
         # Get apps for participant
         if current_login_type == LoginType.PARTICIPANT_LOGIN:
             # Get base app list for project
-            apps = app_access.query_apps_in_order(args['id_project'])
+            apps = app_access.query_apps_in_order(args['id_project'], True)
 
         # Get all apps
         if current_login_type == LoginType.USER_LOGIN:
@@ -140,7 +140,7 @@ class QueryApps(Resource):
 
         # Validate that the app can be deleted
         app_to_del = WebPortalApp.get_app_by_id(id_to_delete)
-        if not app_to_del['app_deletable']:
+        if not app_to_del.app_deletable:
             return gettext('Forbidden'), 403
 
         # If we are here, we are allowed to delete.

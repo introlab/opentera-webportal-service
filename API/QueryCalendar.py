@@ -111,8 +111,8 @@ class QueryCalendar(Resource):
         event_json = request.json['event']
 
         # Validate if we have an id
-        if 'id_event' not in event_json or 'id_room' not in event_json:
-            return gettext('Missing id_event or id_room arguments'), 400
+        if 'id_event' not in event_json:
+            return gettext('Missing id_event argument'), 400
 
         start_time = datetime.fromisoformat(event_json['event_start_datetime'])
         end_time = datetime.fromisoformat(event_json['event_end_datetime'])
@@ -132,7 +132,7 @@ class QueryCalendar(Resource):
             session = event_json['session']
             endpoint = '/api/service/sessions'
             params = {'session': session}
-            response = Globals.service.get_from_opentera(endpoint, params)
+            response = Globals.service.post_to_opentera(endpoint, params)
 
             if response.status_code == 200:
                 session_info = response.json()

@@ -24,7 +24,6 @@ class DBManagerCalendarAccess:
         return []
 
     def query_overlaps(self, user_uuid, start_time, end_time, id_event=0):
-
         events = WebPortalCalendarEvent.query.filter(
             and_(WebPortalCalendarEvent.id_event != id_event,
                  or_(WebPortalCalendarEvent.event_start_datetime.between(start_time, end_time),

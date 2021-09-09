@@ -4,10 +4,14 @@ from libwebportal.db.models.WebPortalApp import WebPortalApp
 
 class DBManagerAppAccess:
 
-    def query_apps_in_order(self, id_project: int):
+    def query_apps_in_order(self, id_project: int, enabled_only=False):
+        queries = [WebPortalApp.id_project == id_project]
+        if enabled_only:
+            queries.append(WebPortalApp.app_enabled is True)
+
         # Order apps by app_order and if same order, alphabetically
-        apps = WebPortalApp.query.filter_by(id_project=id_project).filter_by(app_enabled=True) \
-            .order_by(WebPortalApp.app_order.asc(), WebPortalApp.app_name.asc()).all()
+        apps = WebPortalApp.query.filter(*queries).order_by(WebPortalApp.app_order.asc(),
+                                                            WebPortalApp.app_name.asc()).all()
 
         if apps:
             return apps
