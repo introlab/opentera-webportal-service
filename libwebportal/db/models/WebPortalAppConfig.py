@@ -1,4 +1,6 @@
-from opentera.db.Base import BaseModel, db
+from opentera.db.Base import BaseModel
+
+from libwebportal.db.DBGlobals import db
 
 
 class WebPortalAppConfig(db.Model, BaseModel):

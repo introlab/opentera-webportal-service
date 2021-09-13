@@ -8,7 +8,7 @@ from opentera.db.models.TeraParticipant import TeraParticipant
 
 # Must include all Database objects here to be properly initialized and created if needed
 from opentera.modules.BaseModule import BaseModule
-from opentera.db.Base import db
+from .DBGlobals import db
 
 # All at once to make sure all files are registered.
 from .DBManagerCalendarAccess import DBManagerCalendarAccess
@@ -96,7 +96,7 @@ class DBManager (BaseModule):
         db.app = flask_app
 
         # Init tables
-        # db.drop_all()
+        db.drop_all()
         db.create_all()
 
         # Apply any database upgrade, if needed
