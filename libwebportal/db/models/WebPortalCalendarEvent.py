@@ -1,8 +1,6 @@
-from opentera.db.Base import BaseModel
+from libwebportal.db.Base import db, BaseModel
 import datetime
 from datetime import timedelta
-
-from libwebportal.db.DBGlobals import db
 
 
 class WebPortalCalendarEvent(db.Model, BaseModel):

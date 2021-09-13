@@ -1,7 +1,5 @@
-from opentera.db.Base import BaseModel
+from libwebportal.db.Base import db, BaseModel
 from enum import Enum, unique
-
-from libwebportal.db.DBGlobals import db
 
 
 class WebPortalApp(db.Model, BaseModel):

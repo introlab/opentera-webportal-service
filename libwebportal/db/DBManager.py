@@ -1,6 +1,6 @@
 from flask_sqlalchemy import event
 from sqlalchemy.engine import Engine
-from sqlite3 import Connection as SQLite3Connection
+# from sqlite3 import Connection as SQLite3Connection
 
 from opentera.config.ConfigManager import ConfigManager
 from opentera.modules.BaseModule import ModuleNames
@@ -8,7 +8,7 @@ from opentera.db.models.TeraParticipant import TeraParticipant
 
 # Must include all Database objects here to be properly initialized and created if needed
 from opentera.modules.BaseModule import BaseModule
-from .DBGlobals import db
+from libwebportal.db.Base import db
 
 # All at once to make sure all files are registered.
 from .DBManagerCalendarAccess import DBManagerCalendarAccess
@@ -41,6 +41,8 @@ class DBManager (BaseModule):
         BaseModule.__init__(self, ModuleNames.DATABASE_MODULE_NAME.value, config)
 
         self.db_uri = None
+
+
 
     # @staticmethod
     # def userAccess(user: TeraUser):
@@ -179,9 +181,9 @@ class DBManager (BaseModule):
 
 
 # Fix foreign_keys on sqlite
-@event.listens_for(Engine, "connect")
-def _set_sqlite_pragma(dbapi_connection, connection_record):
-    if isinstance(dbapi_connection, SQLite3Connection):
-        cursor = dbapi_connection.cursor()
-        cursor.execute("PRAGMA foreign_keys=ON;")
-        cursor.close()
+# @event.listens_for(Engine, "connect")
+# def _set_sqlite_pragma(dbapi_connection, connection_record):
+#     if isinstance(dbapi_connection, SQLite3Connection):
+#         cursor = dbapi_connection.cursor()
+#         cursor.execute("PRAGMA foreign_keys=ON;")
+#         cursor.close()

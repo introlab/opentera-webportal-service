@@ -16,7 +16,9 @@ get_parser.add_argument('id_project', type=int, help='ID of the project to get a
 get_parser.add_argument('with_config', type=inputs.boolean, help='Flag to also returns specific config for the current '
                                                                  'participant')
 
-post_parser = api.parser()
+post_schema = api.schema_model('app', {'properties': WebPortalApp.get_json_schema(),
+                                       'type': 'object',
+                                       'location': 'json'})
 delete_parser = reqparse.RequestParser()
 delete_parser.add_argument('id', type=int, help='App ID to delete', required=True)
 
@@ -74,7 +76,7 @@ class QueryApps(Resource):
 
         return apps_json
 
-    @api.expect(post_parser)
+    @api.expect(post_schema)
     @api.doc(description='Create / update apps. id_app must be set to "0" to create a new app.'
                          'An app can be created/modified if the user has admin rights to the related site.',
              responses={200: 'Success',
