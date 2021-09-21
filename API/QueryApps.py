@@ -147,7 +147,7 @@ class QueryApps(Resource):
 
         # If we are here, we are allowed to delete.
         try:
-            WebPortalApp.delete(id_to_delete=id_to_delete)
+            WebPortalApp.delete(id_to_delete)
         except exc.SQLAlchemyError as e:
             import sys
             print(sys.exc_info())
