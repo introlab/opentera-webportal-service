@@ -18,7 +18,7 @@ class QueryAccountInfos(Resource):
     @api.expect(get_parser)
     @api.doc(description='Gets connected user infos from token: login type, uuid, username',
              responses={200: 'Success'})
-    @ServiceAccessManager.token_required
+    @ServiceAccessManager.token_required(allow_static_tokens=True, allow_dynamic_tokens=True)
     def get(self):
         parser = get_parser
         args = parser.parse_args()
@@ -41,6 +41,7 @@ class QueryAccountInfos(Resource):
                 account_infos['fullname'] = participant['participant_name']
                 account_infos['project_id'] = participant['id_project']
                 if participant['id_project']:
+                    # TODO: Use database objects directly instead of using a query to get apps information
                     response = current_participant_client.do_get_request_to_backend(
                         '/webportal/api/apps?with_config=true&id_project=' + str(participant['id_project']))
                     if response.status_code == 200:
