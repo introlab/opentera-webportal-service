@@ -1,5 +1,9 @@
 from sqlalchemy import and_, or_, literal
 from datetime import datetime
+
+from flask_babel import gettext
+from sqlalchemy.exc import InvalidRequestError
+
 from libwebportal.db.models.WebPortalCalendarEvent import WebPortalCalendarEvent
 
 
@@ -23,7 +27,7 @@ class DBManagerCalendarAccess:
             return events
         return []
 
-    def query_overlaps(self, user_uuid, start_time, end_time, id_event=0):
+    def query_overlaps_user(self, user_uuid, start_time, end_time, id_event=0):
         events = WebPortalCalendarEvent.query.filter(
             and_(WebPortalCalendarEvent.id_event != id_event,
                  or_(WebPortalCalendarEvent.event_start_datetime.between(start_time, end_time),
@@ -38,6 +42,21 @@ class DBManagerCalendarAccess:
             return events
         return []
 
+    def query_overlaps_participants(self, participant_uuids, start_time, end_time, id_event=0):
+        events = WebPortalCalendarEvent.query.filter(
+            and_(WebPortalCalendarEvent.id_event != id_event,
+                 or_(WebPortalCalendarEvent.event_start_datetime.between(start_time, end_time),
+                     WebPortalCalendarEvent.event_end_datetime.between(start_time, end_time),
+                     literal(start_time).between(WebPortalCalendarEvent.event_start_datetime,
+                                                 WebPortalCalendarEvent.event_end_datetime),
+                     literal(end_time).between(WebPortalCalendarEvent.event_start_datetime,
+                                               WebPortalCalendarEvent.event_end_datetime))),
+            WebPortalCalendarEvent.session_participant_uuids.contains(participant_uuids)).all()
+
+        if events:
+            return events
+        return []
+
     def query_next_three(self, user_uuid):
         now = datetime.now()
         events = WebPortalCalendarEvent.query.filter(WebPortalCalendarEvent.event_end_datetime > now,
@@ -47,3 +66,12 @@ class DBManagerCalendarAccess:
         if events:
             return events
         return []
+
+    def delete_event_with_session_uuid(self, session_info):
+        try:
+            WebPortalCalendarEvent.delete_with_session_uuid(session_info['session_uuid'])
+        except InvalidRequestError as e:
+            return gettext('Invalid request'), 500
+
+    def update_event_after_session_update(self, session_infos):
+        pass

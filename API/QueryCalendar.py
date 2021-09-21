@@ -36,22 +36,33 @@ class QueryCalendar(Resource):
     @api.expect(get_parser)
     @api.doc(description='Get calendar events.',
              responses={200: 'Success - returns calendar events',
+                        408: 'Participants session overlap',
+                        409: 'User event overlap',
                         500: 'Database error'})
     @ServiceAccessManager.token_required
     def get(self):
         parser = get_parser
         args = parser.parse_args()
         calendar_access = DBManager.calendar_access()
+        participant_uuids = request.args.getlist('participant_uuid', type=str)
 
         events = []
-        if args['overlaps']:
-            if not args['user_uuid'] or not args['start_date'] or not args['end_date']:
-                return 'Missing user_uuid or date arguments', 400
-            else:
-                # Find event overlaps
+        if args['overlaps'] is True:
+            if not args['start_date'] or not args['end_date']:
+                return 'Missing dates arguments', 400
+            elif not args['user_uuid'] and not args['participant_ids']:
+                return 'Missing user_uuid or participant ids', 400
+            elif participant_uuids:
+                # Find session overlaps for participants
                 start_time = datetime.fromisoformat(args['start_date'])
                 end_time = datetime.fromisoformat(args['end_date'])
-                events = calendar_access.query_overlaps(args['user_uuid'], start_time, end_time)
+                events = calendar_access.query_overlaps_participants(participant_uuids, start_time, end_time)
+                pass
+            elif args['user_uuid']:
+                # Find event overlaps for user
+                start_time = datetime.fromisoformat(args['start_date'])
+                end_time = datetime.fromisoformat(args['end_date'])
+                events = calendar_access.query_overlaps_user(args['user_uuid'], start_time, end_time)
         elif args['three']:
             if not args['user_uuid']:
                 return 'Missing user_uuid argument', 400
@@ -122,8 +133,8 @@ class QueryCalendar(Resource):
             return gettext('Can\'t edit a passed event.'), 400
 
         # Check if there is already a event for that room between the times of the event
-        overlapping_events = calendar_access.query_overlaps(event_json['user_uuid'], start_time, end_time,
-                                                            event_json['id_event'])
+        overlapping_events = calendar_access.query_overlaps_user(event_json['user_uuid'], start_time, end_time,
+                                                                 event_json['id_event'])
         if overlapping_events:
             return gettext('An event already uses this time slot'), 400
 
@@ -192,7 +203,7 @@ class QueryCalendar(Resource):
 
         # If we are here, we are allowed to delete.
         try:
-            WebPortalCalendarEvent.delete(id_to_delete=id_to_delete)
+            WebPortalCalendarEvent.delete(id_to_delete)
         except exc.SQLAlchemyError as e:
             import sys
             print(sys.exc_info())
