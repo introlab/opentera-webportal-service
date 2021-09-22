@@ -13,7 +13,7 @@ class DBManagerCalendarAccess:
         event = WebPortalCalendarEvent.get_event_by_id(event_id)
         return event
 
-    def query_event_by_user(self, user_uuid, start_date, end_date):
+    def query_event_for_user(self, user_uuid, start_date, end_date):
         start_date = datetime.strptime(start_date, '%d-%m-%Y').date()
         end_date = datetime.strptime(end_date, '%d-%m-%Y')
         end_date = end_date.replace(hour=23, minute=59, second=59)
@@ -21,6 +21,20 @@ class DBManagerCalendarAccess:
         events = WebPortalCalendarEvent.query.filter(
             WebPortalCalendarEvent.event_start_datetime.between(start_date, end_date),
             WebPortalCalendarEvent.user_uuid == user_uuid). \
+            order_by(WebPortalCalendarEvent.event_start_datetime.asc()).all()
+
+        if events:
+            return events
+        return []
+
+    def query_event_for_participants(self, participant_uuids, start_date, end_date):
+        start_date = datetime.strptime(start_date, '%d-%m-%Y').date()
+        end_date = datetime.strptime(end_date, '%d-%m-%Y')
+        end_date = end_date.replace(hour=23, minute=59, second=59)
+
+        events = WebPortalCalendarEvent.query.filter(
+            WebPortalCalendarEvent.event_start_datetime.between(start_date, end_date),
+            WebPortalCalendarEvent.session_participant_uuids.contains(participant_uuids)). \
             order_by(WebPortalCalendarEvent.event_start_datetime.asc()).all()
 
         if events:

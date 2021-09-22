@@ -20,6 +20,7 @@ get_parser.add_argument('start_date', type=str, help='Date of first day to query
 get_parser.add_argument('end_date', type=str, help='Date of last day to query')
 get_parser.add_argument('overlaps', type=inputs.boolean, help='Return only overlapping events')
 get_parser.add_argument('three', type=inputs.boolean, help='Return only three next events')
+get_parser.add_argument('full', type=inputs.boolean, help='Get additional information for event')
 
 post_parser = api.parser()
 delete_parser = reqparse.RequestParser()
@@ -65,14 +66,24 @@ class QueryCalendar(Resource):
                 events = calendar_access.query_next_three(current_user_client.user_uuid)
         else:
             if args['id_event']:
+                # Get infos of event
                 events = [calendar_access.query_event_by_id(event_id=args['id_event'])]
-            if current_user_client:
+            if participant_uuids:
                 if not args['start_date'] or not args['end_date']:
                     return 'Missing date arguments', 400
                 else:
-                    events = calendar_access.query_event_by_user(user_uuid=current_user_client.user_uuid,
-                                                                 start_date=args['start_date'],
-                                                                 end_date=args['end_date'])
+                    # Get events for participants
+                    events = calendar_access.query_event_for_participants(participant_uuids,
+                                                                          start_date=args['start_date'],
+                                                                          end_date=args['end_date'])
+            elif current_user_client:
+                if not args['start_date'] or not args['end_date']:
+                    return 'Missing date arguments', 400
+                else:
+                    # Get events for connected user
+                    events = calendar_access.query_event_for_user(user_uuid=current_user_client.user_uuid,
+                                                                  start_date=args['start_date'],
+                                                                  end_date=args['end_date'])
 
         try:
             events_list = []
@@ -81,7 +92,7 @@ class QueryCalendar(Resource):
                 event_json = event.to_json()
 
                 # If event has a session associated to it, get it from OpenTera
-                if event.session_uuid:
+                if event.session_uuid and args['full'] is True:
                     endpoint = '/api/service/sessions'
                     params = {'uuid_session': event.session_uuid}
                     response = Globals.service.get_from_opentera(endpoint, params)
