@@ -1,5 +1,8 @@
+from opentera.services.ServiceAccessManager import current_participant_client
+
 import Globals
 from libwebportal.db.models.WebPortalApp import WebPortalApp
+from libwebportal.db.models.WebPortalAppConfig import WebPortalAppConfig
 
 
 class DBManagerAppAccess:
@@ -29,3 +32,25 @@ class DBManagerAppAccess:
                 app['service'] = service
 
         return app
+
+    def query_project_apps(self, id_project):
+        apps = WebPortalApp.query.filter(WebPortalApp.id_project == id_project).order_by(WebPortalApp.app_order.asc(),
+                                                                                         WebPortalApp.app_name.asc()).all()
+        if apps:
+            return apps
+        return []
+
+
+    def query_app_config(self, apps_json):
+        for app in apps_json:
+            part_uuid = current_participant_client.participant_uuid
+            app_config = WebPortalAppConfig.get_app_config_for_participant(part_uuid, app['id_app'])
+            app_config_json = None
+            if app_config:
+                app_config_json = app_config.to_json(ignore_fields=['id_app', 'participant_uuid'])
+                if app['app_type'] == WebPortalApp.WebPortalAppType.OPENTERA_SERVICE.value:
+                    # Create url for that service
+                    # TODO: Query services with service API and generate correct URL
+                    pass
+            app['app_config'] = app_config_json
+        return apps_json

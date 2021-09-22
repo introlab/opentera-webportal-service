@@ -4,6 +4,8 @@ from flask_restx import Resource
 from FlaskModule import default_api_ns as api
 import Globals
 
+from libwebportal.db.DBManager import DBManager
+
 # Parser definition(s)
 get_parser = api.parser()
 get_parser.add_argument('id_site', type=int, help='ID of the selected site')
@@ -20,6 +22,7 @@ class QueryAccountInfos(Resource):
              responses={200: 'Success'})
     @ServiceAccessManager.token_required(allow_static_tokens=True, allow_dynamic_tokens=True)
     def get(self):
+        app_access = DBManager.app_access()
         parser = get_parser
         args = parser.parse_args()
         account_infos = {
@@ -42,10 +45,10 @@ class QueryAccountInfos(Resource):
                 account_infos['project_id'] = participant['id_project']
                 if participant['id_project']:
                     # TODO: Use database objects directly instead of using a query to get apps information
-                    response = current_participant_client.do_get_request_to_backend(
-                        '/webportal/api/apps?with_config=true&id_project=' + str(participant['id_project']))
-                    if response.status_code == 200:
-                        account_infos['apps'] = response.json()
+                    apps = app_access.query_project_apps(participant['id_project'])
+                    apps_json = [app.to_json() for app in apps]
+                    app_access.query_app_config(apps_json)
+                    account_infos['apps'] = apps_json
 
         if current_login_type == LoginType.USER_LOGIN:
             user = current_user_client.get_user_info()
