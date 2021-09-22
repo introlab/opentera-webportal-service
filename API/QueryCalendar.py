@@ -6,7 +6,7 @@ from flask_babel import gettext
 from datetime import datetime, timedelta
 
 from FlaskModule import default_api_ns as api
-from opentera.services.ServiceAccessManager import ServiceAccessManager
+from opentera.services.ServiceAccessManager import ServiceAccessManager, current_user_client
 
 from WebPortalService import WebPortalService
 from libwebportal.db.DBManager import DBManager
@@ -16,7 +16,6 @@ import Globals
 # Parser definition(s)
 get_parser = api.parser()
 get_parser.add_argument('id_event', type=int, help='ID of the event to query')
-get_parser.add_argument('user_uuid', type=str, help='UUID of the user from which to get all events')
 get_parser.add_argument('start_date', type=str, help='Date of first day to query')
 get_parser.add_argument('end_date', type=str, help='Date of last day to query')
 get_parser.add_argument('overlaps', type=inputs.boolean, help='Return only overlapping events')
@@ -50,33 +49,28 @@ class QueryCalendar(Resource):
         if args['overlaps'] is True:
             if not args['start_date'] or not args['end_date']:
                 return 'Missing dates arguments', 400
-            elif not args['user_uuid'] and not args['participant_ids']:
-                return 'Missing user_uuid or participant ids', 400
             elif participant_uuids:
                 # Find session overlaps for participants
                 start_time = datetime.fromisoformat(args['start_date'])
                 end_time = datetime.fromisoformat(args['end_date'])
                 events = calendar_access.query_overlaps_participants(participant_uuids, start_time, end_time)
-                pass
-            elif args['user_uuid']:
-                # Find event overlaps for user
+            elif current_user_client:
+                # Find event overlaps for connected user
                 start_time = datetime.fromisoformat(args['start_date'])
                 end_time = datetime.fromisoformat(args['end_date'])
-                events = calendar_access.query_overlaps_user(args['user_uuid'], start_time, end_time)
+                events = calendar_access.query_overlaps_user(current_user_client.user_uuid, start_time, end_time)
         elif args['three']:
-            if not args['user_uuid']:
-                return 'Missing user_uuid argument', 400
-            else:
+            if current_user_client:
                 # Find next three events
-                events = calendar_access.query_next_three(args['user_uuid'])
+                events = calendar_access.query_next_three(current_user_client.user_uuid)
         else:
             if args['id_event']:
                 events = [calendar_access.query_event_by_id(event_id=args['id_event'])]
-            if args['user_uuid']:
+            if current_user_client:
                 if not args['start_date'] or not args['end_date']:
                     return 'Missing date arguments', 400
                 else:
-                    events = calendar_access.query_event_by_user(user_uuid=args['user_uuid'],
+                    events = calendar_access.query_event_by_user(user_uuid=current_user_client.user_uuid,
                                                                  start_date=args['start_date'],
                                                                  end_date=args['end_date'])
 
