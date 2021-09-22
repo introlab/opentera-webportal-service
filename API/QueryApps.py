@@ -55,19 +55,7 @@ class QueryApps(Resource):
         apps_json = [app.to_json() for app in apps]
 
         # Get with app config for participant
-        if args['with_config'] and current_login_type == LoginType.PARTICIPANT_LOGIN:
-            part_uuid = current_participant_client.participant_uuid
-            from libwebportal.db.models.WebPortalAppConfig import WebPortalAppConfig
-            for app in apps_json:
-                app_config = WebPortalAppConfig.get_app_config_for_participant(part_uuid, app['id_app'])
-                app_config_json = None
-                if app_config:
-                    app_config_json = app_config.to_json(ignore_fields=['id_app', 'participant_uuid'])
-                    if app['app_type'] == WebPortalApp.WebPortalAppType.OPENTERA_SERVICE.value:
-                        # Create url for that service
-                        # TODO: Query services with service API and generate correct URL
-                        pass
-                app['app_config'] = app_config_json
+        app_access.query_app_config(apps_json)
 
         # Get service associated to the app if OpenTera service
         if current_login_type == LoginType.USER_LOGIN:
