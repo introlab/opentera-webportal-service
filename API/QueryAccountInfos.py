@@ -45,19 +45,13 @@ class QueryAccountInfos(Resource):
             if participant is None:
                 return gettext('Unknown participant'), 400
 
-            # Get the return value as a json dictionnary
+            # Get the return value as a json dictionary
             participant = participant.json()
 
             account_infos['login_type'] = 'participant'
             account_infos['login_id'] = current_participant_client.id_participant
             account_infos['login_uuid'] = current_participant_client.participant_uuid
-
-            # TOCHECK: Is 'participant_username' really useful? Should be empty most of the time since we are using
-            # tokens, and thus no username is defined in that case, unless username-password login are also enabled
-            # for that participant
-            account_infos['username'] = participant['participant_username']
-
-            if participant and 'participant_name' in participant:
+            if participant:
                 account_infos['user'] = participant
                 account_infos['fullname'] = participant['participant_name']
                 account_infos['project_id'] = participant['id_project']
