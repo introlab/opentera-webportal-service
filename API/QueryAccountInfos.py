@@ -1,6 +1,7 @@
 from opentera.services.ServiceAccessManager import ServiceAccessManager, current_login_type, \
     current_participant_client, current_user_client, LoginType
 from flask_restx import Resource
+from flask_babel import gettext
 from FlaskModule import default_api_ns as api
 import Globals
 
@@ -34,11 +35,28 @@ class QueryAccountInfos(Resource):
         }
 
         if current_login_type == LoginType.PARTICIPANT_LOGIN:
-            participant = current_participant_client.get_participant_infos()
+            # A call using the service API is required to get participant info, since we are using participant token
+            # and the information returned by the participant/participants API (such as the one that is used in
+            # current_participant_client.get_participant_infos will only return very limited information (only the
+            # participant name for now).
+            participant = Globals.service.get_from_opentera('/api/service/participants',
+                                                            'participant_uuid=' +
+                                                            current_participant_client.participant_uuid)
+            if participant is None:
+                return gettext('Unknown participant'), 400
+
+            # Get the return value as a json dictionnary
+            participant = participant.json()
+
             account_infos['login_type'] = 'participant'
             account_infos['login_id'] = current_participant_client.id_participant
             account_infos['login_uuid'] = current_participant_client.participant_uuid
+
+            # TOCHECK: Is 'participant_username' really useful? Should be empty most of the time since we are using
+            # tokens, and thus no username is defined in that case, unless username-password login are also enabled
+            # for that participant
             account_infos['username'] = participant['participant_username']
+
             if participant and 'participant_name' in participant:
                 account_infos['user'] = participant
                 account_infos['fullname'] = participant['participant_name']
