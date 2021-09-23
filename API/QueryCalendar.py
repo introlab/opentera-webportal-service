@@ -39,7 +39,7 @@ class QueryCalendar(Resource):
                         408: 'Participants session overlap',
                         409: 'User event overlap',
                         500: 'Database error'})
-    @ServiceAccessManager.token_required
+    @ServiceAccessManager.token_required()
     def get(self):
         parser = get_parser
         args = parser.parse_args()
@@ -68,7 +68,7 @@ class QueryCalendar(Resource):
             if args['id_event']:
                 # Get infos of event
                 events = [calendar_access.query_event_by_id(event_id=args['id_event'])]
-            if participant_uuids:
+            elif participant_uuids:
                 if not args['start_date'] or not args['end_date']:
                     return 'Missing date arguments', 400
                 else:
@@ -120,7 +120,7 @@ class QueryCalendar(Resource):
                         403: 'Logged user can\'t create/update the specified event',
                         400: 'Badly formed JSON or missing fields(id_site) in the JSON body',
                         500: 'Internal error occurred when saving event'})
-    @ServiceAccessManager.token_required
+    @ServiceAccessManager.token_required()
     def post(self):
         calendar_access = DBManager.calendar_access()
         # Using request.json instead of parser, since parser messes up the json!
@@ -195,7 +195,7 @@ class QueryCalendar(Resource):
              responses={200: 'Success',
                         403: 'Logged user can\'t delete event (only site admin can delete)',
                         500: 'Database error.'})
-    @ServiceAccessManager.token_required
+    @ServiceAccessManager.token_required()
     def delete(self):
         parser = delete_parser
         args = parser.parse_args()
