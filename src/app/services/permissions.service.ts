@@ -3,11 +3,7 @@ import {makeApiURL} from '@core/utils/make-api-url';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {shareReplay, tap} from 'rxjs/operators';
-
-class Permission {
-  site_admin?: boolean;
-  project_admin?: boolean;
-}
+import {Permission} from '@shared/models/permission.model';
 
 @Injectable({
   providedIn: 'root'

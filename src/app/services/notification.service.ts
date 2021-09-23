@@ -10,7 +10,7 @@ export class NotificationService {
   }
 
   showSuccess(message: string): void {
-    this.snackBar.open(message, '', {duration: 3000});
+    this.snackBar.open(message, 'X', {duration: 2000});
   }
 
   showError(message: string): void {

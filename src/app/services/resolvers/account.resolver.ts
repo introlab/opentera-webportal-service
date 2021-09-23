@@ -1,17 +1,23 @@
 import {Injectable} from '@angular/core';
-import {Router, Resolve, RouterStateSnapshot, ActivatedRouteSnapshot} from '@angular/router';
+import {Resolve, RouterStateSnapshot, ActivatedRouteSnapshot} from '@angular/router';
 import {Observable, of, throwError} from 'rxjs';
 import {AccountService} from '@services/account.service';
 import {Account} from '@shared/models/account.model';
 import {catchError, map, shareReplay, tap} from 'rxjs/operators';
+import {CookieService} from 'ngx-cookie-service';
+import {AuthenticationService} from '@services/authentication.service';
+import {isUser} from '@core/utils/utility-functions';
+import {GlobalConstants} from '@core/utils/global-constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountResolver implements Resolve<Account> {
-  private account: any = undefined;
+  private account: Account = undefined;
 
-  constructor(private accountService: AccountService) {
+  constructor(private accountService: AccountService,
+              private authService: AuthenticationService,
+              private cookieService: CookieService) {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Account> {
@@ -24,13 +30,20 @@ export class AccountResolver implements Resolve<Account> {
 
   private getAccountFromAPI(): Observable<Account> {
     return this.accountService.getWithToken().pipe(
-      tap((dataFromApi) => {
-        this.account = dataFromApi;
-        console.log(dataFromApi);
-      }),
       shareReplay(1),
-      map((dataFromApi) => dataFromApi),
-      catchError((err) => throwError(err))
+      tap((accountFromAPI) => {
+        console.log(accountFromAPI);
+        this.account = accountFromAPI;
+        if (isUser(accountFromAPI)) {
+          console.log('refresh user token');
+          this.authService.startRefreshTokenTimer();
+        }
+      }),
+      map((accountFromAPI) => accountFromAPI),
+      catchError((err) => {
+        this.authService.logout(isUser(this.account));
+        return throwError(err);
+      })
     );
   }
 }

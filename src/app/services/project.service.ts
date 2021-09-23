@@ -11,15 +11,15 @@ import {Project} from '@shared/models/project.model';
 export class ProjectService {
   private API_URL = makeApiURL();
   private controller = 'user/projects';
-
   private projectsList: Project[] = [];
   private projectsListSubject: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>([]);
 
   constructor(private http: HttpClient) {
   }
 
-  getBySite(idSite: number): Observable<Project[]> {
-    return this.http.get<Project[]>(this.API_URL + this.controller + '?id_site=' + idSite)
+  getBySite(idSite: number, idService: number): Observable<Project[]> {
+    const filter = `?id_site=${idSite}&id_service=${idService}`;
+    return this.http.get<Project[]>(this.API_URL + this.controller + filter)
       .pipe(tap(result => {
         this.projectsListSubject.next(result);
       }));
