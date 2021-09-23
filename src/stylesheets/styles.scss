@@ -1,12 +1,18 @@
+@import "~@danielmoncada/angular-datetime-picker/assets/style/picker.min.css";
+
 :root {
-  --header-height: 80px;
-  --app-padding: 2em;
+  --header-height: 70px;
+  --app-padding: 80px;
+  --content-margin: 30px;
   --transition: 0.3s;
   --hue-color: 190;
   --white: #fff;
   --pink: #FF9ED3;
+  --border-color: #e2e2e2;
   --dark-green: #073120;
   --text-color: #122F2B;
+  --whitish-green: #f5f7f5;
+  --shadow-color: 0deg 0% 50%;
 
   /* Font and typography */
   --body-font: 'Open Sans', sans-serif;
@@ -23,7 +29,7 @@
 
   --glass-login-width: 70%;
   --glass-min-height: 90vh;
-  --border-radius: 2rem;
+  --border-radius: 1rem;
   --viewport-height: 100vh;
 }
 
@@ -47,13 +53,18 @@ body {
   font-size: var(--normal-font-size);
   color: var(--text-color);
   min-height: var(--viewport-height);
-  background: var(--primary-color); /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right top, var(--accent-color), var(--primary-color)); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right top, var(--accent-color), var(--primary-color)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: var(--primary-lighter-color); /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right top, var(--accent-lighter-color), var(--primary-lighter-color)); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right top, var(--accent-lighter-color), var(--primary-lighter-color)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 a {
   text-decoration: none;
+  color: inherit;
+
+  &:visited {
+    color: inherit;
+  }
 }
 
 p {
@@ -122,13 +133,22 @@ input {
   background: white;
   min-height: var(--glass-min-height);
   width: 100%;
-  background: linear-gradient(
-      to right bottom,
-      rgba(255, 255, 255, 0.7),
-      rgba(255, 255, 255, 0.3)
-  );
   z-index: 2;
   border-radius: var(--border-radius);
   backdrop-filter: blur(1rem);
   display: flex;
+}
+
+
+/*=============== MATERIAL UI TWEAKS ===============*/
+mat-error {
+  line-height: initial;
+}
+
+/*=============== RESPONSIVE ===============*/
+
+@media screen and (max-width: 800px) {
+  :root {
+    --app-padding: 40px;
+  }
 }

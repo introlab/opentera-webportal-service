@@ -1,0 +1,20 @@
+// Time picker
+
+.owl-dt-container-buttons {
+  color: var(--primary-color);
+}
+
+.owl-dt-calendar-table .owl-dt-calendar-cell-selected {
+  background-color: var(--primary-color);
+}
+
+
+// Calendar
+
+.cal-month-view .cal-day-badge {
+  background-color: var(--primary-color);
+}
+
+.cal-month-view .cal-day-cell.cal-weekend .cal-day-number {
+  color: var(--accent-color);
+}
