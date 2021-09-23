@@ -1,14 +1,15 @@
-import {App} from '@shared/models/app.model';
+import {Application} from '@shared/models/application.model';
 import {Site} from '@shared/models/site.model';
 
 export class Account {
-  id?: number;
+  login_id?: number;
   login_type?: string;
   fullname?: string;
-  uuid?: string;
+  username?: string;
+  login_uuid?: string;
   is_super_admin?: boolean;
   project_id?: number;
-  apps?: App[];
+  apps?: Application[];
   user?: any;
   sites?: Site[];
 }
