@@ -1,0 +1,121 @@
+<div class="container">
+  <section class="events-container">
+    <button class="add-button" mat-raised-button [color]="'primary'" (click)="openFormWithTime(currentDate)">
+      <mat-icon>add</mat-icon>
+      Ajouter
+    </button>
+
+    <app-events [events]="eventsWithDetails"></app-events>
+  </section>
+  <section class="calendar-container">
+    <div class="calendar-controls">
+      <div class="button-group view">
+        <div class="button"
+             (click)="setView(CalendarView.Month)"
+             [class.active]="view === CalendarView.Month">
+          Month
+        </div>
+        <div class="button"
+             (click)="setView(CalendarView.Week)"
+             [class.active]="view === CalendarView.Week">
+          Week
+        </div>
+        <div class="button"
+             (click)="setView(CalendarView.Day)"
+             [class.active]="view === CalendarView.Day">
+          Day
+        </div>
+      </div>
+      <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'fr' }}</h3>
+      <div class="button-group time">
+        <div class="button icon"
+             mwlCalendarPreviousView
+             [view]="view"
+             [(viewDate)]="viewDate"
+             (viewDateChange)="closeOpenMonthViewDay($event)">
+          <mat-icon>chevron_left</mat-icon>
+        </div>
+        <div class="button"
+             mwlCalendarToday
+             [(viewDate)]="viewDate"
+             (viewDateChange)="closeOpenMonthViewDay($event)">
+          Aujourd'hui
+        </div>
+        <div class="button icon"
+             mwlCalendarNextView
+             [view]="view"
+             [(viewDate)]="viewDate"
+             (viewDateChange)="closeOpenMonthViewDay($event)">
+          <mat-icon>chevron_right</mat-icon>
+        </div>
+      </div>
+    </div>
+    <div [ngSwitch]="view">
+      <mwl-calendar-month-view
+        *ngSwitchCase="CalendarView.Month"
+        [locale]="'fr'"
+        [viewDate]="viewDate"
+        [events]="calendarEvents"
+        [refresh]="refresh"
+        [activeDayIsOpen]="false"
+        (eventClicked)="openForm($event.event)"
+        (dayClicked)="dayClicked($event.day)"
+      >
+      </mwl-calendar-month-view>
+      <mwl-calendar-week-view
+        *ngSwitchCase="CalendarView.Week"
+        [viewDate]="viewDate"
+        [events]="calendarEvents"
+        [refresh]="refresh"
+        (eventClicked)="openForm($event.event)"
+        (hourSegmentClicked)="openFormWithTime($event.date)"
+      >
+      </mwl-calendar-week-view>
+      <mwl-calendar-day-view
+        *ngSwitchCase="CalendarView.Day"
+        [viewDate]="viewDate"
+        [events]="calendarEvents"
+        [refresh]="refresh"
+        (eventClicked)="openForm($event.event)"
+        (hourSegmentClicked)="openFormWithTime($event.date)"
+      >
+      </mwl-calendar-day-view>
+    </div>
+  </section>
+</div>
+
+<ng-template #headerTemplate let-days="days" let-dayClicked="dayClicked"
+             let-eventDropped="eventDropped">
+  <div class="cal-cell-row cal-header">
+    <div class="classes" *ngFor="let day of days">
+      <div class="small-date">
+        {{day.date | date: 'EE'}}
+        {{day.date | date: 'd'}}
+      </div>
+      <div class="large-date">
+        {{day.date | date: 'EEEE'}}
+        {{day.date | date: 'd'}}
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #customDayEventsTemplate let-events="events" let-eventClicked="eventClicked" let-isOpen="isOpen">
+  <div class="cal-open-day-events" [@collapse] *ngIf="isOpen">
+    <div class="date">{{events[0].start | date: 'longDate' }}</div>
+    <div *ngFor="let event of events">
+      <div class="event" (click)="openForm(event)">{{event.start | date: 'h:mm a'}}
+        - {{event.end | date: 'h:mm a'}}: {{ event.title }}</div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #customWeekEvent let-weekEvent="weekEvent">
+  <div class="cal-event" [style.backgroundColor]="weekEvent.event.color?.secondary"
+       [style.borderColor]="weekEvent.event.color?.primary">
+    <div class="event">{{weekEvent.event.start | date: 'h:mm a'}}
+      - {{weekEvent.event.end | date: 'h:mm a'}}: {{ weekEvent.event.title }}</div>
+  </div>
+</ng-template>
+
+

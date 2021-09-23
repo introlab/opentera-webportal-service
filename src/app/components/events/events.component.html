@@ -1,0 +1,11 @@
+<div class="events" *ngIf="events.length > 0 else noEvent">
+  <ng-container *ngFor="let event of events;index as i; trackBy: trackByFn">
+    <app-event-card [event]="event"></app-event-card>
+  </ng-container>
+</div>
+
+<ng-template #noEvent>
+  <mat-card>
+    <h4>Aucun évenement à afficher</h4>
+  </mat-card>
+</ng-template>

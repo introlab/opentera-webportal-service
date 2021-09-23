@@ -1,0 +1,35 @@
+<div class="card">
+  <div class="date">
+    {{event.event_start_datetime | date:'dd MMM yyyy'}}
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Contrôles">
+      <mat-icon>more_horiz</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="openForm(event.id_event)" *ngIf="isEventToCome">
+        <mat-icon>edit</mat-icon>
+        Modifier
+      </button>
+      <button mat-menu-item (click)="confirmDeletion(event.id_event)">
+        <mat-icon>delete</mat-icon>
+        Supprimer
+      </button>
+    </mat-menu>
+  </div>
+  <div class="time">
+    <span [style.background-color]="'#54cdfb'"></span>
+    {{event.event_start_datetime | date:'HH:mm'}}-{{event.event_end_datetime | date:'HH:mm'}}
+  </div>
+  <div class="name">{{event.event_name}}</div>
+  <div class="participants" *ngIf="isUser && event.session">
+    Participants:
+    <ng-container *ngFor="let participant of event.session[0].session_participants; let last = last">
+      {{participant.participant_name}} <span *ngIf="!last">-</span>
+    </ng-container>
+  </div>
+  <ng-container *ngIf="isUser">
+    <button mat-stroked-button [color]="'accent'" class="connect" (click)="connect(event.event_static_url)"
+            *ngIf="isEventToCome">
+      Se connecter
+    </button>
+  </ng-container>
+</div>
