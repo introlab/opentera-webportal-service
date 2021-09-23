@@ -1,0 +1,20 @@
+.wrapper {
+  width: 100%;
+  max-width: 700px;
+  background-color: var(--text);
+  margin: var(--app-content-padding) auto;
+  color: var(--background);
+  padding: var(--app-content-padding);
+  box-sizing: border-box;
+  border-radius: 4px;
+
+  a {
+    align-self: flex-end;
+    font-weight: 700;
+
+    i {
+      font-size: 14px;
+      height: 14px;
+    }
+  }
+}
