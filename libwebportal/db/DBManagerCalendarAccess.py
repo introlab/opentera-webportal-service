@@ -1,7 +1,8 @@
-from sqlalchemy import and_, or_, literal
+from sqlalchemy import and_, or_, literal, String, cast
 from datetime import datetime
 
 from flask_babel import gettext
+from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.exc import InvalidRequestError
 
 from libwebportal.db.models.WebPortalCalendarEvent import WebPortalCalendarEvent
@@ -34,8 +35,8 @@ class DBManagerCalendarAccess:
 
         events = WebPortalCalendarEvent.query.filter(
             WebPortalCalendarEvent.event_start_datetime.between(start_date, end_date),
-            WebPortalCalendarEvent.session_participant_uuids.contains(participant_uuids)). \
-            order_by(WebPortalCalendarEvent.event_start_datetime.asc()).all()
+            WebPortalCalendarEvent.session_participant_uuids.contains(cast([participant_uuids], ARRAY(String)))) \
+            .order_by(WebPortalCalendarEvent.event_start_datetime.asc()).all()
 
         if events:
             return events
@@ -65,7 +66,7 @@ class DBManagerCalendarAccess:
                                                  WebPortalCalendarEvent.event_end_datetime),
                      literal(end_time).between(WebPortalCalendarEvent.event_start_datetime,
                                                WebPortalCalendarEvent.event_end_datetime))),
-            WebPortalCalendarEvent.session_participant_uuids.contains(participant_uuids)).all()
+            WebPortalCalendarEvent.session_participant_uuids.contains(cast([participant_uuids], ARRAY(String)))).all()
 
         if events:
             return events
@@ -73,7 +74,7 @@ class DBManagerCalendarAccess:
 
     def query_next_three(self, user_uuid):
         now = datetime.now()
-        events = WebPortalCalendarEvent.query.filter(WebPortalCalendarEvent.event_end_datetime > now,
+        events = WebPortalCalendarEvent.query.filter(WebPortalCalendarEvent.event_start_datetime > now,
                                                      WebPortalCalendarEvent.user_uuid == user_uuid). \
             order_by(WebPortalCalendarEvent.event_start_datetime.asc()).limit(3).all()
 
