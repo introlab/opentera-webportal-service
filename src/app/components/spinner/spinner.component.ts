@@ -8,7 +8,7 @@ import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
   styleUrls: ['./spinner.component.scss']
 })
 export class SpinnerComponent implements OnInit {
-  color: ThemePalette = 'accent';
+  color: ThemePalette = 'primary';
   mode: ProgressSpinnerMode = 'indeterminate';
   value = 50;
 
