@@ -1,0 +1,7 @@
+.page-container {
+  padding: calc(var(--app-padding) / 3) var(--app-padding);
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  margin-top: var(--content-margin);
+}
