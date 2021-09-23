@@ -1,7 +1,7 @@
 <div class="card">
   <div class="date">
     {{event.event_start_datetime | date:'dd MMM yyyy'}}
-    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Contrôles">
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Contrôles" *ngIf="!isPastEvent && isUser">
       <mat-icon>more_horiz</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
@@ -26,7 +26,7 @@
       {{participant.participant_name}} <span *ngIf="!last">-</span>
     </ng-container>
   </div>
-  <ng-container *ngIf="isUser">
+  <ng-container *ngIf="!isPastEvent">
     <button mat-stroked-button [color]="'accent'" class="connect" (click)="connect(event.event_static_url)"
             *ngIf="isEventToCome">
       Se connecter

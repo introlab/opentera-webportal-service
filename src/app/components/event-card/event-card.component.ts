@@ -21,6 +21,7 @@ export class EventCardComponent implements OnInit, OnDestroy {
   duration: string;
   isUser = false;
   isEventToCome = false;
+  isPastEvent = true;
   private subscription: Subscription;
   private account: Account;
 
@@ -32,11 +33,18 @@ export class EventCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.checkIfEventIsPassed();
     this.getDuration();
     this.subscription = this.accountService.account$().subscribe((account) => {
       this.account = account;
       this.isUser = isUser(account);
     });
+  }
+
+  private checkIfEventIsPassed(): void {
+    const now = new Date();
+    const end = new Date(this.event.event_end_datetime);
+    this.isPastEvent = end < now;
   }
 
   private getDuration(): void {
@@ -71,7 +79,11 @@ export class EventCardComponent implements OnInit, OnDestroy {
   }
 
   connect(event_static_url: string): void {
-    console.log(event_static_url);
+    if (this.isUser) {
+      console.log('connect for user', event_static_url);
+    } else {
+      console.log('connect for participant', event_static_url);
+    }
   }
 
   openForm(idEvent: number): void {
