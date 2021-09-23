@@ -1,23 +1,22 @@
 import {LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {AppLayoutComponent} from '@shared/layout/app-layout/app-layout.component';
 import {LoginLayoutComponent} from '@shared/layout/login-layout/login-layout.component';
 import {SharedModule} from '@shared/shared.module';
-import {LoginComponent} from '@pages/login/login.component';
-import {ReactiveFormsModule} from '@angular/forms';
 import {MaterialModule} from '@shared/material.module';
-import {TokenInterceptor} from '@core/interceptors/token.interceptor';
 import localeFr from '@angular/common/locales/fr';
 import {registerLocaleData} from '@angular/common';
-import {AccountResolver} from '@services/resolvers/account.resolver';
-import {CalendarComponent} from '@pages/calendar/calendar.component';
 import {ParticipantLayoutComponent} from '@shared/layout/participant-layout/participant-layout.component';
-import {CalendarModule, DateAdapter} from 'angular-calendar';
-import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
+import {OWL_DATE_TIME_LOCALE, OwlDateTimeIntl} from '@danielmoncada/angular-datetime-picker';
+import {DefaultIntl} from '@core/utils/datetime-picker.config';
+import {LoginComponent} from '@pages/login/login.component';
+import {NotFoundComponent} from '@pages/not-found/not-found.component';
+import {CoreModule} from '@core/core.module';
+import {UserModule} from '@src/app/modules/user.module';
+import {ParticipantModule} from '@src/app/modules/participant.module';
+import {HeaderModule} from '@src/app/modules/header.module';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -25,25 +24,25 @@ registerLocaleData(localeFr, 'fr');
   declarations: [
     AppComponent,
     AppLayoutComponent,
+    LoginComponent,
     LoginLayoutComponent,
     ParticipantLayoutComponent,
-    LoginComponent,
-    CalendarComponent
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     SharedModule,
+    AppRoutingModule,
+    CoreModule,
     MaterialModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    ReactiveFormsModule,
-    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
+    UserModule,
+    ParticipantModule,
+    HeaderModule,
   ],
   providers: [
-    AccountResolver,
-    {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
     {provide: LOCALE_ID, useValue: 'FR-fr'},
+    {provide: OwlDateTimeIntl, useClass: DefaultIntl},
+    {provide: OWL_DATE_TIME_LOCALE, useValue: 'fr'},
   ],
   bootstrap: [AppComponent]
 })
