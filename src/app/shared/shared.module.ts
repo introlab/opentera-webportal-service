@@ -1,67 +1,90 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ResponsiveNavigationComponent} from '@components/navigation/responsive-navigation/responsive-navigation.component';
-import {NavigationComponent} from '@components/navigation/navigation/navigation.component';
-import {MenuHamburgerComponent} from '@components/navigation/menu-hamburger/menu-hamburger.component';
-import {ProfileComponent} from '@components/navigation/profile/profile.component';
-import {HeaderComponent} from '@components/navigation/header/header.component';
 import {MaterialModule} from '@shared/material.module';
-import {FooterComponent} from '@components/footer/footer.component';
 import {RouterModule} from '@angular/router';
 import {LogoComponent} from '@components/logo/logo.component';
 import {AngularSvgIconModule} from 'angular-svg-icon';
 import {FrameComponent} from '@components/frame/frame.component';
-import {NotFoundComponent} from '@pages/not-found/not-found.component';
-import {AppLinkComponent} from '@components/navigation/app-link/app-link.component';
-import {EmailsComponent} from '@pages/emails/emails.component';
-import {SeanceComponent} from '@pages/seance/seance.component';
-import {ExercisesComponent} from '@pages/exercices/exercises.component';
 import {SafeUrlPipe} from '@core/pipes/safe-url.pipe';
 import {SpinnerComponent} from '@components/spinner/spinner.component';
-import {CallbackComponent} from '@components/callback/callback.component';
-import {SiteSelectorComponent} from '@components/site-selector/site-selector.component';
-import {ProjectSelectorComponent} from '@components/project-selector/project-selector.component';
+import {SiteSelectorComponent} from '@components/selectors/site-selector/site-selector.component';
+import {ProjectSelectorComponent} from '@components/selectors/project-selector/project-selector.component';
 import {TruncatePipe} from '@core/pipes/truncate.pipe';
+import {ConfirmationComponent} from '@components/confirmation/confirmation.component';
+import {EventCardComponent} from '@components/event-card/event-card.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {OWL_DATE_TIME_LOCALE, OwlDateTimeIntl, OwlDateTimeModule, OwlNativeDateTimeModule} from '@danielmoncada/angular-datetime-picker';
+import {SessionTypeSelectorComponent} from '@components/selectors/session-type-selector/session-type-selector.component';
+import {EventFormComponent} from '@pages/event-form/event-form.component';
+import {ParticipantsSelectorComponent} from '@components/selectors/participants-selector/participants-selector.component';
+import {CallbackComponent} from '@components/callback/callback.component';
+import {EventsComponent} from '@components/events/events.component';
+import {HttpClientModule} from '@angular/common/http';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {CalendarModule, DateAdapter} from 'angular-calendar';
+import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
+import {FooterComponent} from '@components/footer/footer.component';
+import {CalendarComponent} from '@components/calendar/calendar.component';
+import {CalendarPageComponent} from '@pages/calendar/calendar.component';
 
 
 @NgModule({
   declarations: [
-    HeaderComponent,
-    ResponsiveNavigationComponent,
-    NavigationComponent,
-    MenuHamburgerComponent,
-    ProfileComponent,
-    FooterComponent,
-    LogoComponent,
-    FrameComponent,
-    EmailsComponent,
-    SeanceComponent,
-    ExercisesComponent,
-    NotFoundComponent,
-    AppLinkComponent,
     SpinnerComponent,
+    ProjectSelectorComponent,
+    SiteSelectorComponent,
+    CallbackComponent,
+    EventsComponent,
+    FrameComponent,
     SafeUrlPipe,
     TruncatePipe,
-    CallbackComponent,
-    SiteSelectorComponent,
-    ProjectSelectorComponent
+    ConfirmationComponent,
+    EventCardComponent,
+    SessionTypeSelectorComponent,
+    ParticipantsSelectorComponent,
+    LogoComponent,
+    FooterComponent,
+    CalendarComponent,
+    CalendarPageComponent
   ],
   exports: [
-    HeaderComponent,
-    ResponsiveNavigationComponent,
-    FooterComponent,
-    LogoComponent,
+    CommonModule,
+    RouterModule,
+    HttpClientModule,
+    ReactiveFormsModule,
     SpinnerComponent,
     SiteSelectorComponent,
     ProjectSelectorComponent,
+    FrameComponent,
+    LogoComponent,
+    MaterialModule,
+    OwlDateTimeModule,
+    SessionTypeSelectorComponent,
+    ParticipantsSelectorComponent,
+    FooterComponent,
+    AngularSvgIconModule,
+    TruncatePipe,
+    CalendarComponent,
+    EventsComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     RouterModule,
+    HttpClientModule,
+    RouterModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
     AngularSvgIconModule.forRoot(),
+    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),
   ],
-  providers: []
+  providers: [],
+  entryComponents: [
+    ConfirmationComponent,
+    EventFormComponent
+  ]
 })
 export class SharedModule {
 }
