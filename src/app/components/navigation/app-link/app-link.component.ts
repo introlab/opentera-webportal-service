@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {App} from '@shared/models/app.model';
+import {Application} from '@shared/models/application.model';
 
 @Component({
   selector: 'app-link',
@@ -7,7 +7,7 @@ import {App} from '@shared/models/app.model';
   styleUrls: ['./app-link.component.scss']
 })
 export class AppLinkComponent implements OnInit {
-  @Input() app!: App;
+  @Input() app!: Application;
   link: any;
 
   constructor() {

@@ -6,7 +6,9 @@
   </ng-container>
   <ng-container *ngIf="isUser">
     <ng-container *ngFor="let link of userLinks;index as i">
-      <a [routerLink]="link.path" [title]="link.name">{{link.name}}</a>
+      <a [routerLink]="link.path" [title]="link.name" [routerLinkActive]="'active'">
+        <span>{{link.name}}</span>
+      </a>
     </ng-container>
   </ng-container>
 </nav>
