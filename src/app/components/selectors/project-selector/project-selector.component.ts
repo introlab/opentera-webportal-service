@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {distinctUntilKeyChanged, filter, switchMap} from 'rxjs/operators';
+import {distinctUntilChanged, distinctUntilKeyChanged, filter, switchMap} from 'rxjs/operators';
 import {combineLatest, Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {PermissionsService} from '@services/permissions.service';
@@ -9,6 +9,7 @@ import {GlobalConstants} from '@core/utils/global-constants';
 import {Project} from '@shared/models/project.model';
 import {ProjectService} from '@services/project.service';
 import {SelectedProjectService} from '@services/selected-project.service';
+import {ServiceService} from '@services/service.service';
 
 @Component({
   selector: 'app-project-selector',
@@ -25,6 +26,7 @@ export class ProjectSelectorComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router,
               private projectService: ProjectService,
+              private serviceService: ServiceService,
               private permissionsService: PermissionsService,
               private selectedSiteService: SelectedSiteService,
               private selectedProjectService: SelectedProjectService) {
@@ -35,12 +37,16 @@ export class ProjectSelectorComponent implements OnInit, OnDestroy {
   }
 
   private getProjects(): void {
-    this.subscription = this.selectedSiteService.getSelectedSite().pipe(
-      distinctUntilKeyChanged('id_site'),
-      filter(site => this.isSiteValid(site)),
-      switchMap((site: Site) => {
+    const selectedSite$ = this.selectedSiteService.getSelectedSite();
+    const service$ = this.serviceService.service$();
+    const selectedProject$ = this.selectedProjectService.getSelectedProject();
+
+    this.subscription = combineLatest([selectedSite$, service$]).pipe(
+      distinctUntilChanged((a, b) => a[0].id_site === b[0].id_site),
+      filter(([selectedSite, service]) => this.isSiteValid(selectedSite)),
+      switchMap(([selectedSite, service]) => {
         this.refreshing = true;
-        return combineLatest([this.selectedProjectService.getSelectedProject(), this.projectService.getBySite(site.id_site)]);
+        return combineLatest([selectedProject$, this.projectService.getBySite(selectedSite.id_site, service.id_service)]);
       })
     ).subscribe(([selectedProject, projects]) => {
       this.projects = projects;
@@ -67,7 +73,7 @@ export class ProjectSelectorComponent implements OnInit, OnDestroy {
   onValueChanged(selected: Project): void {
     if (selected && this.isDifferentProject(selected)) {
       this.selectedProjectService.setSelectedProject(selected);
-      this.getProjectPermission(selected);
+      // this.getProjectPermission(selected);
     }
   }
 

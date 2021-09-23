@@ -1,11 +1,12 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {Subscription} from 'rxjs';
+import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Site} from '@shared/models/site.model';
 import {Router} from '@angular/router';
-import {distinctUntilKeyChanged, filter, switchMap} from 'rxjs/operators';
+import {distinctUntilChanged, distinctUntilKeyChanged, filter, switchMap, tap} from 'rxjs/operators';
 import {SelectedSiteService} from '@services/selected-site.service';
 import {PermissionsService} from '@services/permissions.service';
-import {Project} from '@shared/models/project.model';
+import {AccountService} from '@services/account.service';
+import {Permission} from '@shared/models/permission.model';
 
 @Component({
   selector: 'app-site-selector',
@@ -13,12 +14,13 @@ import {Project} from '@shared/models/project.model';
   styleUrls: ['./site-selector.component.scss']
 })
 export class SiteSelectorComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() sites: Site[] = [];
+  sites: Site[] = [];
   selectedSite: Site;
   private subscription: Subscription;
 
   constructor(private router: Router,
               private permissionsService: PermissionsService,
+              private accountService: AccountService,
               private selectedSiteService: SelectedSiteService) {
   }
 
@@ -27,12 +29,18 @@ export class SiteSelectorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = this.selectedSiteService.getSelectedSite().pipe(
-      distinctUntilKeyChanged('id_site'),
-      filter((site) => SiteSelectorComponent.filterSite(site)),
-      switchMap((site) => {
+    const selectedSite$ = this.selectedSiteService.getSelectedSite();
+    const account$ = this.accountService.account$();
+
+    this.subscription = combineLatest([selectedSite$, account$]).pipe(
+      distinctUntilChanged((a, b) => a[0].id_site === b[0].id_site),
+      tap(([site, account]) => {
+        this.sites = account.sites;
+      }),
+      filter(([site, account]) => SiteSelectorComponent.filterSite(site)),
+      switchMap(([site, account]) => {
         this.selectedSite = site;
-        return this.permissionsService.getSitePermission(this.selectedSite.id_site);
+        return this.getSitePermission(this.selectedSite);
       })
     ).subscribe();
   }
@@ -54,12 +62,13 @@ export class SiteSelectorComponent implements OnInit, OnChanges, OnDestroy {
   onValueChanged(selected: Site): void {
     if (selected) {
       this.selectedSiteService.setSelectedSite(selected);
-      this.getSitePermission(selected);
+      this.getSitePermission(selected).subscribe();
     }
   }
 
-  private getSitePermission(site: Site): void {
-    this.permissionsService.getSitePermission(site.id_site).subscribe();
+  private getSitePermission(site: Site): Observable<Permission> {
+    // return this.permissionsService.getSitePermission(site.id_site);
+    return of(null);
   }
 
   manageSites(): boolean {
