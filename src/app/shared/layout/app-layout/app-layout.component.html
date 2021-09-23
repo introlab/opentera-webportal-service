@@ -1,8 +1,24 @@
 <div class="glass-container">
   <app-header></app-header>
   <app-responsive-navigation></app-responsive-navigation>
-  <div class="content" *ngIf="!navigationOpened">
-    <router-outlet></router-outlet>
-  </div>
+  <section *ngIf="!navigationOpened">
+    <div class="chips" *ngIf="showSelectors">
+        <span>{{selectedSite?.site_name}}</span>
+        <span>{{selectedProject?.project_name}}</span>
+        <span [title]="'Changer de site / projet'" (click)="showSelectors = !showSelectors" class="edit">
+          <mat-icon>edit</mat-icon>
+        </span>
+    </div>
+    <router-outlet *ngIf="!isUser || showSelectors else selectors"></router-outlet>
+  </section>
   <app-footer></app-footer>
 </div>
+
+<ng-template #selectors>
+  <div class="selectors">
+    <h2>Sélectionner un projet à administrer</h2>
+    <app-site-selector></app-site-selector>
+    <app-project-selector></app-project-selector>
+    <button *ngIf="showBackButtonSelectors" mat-stroked-button [color]="'primary'" (click)="showSelectors = !showSelectors">Retour</button>
+  </div>
+</ng-template>
