@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {GlobalConstants} from '@core/utils/global-constants';
+import {AuthenticationService} from '@services/authentication.service';
 
 @Component({
   selector: 'app-callback',
@@ -10,22 +11,20 @@ import {GlobalConstants} from '@core/utils/global-constants';
 export class CallbackComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private authenticationService: AuthenticationService) {
   }
 
   public ngOnInit(): void {
     console.log('callback');
     this.activatedRoute.queryParams.subscribe((params) => {
-      console.log(params);
       const token = params.token;
 
       if (!!params.token) {
-        this.router.navigate([GlobalConstants.homePage]);
+        this.authenticationService.loginWithToken(token);
       } else {
         this.router.navigate([GlobalConstants.loginPage]);
       }
-
     });
   }
-
 }

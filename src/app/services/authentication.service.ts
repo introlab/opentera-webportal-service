@@ -36,8 +36,8 @@ export class AuthenticationService {
 
   login(username: string, password: string, isManager: boolean = false): Observable<any> {
     const apiUrl = isManager ? `${this.API_URL}user/login` : `${this.API_URL}participant/login`;
-    const header = new HttpHeaders().set('Authorization', 'Basic ' + btoa(username + ':' + password));
-    return this.http.get(apiUrl, {headers: header}).pipe(
+    const headers = new HttpHeaders().set('Authorization', 'Basic ' + btoa(username + ':' + password));
+    return this.http.get(apiUrl, {headers}).pipe(
       tap((response: any) => {
         const token = isManager ? response.user_token : response.participant_token;
         this.isLoggedIn = true;
@@ -46,6 +46,13 @@ export class AuthenticationService {
         this.startRefreshTokenTimer();
       })
     );
+  }
+
+  loginWithToken(token: string): void {
+    console.log('login with token');
+    this.isLoggedIn = true;
+    this.cookieService.set(this.cookieValue, token, null, '/');
+    this.router.navigate([this._lastAuthenticatedPath]);
   }
 
   logout(isManager: boolean = false): Observable<any> {
