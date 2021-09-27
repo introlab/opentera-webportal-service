@@ -1,5 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Application} from '@shared/models/application.model';
+import {SelectedSourceService} from '@services/selected-source.service';
+import {Router} from '@angular/router';
+import {Pages} from '@core/utils/pages';
 
 @Component({
   selector: 'app-link',
@@ -10,10 +13,29 @@ export class AppLinkComponent implements OnInit {
   @Input() app!: Application;
   link: any;
 
-  constructor() {
+  constructor(private selectedSourceService: SelectedSourceService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
-    this.link = this.app.app_name?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  showApp(): void {
+    switch (this.app.app_name.toLocaleLowerCase()) {
+      case 'calendrier':
+        this.router.navigate([Pages.calendarPage]);
+        break;
+      case 'courriel':
+        this.router.navigate([Pages.createPath(Pages.emailPage)]);
+        break;
+      default:
+        this.router.navigate([Pages.createPath(Pages.appPage), {app: this.app.app_name?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')}]);
+        console.log('def');
+    }
+    if (this.app.app_config) {
+      this.selectedSourceService.setSelectedSource(this.app.app_config.app_config_url);
+    } else {
+      this.selectedSourceService.setSelectedSource('');
+    }
   }
 }

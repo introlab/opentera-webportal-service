@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {GlobalConstants} from '@core/utils/global-constants';
+import {Pages} from '@core/utils/pages';
 import {AuthenticationService} from '@services/authentication.service';
 
 @Component({
@@ -23,7 +23,7 @@ export class CallbackComponent implements OnInit {
       if (!!params.token) {
         this.authenticationService.loginWithToken(token);
       } else {
-        this.router.navigate([GlobalConstants.loginPage]);
+        this.router.navigate([Pages.loginPage]);
       }
     });
   }

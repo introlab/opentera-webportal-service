@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {GlobalConstants} from '@core/utils/global-constants';
+import {Pages} from '@core/utils/pages';
 import {Subscription} from 'rxjs';
 import {AccountService} from '@services/account.service';
 import {Account} from '@shared/models/account.model';
@@ -25,7 +25,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   goHome(): void {
-    this.router.navigate([GlobalConstants.homePage]);
+    this.router.navigate([Pages.homePage]);
   }
 
   ngOnDestroy(): void {

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from '@src/environments/environment';
 import {Router} from '@angular/router';
-import {GlobalConstants} from '@core/utils/global-constants';
+import {Pages} from '@core/utils/pages';
 
 @Component({
   selector: 'app-not-found',
@@ -18,6 +18,6 @@ export class NotFoundComponent implements OnInit {
   }
 
   goHome(): void {
-    this.router.navigate([GlobalConstants.homePage]);
+    this.router.navigate([Pages.homePage]);
   }
 }

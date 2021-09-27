@@ -7,6 +7,7 @@ import {AuthenticationService} from '@services/authentication.service';
 import {LoginButtonService} from '@services/login-button.service';
 import {NotificationService} from '@services/notification.service';
 import {GlobalConstants} from '@core/utils/global-constants';
+import {Pages} from '@core/utils/pages';
 import {CookieService} from 'ngx-cookie-service';
 
 @Injectable()
@@ -35,7 +36,7 @@ export class ServerErrorInterceptor implements HttpInterceptor {
         }
         if (error.status === 401) {
           authService.logout().subscribe();
-          ngZone.run(() => this.router.navigate([GlobalConstants.loginPage]));
+          ngZone.run(() => this.router.navigate([Pages.loginPage]));
         }
         return throwError(error);
       })

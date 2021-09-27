@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router} from '@angular/router';
 import {AuthenticationService} from '@services/authentication.service';
-import {GlobalConstants} from '@core/utils/global-constants';
+import {Pages} from '@core/utils/pages';
 
 @Injectable()
 export class AuthGuardService implements CanActivate {
@@ -11,7 +11,7 @@ export class AuthGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     if (!this.authService.isAuthenticated()) {
-      this.router.navigate([GlobalConstants.loginPage]);
+      this.router.navigate([Pages.loginPage]);
       return false;
     }
     return true;

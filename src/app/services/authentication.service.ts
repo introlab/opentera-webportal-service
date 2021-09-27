@@ -7,6 +7,7 @@ import {makeApiURL} from '@core/utils/make-api-url';
 import {Router} from '@angular/router';
 import {CookieService} from 'ngx-cookie-service';
 import {AccountService} from '@services/account.service';
+import {Pages} from '@core/utils/pages';
 
 @Injectable({
   providedIn: 'root'
@@ -60,7 +61,7 @@ export class AuthenticationService {
     return this.http.get(apiUrl).pipe(
       tap(() => {
         this.isLoggedIn = false;
-        this.router.navigate([GlobalConstants.loginPage]);
+        this.router.navigate([Pages.loginPage]);
         this.cookieService.delete(this.cookieValue, '/');
         this.stopRefreshTokenTimer();
       })

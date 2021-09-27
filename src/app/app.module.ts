@@ -1,5 +1,4 @@
 import {LOCALE_ID, NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {AppLayoutComponent} from '@shared/layout/app-layout/app-layout.component';
@@ -17,6 +16,8 @@ import {CoreModule} from '@core/core.module';
 import {UserModule} from '@src/app/modules/user.module';
 import {ParticipantModule} from '@src/app/modules/participant.module';
 import {HeaderModule} from '@src/app/modules/header.module';
+import {HttpClientModule} from '@angular/common/http';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -30,14 +31,15 @@ registerLocaleData(localeFr, 'fr');
     NotFoundComponent,
   ],
   imports: [
-    BrowserModule,
+    BrowserAnimationsModule,
     SharedModule,
-    AppRoutingModule,
+    HttpClientModule,
     CoreModule,
     MaterialModule,
+    HeaderModule,
     UserModule,
     ParticipantModule,
-    HeaderModule,
+    AppRoutingModule,
   ],
   providers: [
     {provide: LOCALE_ID, useValue: 'FR-fr'},

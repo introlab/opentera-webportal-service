@@ -19,8 +19,6 @@ import {EventFormComponent} from '@pages/event-form/event-form.component';
 import {ParticipantsSelectorComponent} from '@components/selectors/participants-selector/participants-selector.component';
 import {CallbackComponent} from '@components/callback/callback.component';
 import {EventsComponent} from '@components/events/events.component';
-import {HttpClientModule} from '@angular/common/http';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {FooterComponent} from '@components/footer/footer.component';
@@ -50,7 +48,6 @@ import {CalendarPageComponent} from '@pages/calendar/calendar.component';
   exports: [
     CommonModule,
     RouterModule,
-    HttpClientModule,
     ReactiveFormsModule,
     SpinnerComponent,
     SiteSelectorComponent,
@@ -71,11 +68,9 @@ import {CalendarPageComponent} from '@pages/calendar/calendar.component';
     CommonModule,
     MaterialModule,
     RouterModule,
-    HttpClientModule,
     RouterModule,
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
-    BrowserAnimationsModule,
     ReactiveFormsModule,
     AngularSvgIconModule.forRoot(),
     CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}),

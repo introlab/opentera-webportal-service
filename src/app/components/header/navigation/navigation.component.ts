@@ -4,28 +4,28 @@ import {AccountService} from '@services/account.service';
 import {Subscription} from 'rxjs';
 import {Application} from '@shared/models/application.model';
 import {isUser} from '@core/utils/utility-functions';
-import {GlobalConstants} from '@core/utils/global-constants';
+import {Pages} from '@core/utils/pages';
 
 const links: any = [
   {
     id: 1,
     name: 'Accueil',
-    path: GlobalConstants.calendarPage,
+    path: Pages.calendarPage,
   },
   {
     id: 2,
     name: 'Participants',
-    path: GlobalConstants.participantsPage,
+    path: Pages.createPath(Pages.participantsPage, true),
   },
   {
     id: 3,
     name: 'Sections',
-    path: GlobalConstants.sectionsPage,
+    path: Pages.createPath(Pages.applicationsPage, true),
   },
   {
     id: 4,
     name: 'Planification',
-    path: GlobalConstants.planningPage,
+    path: Pages.createPath(Pages.planningPage, true),
   },
 ];
 

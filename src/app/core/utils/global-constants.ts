@@ -12,20 +12,6 @@ export class GlobalConstants {
 
   static applicationTypes = {external: 0, 'OpenTera Service': 1};
 
-  // App page urls
-  static homePage = '';
-  static loginPage = 'connexion';
-  static calendarPage = 'calendrier';
-  static eventFormPage = 'evenement';
-  static participantsPage = 'participants';
-  static sectionsPage = 'sections';
-  static planningPage = 'planifiation';
-  static applicationsPage = 'sections';
-  static sessionPage = 'seance';
-  static emailPage = 'courriel';
-  static exercisesPage = 'exercices';
-  static fourofourPage = '404';
-
   // TODO to be app_config_url probably
   static emailLink = 'https://mail.google.com/';
   static seanceLink = 'https://telesante.cdrv.ca:40001?webId=ihkLMOuLvzYdpE2QEcX435kn';

@@ -34,6 +34,7 @@ export class PlanningComponent implements OnInit, OnDestroy {
   }
 
   participantChange(participant: Participant): void {
+    this.participant = participant.participant_name;
     this.participantsUUIDs = [participant.participant_uuid];
   }
 }

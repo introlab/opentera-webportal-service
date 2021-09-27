@@ -14,6 +14,7 @@ import {GlobalConstants} from '@core/utils/global-constants';
 import {ApplicationFormComponent} from '@components/forms/application-form/application-form.component';
 import {Router} from '@angular/router';
 import {Project} from '@shared/models/project.model';
+import {Pages} from '@core/utils/pages';
 
 @Component({
   selector: 'app-applications',
@@ -163,7 +164,7 @@ export class ApplicationsComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         this.appService.update(result).pipe(
           switchMap((updated) => {
-            this.router.navigate([GlobalConstants.applicationsPage]);
+            this.router.navigate([Pages.applicationsPage]);
             this.notificationService.showSuccess('La section ' + updated[0].app_name + ' a été sauvegardée.');
             return this.refreshApps();
           })

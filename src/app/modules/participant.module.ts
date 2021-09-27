@@ -5,6 +5,7 @@ import {SeanceComponent} from '@pages/participant/seance/seance.component';
 import {ExercisesComponent} from '@pages/participant/exercices/exercises.component';
 import {SharedModule} from '@shared/shared.module';
 import {MaterialModule} from '@shared/material.module';
+import {ParticipantRoutingModule} from '@src/app/modules/participant-routing.module';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import {MaterialModule} from '@shared/material.module';
   imports: [
     CommonModule,
     SharedModule,
-    MaterialModule
+    MaterialModule,
+    ParticipantRoutingModule
   ]
 })
 export class ParticipantModule {

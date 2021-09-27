@@ -4,7 +4,7 @@ import {Event} from '@shared/models/event.model';
 import {CalendarEvent, CalendarView, collapseAnimation} from 'angular-calendar';
 import {combineLatest, Subject, Subscription} from 'rxjs';
 import {AccountService} from '@services/account.service';
-import {GlobalConstants} from '@core/utils/global-constants';
+import {Pages} from '@core/utils/pages';
 import {isUser} from '@core/utils/utility-functions';
 import {Account} from '@shared/models/account.model';
 import {CalendarService} from '@services/calendar.service';
@@ -174,26 +174,29 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private refreshCalendar(startDate: Date, endDate: Date): void {
-    if (!this.isUser) {
-      this.participantsUUIDs = [this.account.login_uuid];
+    if (this.account) {
+      if (!this.isUser) {
+        this.participantsUUIDs = [this.account.login_uuid];
+      }
+      if (this.router.url.includes(Pages.planningPage) && this.participantsUUIDs.length > 0) {
+        const start = CalendarComponent.getDateString(startDate);
+        const end = CalendarComponent.getDateString(endDate);
+        this.calendarService.getCalendar(start, end, this.participantsUUIDs).subscribe();
+      }
     }
-    console.log(this.participantsUUIDs);
-    const start = CalendarComponent.getDateString(startDate);
-    const end = CalendarComponent.getDateString(endDate);
-    this.calendarService.getCalendar(start, end, this.participantsUUIDs).subscribe();
   }
 
   openForm(event: CalendarEvent): void {
     if (this.isUser) {
       const idEvent = event.meta.event.id_event;
-      this.router.navigate([GlobalConstants.eventFormPage, {idEvent}]);
+      this.router.navigate([Pages.eventFormPage, {idEvent}]);
     }
   }
 
   openFormWithTime(date: Date): void {
     if (this.isUser) {
       const time = date.toISOString();
-      this.router.navigate([GlobalConstants.eventFormPage, {time}]);
+      this.router.navigate([Pages.eventFormPage, {time}]);
     }
   }
 

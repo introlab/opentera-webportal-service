@@ -6,7 +6,7 @@ import {NotificationService} from '@services/notification.service';
 import {MatDialog} from '@angular/material/dialog';
 import {convertMinutesToHoursMinutes, getDuration, isUser} from '@core/utils/utility-functions';
 import {Router} from '@angular/router';
-import {GlobalConstants} from '@core/utils/global-constants';
+import {Pages} from '@core/utils/pages';
 import {AccountService} from '@services/account.service';
 import {Subscription} from 'rxjs';
 import {Account} from '@shared/models/account.model';
@@ -87,7 +87,7 @@ export class EventCardComponent implements OnInit, OnDestroy {
   }
 
   openForm(idEvent: number): void {
-    this.router.navigate([GlobalConstants.eventFormPage, {idEvent}]);
+    this.router.navigate([Pages.eventFormPage, {idEvent}]);
   }
 
   ngOnDestroy(): void {

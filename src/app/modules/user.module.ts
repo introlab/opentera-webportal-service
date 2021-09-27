@@ -13,6 +13,7 @@ import {ApplicationSelectorComponent} from '@components/selectors/application-se
 import {PasswordFormComponent} from '@components/forms/password-form/password-form.component';
 import {ProfileFormComponent} from '@components/forms/profile-form/profile-form.component';
 import {SelectedParticipantsComponent} from '@components/selected-participants/selected-participants.component';
+import {UserRoutingModule} from '@src/app/modules/user-routing.module';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import {SelectedParticipantsComponent} from '@components/selected-participants/s
     CommonModule,
     SharedModule,
     MaterialModule,
+    UserRoutingModule
   ]
 })
 export class UserModule {

@@ -5,6 +5,7 @@ import {Router} from '@angular/router';
 import {GlobalConstants} from '@core/utils/global-constants';
 import {LoginButtonService} from '@services/login-button.service';
 import {Subscription} from 'rxjs';
+import {Pages} from '@core/utils/pages';
 
 @Component({
   selector: 'app-login',
@@ -54,7 +55,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   private redirect(): void {
     if (this.authService.isAuthenticated()) {
-      this.router.navigate([GlobalConstants.homePage]);
+      this.router.navigate([Pages.homePage]);
     }
   }
 

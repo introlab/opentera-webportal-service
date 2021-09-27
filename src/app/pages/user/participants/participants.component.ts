@@ -11,7 +11,7 @@ import {SelectedProjectService} from '@services/selected-project.service';
 import {switchMap, take} from 'rxjs/operators';
 import {ParticipantService} from '@services/participant/participant.service';
 import {ConfirmationComponent} from '@components/confirmation/confirmation.component';
-import {GlobalConstants} from '@core/utils/global-constants';
+import {Pages} from '@core/utils/pages';
 import {ParticipantFormComponent} from '@components/forms/participant-form/participant-form.component';
 import {SelectedGroupService} from '@services/selected-group.service';
 import {createParticipantUrl, isObjectEmpty} from '@core/utils/utility-functions';
@@ -167,7 +167,7 @@ export class ParticipantsComponent implements OnInit, OnDestroy, AfterViewInit {
           result.id_participant = 0;
         }
         this.participantService.update(result).subscribe((updated) => {
-          this.router.navigate([GlobalConstants.participantsPage]);
+          this.router.navigate([Pages.createPath(Pages.participantsPage, true)]);
           this.notificationService.showSuccess('Le participant ' + updated[0].participant_name + ' a été sauvegardé.');
         });
       }
@@ -175,7 +175,7 @@ export class ParticipantsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openCalendar(participant: Participant): void {
-    this.router.navigate([GlobalConstants.planningPage, {uuid: participant.participant_uuid, name: participant.participant_name}]);
+    this.router.navigate([Pages.createPath(Pages.planningPage, true), {uuid: participant.participant_uuid, name: participant.participant_name}]);
   }
 
   ngOnDestroy(): void {

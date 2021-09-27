@@ -5,7 +5,7 @@ import {Router} from '@angular/router';
 import {PermissionsService} from '@services/permissions.service';
 import {SelectedSiteService} from '@services/selected-site.service';
 import {Site} from '@shared/models/site.model';
-import {GlobalConstants} from '@core/utils/global-constants';
+import {Pages} from '@core/utils/pages';
 import {Project} from '@shared/models/project.model';
 import {ProjectService} from '@services/project.service';
 import {SelectedProjectService} from '@services/selected-project.service';
@@ -59,7 +59,7 @@ export class ProjectSelectorComponent implements OnInit, OnDestroy {
   private isSiteValid(site: Site): boolean {
     const isSiteValid = !!site && !!site.id_site;
     if (!isSiteValid) {
-      this.router.navigate([GlobalConstants.homePage]);
+      this.router.navigate([Pages.homePage]);
     }
     return isSiteValid;
   }
