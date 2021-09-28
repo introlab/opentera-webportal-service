@@ -92,6 +92,15 @@ class QueryCalendar(Resource):
             for event in events:
                 event_json = event.to_json()
 
+                if args['id_event']:
+                    # Get the name of the user who booked the event
+                    endpoint = '/api/service/users'
+                    params = {'user_uuid': event.user_uuid}
+                    response = Globals.service.get_from_opentera(endpoint, params)
+                    if response.status_code == 200 and response is not None:
+                        user = response.json()
+                        event_json['user_fullname'] = user['user_firstname'] + ' ' + user['user_lastname']
+
                 # If event has a session associated to it, get it from OpenTera
                 if event.session_uuid and args['full'] is True:
                     endpoint = '/api/service/sessions'
