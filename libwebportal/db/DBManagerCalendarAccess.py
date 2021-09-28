@@ -15,8 +15,9 @@ class DBManagerCalendarAccess:
         return event
 
     def query_event_for_user(self, user_uuid, start_date, end_date):
-        start_date = datetime.strptime(start_date, '%d-%m-%Y').date()
+        start_date = datetime.strptime(start_date, '%d-%m-%Y')
         end_date = datetime.strptime(end_date, '%d-%m-%Y')
+        start_date = start_date.replace(hour=0, minute=0, second=0)
         end_date = end_date.replace(hour=23, minute=59, second=59)
 
         events = WebPortalCalendarEvent.query.filter(
@@ -29,8 +30,9 @@ class DBManagerCalendarAccess:
         return []
 
     def query_event_for_participants(self, participant_uuids, start_date, end_date):
-        start_date = datetime.strptime(start_date, '%d-%m-%Y').date()
+        start_date = datetime.strptime(start_date, '%d-%m-%Y')
         end_date = datetime.strptime(end_date, '%d-%m-%Y')
+        start_date = start_date.replace(hour=0, minute=0, second=0)
         end_date = end_date.replace(hour=23, minute=59, second=59)
 
         events = WebPortalCalendarEvent.query.filter(
@@ -57,7 +59,7 @@ class DBManagerCalendarAccess:
             return events
         return []
 
-    def query_overlaps_participants(self, participant_uuids, start_time, end_time, id_event=0):
+    def query_overlaps_participants(self, participants_uuids, start_time, end_time, id_event=0):
         events = WebPortalCalendarEvent.query.filter(
             and_(WebPortalCalendarEvent.id_event != id_event,
                  or_(WebPortalCalendarEvent.event_start_datetime.between(start_time, end_time),
@@ -66,17 +68,23 @@ class DBManagerCalendarAccess:
                                                  WebPortalCalendarEvent.event_end_datetime),
                      literal(end_time).between(WebPortalCalendarEvent.event_start_datetime,
                                                WebPortalCalendarEvent.event_end_datetime))),
-            WebPortalCalendarEvent.session_participant_uuids.contains(cast([participant_uuids], ARRAY(String)))).all()
+            WebPortalCalendarEvent.session_participant_uuids.contains(cast([participants_uuids], ARRAY(String)))).all()
 
         if events:
             return events
         return []
 
-    def query_next_three(self, user_uuid):
+    def query_next_three(self, user_uuid=None, participants_uuids=[]):
         now = datetime.now()
-        events = WebPortalCalendarEvent.query.filter(WebPortalCalendarEvent.event_start_datetime > now,
-                                                     WebPortalCalendarEvent.user_uuid == user_uuid). \
-            order_by(WebPortalCalendarEvent.event_start_datetime.asc()).limit(3).all()
+        queries = [WebPortalCalendarEvent.event_end_datetime > now]
+        if user_uuid is not None:
+            queries.append(WebPortalCalendarEvent.user_uuid == user_uuid)
+        elif participants_uuids is not []:
+            queries.append(
+                WebPortalCalendarEvent.session_participant_uuids.contains(cast([participants_uuids], ARRAY(String))))
+
+        events = WebPortalCalendarEvent.query.filter(*queries).order_by(
+            WebPortalCalendarEvent.event_start_datetime.asc()).limit(3).all()
 
         if events:
             return events

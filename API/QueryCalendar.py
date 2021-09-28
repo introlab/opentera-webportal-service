@@ -36,10 +36,8 @@ class QueryCalendar(Resource):
     @api.expect(get_parser)
     @api.doc(description='Get calendar events.',
              responses={200: 'Success - returns calendar events',
-                        408: 'Participants session overlap',
-                        409: 'User event overlap',
                         500: 'Database error'})
-    @ServiceAccessManager.token_required()
+    @ServiceAccessManager.token_required(allow_static_tokens=True, allow_dynamic_tokens=True)
     def get(self):
         parser = get_parser
         args = parser.parse_args()
@@ -63,7 +61,10 @@ class QueryCalendar(Resource):
         elif args['three']:
             if current_user_client:
                 # Find next three events
-                events = calendar_access.query_next_three(current_user_client.user_uuid)
+                events = calendar_access.query_next_three(user_uuid=current_user_client.user_uuid)
+            elif participant_uuids:
+                # Find next three events for participant
+                events = calendar_access.query_next_three(participants_uuids=participant_uuids)
         else:
             if args['id_event']:
                 # Get infos of event
