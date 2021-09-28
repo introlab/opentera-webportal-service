@@ -43,6 +43,7 @@ class WebPortalApp(db.Model, BaseModel):
         WebPortalApp.insert(base_app)
 
         base_app = WebPortalApp()
+        base_app.app_deletable = False  # Can't delete email app, only disable it
         base_app.id_project = 1  # Hard coded for now
         base_app.app_name = 'Courriel'
         base_app.app_icon = 'mail'
