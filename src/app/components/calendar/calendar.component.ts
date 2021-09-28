@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit,
 import {Router} from '@angular/router';
 import {Event} from '@shared/models/event.model';
 import {CalendarEvent, CalendarView, collapseAnimation} from 'angular-calendar';
-import {combineLatest, Subject, Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {AccountService} from '@services/account.service';
 import {Pages} from '@core/utils/pages';
 import {isUser} from '@core/utils/utility-functions';
@@ -86,13 +86,12 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.getAccount();
     this.getEvents();
   }
 
-  private getEvents(): void {
-    const events$ = this.calendarService.events$();
+  private getAccount(): void {
     const account$ = this.accountService.account$();
-
     this.subscriptions.push(
       account$.subscribe((account) => {
         this.isUser = isUser(account);
@@ -100,7 +99,10 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
         this.dateChange();
       })
     );
+  }
 
+  private getEvents(): void {
+    const events$ = this.calendarService.events$();
     this.subscriptions.push(
       events$.subscribe((events) => {
         this.transformEventsForCalendar(events);
@@ -122,12 +124,18 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   dateChange(): void {
-    if (this.view === 'day') {
-      this.getDayData(this.currentDate);
-    } else if (this.view === 'week') {
-      this.getWeekData(this.currentDate);
-    } else if (this.view === 'month') {
-      this.getMonthData(this.currentDate);
+    switch (this.view) {
+      case CalendarView.Day:
+        this.getDayData(this.currentDate);
+        break;
+      case CalendarView.Week:
+        this.getWeekData(this.currentDate);
+        break;
+      case CalendarView.Month:
+        this.getMonthData(this.currentDate);
+        break;
+      default:
+        break;
     }
   }
 
@@ -158,13 +166,21 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  closeOpenMonthViewDay(event: Date): void {
-    if (this.view === 'month') {
-      this.currentDate = new Date(event);
-    } else {
-      this.currentDate = CalendarComponent.getPreviousMonday(new Date(event));
-    }
+  closeOpenMonthViewDay(date: Date): void {
     this.activeDayIsOpen = false;
+    switch (this.view) {
+      case CalendarView.Day:
+        this.currentDate = date;
+        break;
+      case CalendarView.Week:
+        this.currentDate = CalendarComponent.getPreviousMonday(new Date(date));
+        break;
+      case CalendarView.Month:
+        this.currentDate = new Date(date);
+        break;
+      default:
+        break;
+    }
     this.dateChange();
   }
 
@@ -174,13 +190,22 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private refreshCalendar(startDate: Date, endDate: Date): void {
+    const start = CalendarComponent.getDateString(startDate);
+    const end = CalendarComponent.getDateString(endDate);
     if (this.account) {
-      if (!this.isUser) {
+      if (this.isUser) {
+        if (this.router.url.includes(Pages.planningPage)) {
+          if (this.participantsUUIDs.length > 0) {
+            // Get events for a participant
+            this.calendarService.getCalendar(start, end, this.participantsUUIDs).subscribe();
+          }
+        } else {
+          // Get events of the connected user
+          this.calendarService.getCalendar(start, end).subscribe();
+        }
+      } else {
+        // Get events of the connected participant
         this.participantsUUIDs = [this.account.login_uuid];
-      }
-      if (this.router.url.includes(Pages.planningPage) && this.participantsUUIDs.length > 0) {
-        const start = CalendarComponent.getDateString(startDate);
-        const end = CalendarComponent.getDateString(endDate);
         this.calendarService.getCalendar(start, end, this.participantsUUIDs).subscribe();
       }
     }
