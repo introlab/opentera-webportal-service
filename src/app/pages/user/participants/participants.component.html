@@ -44,7 +44,7 @@
           <h4 class="mobile-label">Lien de connexion:</h4>
           <ng-container *ngIf="!row.participant_token">-</ng-container>
           <ng-container *ngIf="row.participant_token && showCopyButton !== row.id_participant">
-            {{row.connection_url | truncate}}
+            {{row.connection_url | truncate: 40}}
           </ng-container>
           <button mat-raised-button *ngIf="row.participant_token && showCopyButton === row.id_participant"
                   (click)="copyUrl(row.connection_url)" [color]="color">Copier
