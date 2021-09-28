@@ -9,6 +9,7 @@ export class Account {
   login_uuid?: string;
   is_super_admin?: boolean;
   project_id?: number;
+  project_name?: string;
   apps?: Application[];
   user?: any;
   sites?: Site[];

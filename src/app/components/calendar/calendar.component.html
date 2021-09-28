@@ -1,6 +1,6 @@
 <div class="container">
   <section class="events-container">
-    <button class="add-button" mat-raised-button [color]="'primary'" (click)="openFormWithTime(currentDate)">
+    <button *ngIf="isUser" class="add-button" mat-raised-button [color]="'primary'" (click)="openFormWithTime(currentDate)">
       <mat-icon>add</mat-icon>
       Ajouter
     </button>

@@ -4,6 +4,7 @@ import {Pages} from '@core/utils/pages';
 import {Subscription} from 'rxjs';
 import {AccountService} from '@services/account.service';
 import {Account} from '@shared/models/account.model';
+import {isUser} from '@core/utils/utility-functions';
 
 @Component({
   selector: 'app-header',
@@ -13,6 +14,8 @@ import {Account} from '@shared/models/account.model';
 export class HeaderComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   private account: Account;
+  isUser = false;
+  projectName = '';
 
   constructor(public router: Router,
               private accountService: AccountService) {
@@ -21,6 +24,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.accountService.account$().subscribe((account) => {
       this.account = account;
+      this.projectName = account.project_name;
+      this.isUser = isUser(account);
     });
   }
 

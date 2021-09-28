@@ -1,5 +1,10 @@
 <header>
-  <app-logo (click)="goHome()"></app-logo>
+  <app-logo *ngIf="isUser else project" (click)="goHome()"></app-logo>
+  <ng-template #project>
+    <div class="project">
+      {{projectName}}
+    </div>
+  </ng-template>
   <app-navigation></app-navigation>
   <app-profile></app-profile>
   <app-menu-hamburger></app-menu-hamburger>
