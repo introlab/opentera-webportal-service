@@ -92,7 +92,7 @@ class QueryCalendar(Resource):
             for event in events:
                 event_json = event.to_json()
 
-                if args['id_event']:
+                if not args['overlaps']:
                     # Get the name of the user who booked the event
                     endpoint = '/api/service/users'
                     params = {'user_uuid': event.user_uuid}
