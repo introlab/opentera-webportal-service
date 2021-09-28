@@ -15,15 +15,12 @@ export class Pages {
 
 // Users
   static participantsPage = 'participants';
-  static sectionsPage = 'sections';
   static planningPage = 'planification';
   static applicationsPage = 'sections';
 
 // Participants
   static appPage = 'app';
-  static sessionPage = 'seance';
   static emailPage = 'courriel';
-  static exercisesPage = 'exercices';
 
   static createPath(ending: string, isUser = false): string {
     return isUser ? Pages.userPrefix + '/' + ending : Pages.participantPrefix + '/' + ending;
