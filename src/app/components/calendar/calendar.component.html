@@ -13,17 +13,17 @@
         <div class="button"
              (click)="setView(CalendarView.Month)"
              [class.active]="view === CalendarView.Month">
-          Month
+          Mois
         </div>
         <div class="button"
              (click)="setView(CalendarView.Week)"
              [class.active]="view === CalendarView.Week">
-          Week
+          Semaine
         </div>
         <div class="button"
              (click)="setView(CalendarView.Day)"
              [class.active]="view === CalendarView.Day">
-          Day
+          Jour
         </div>
       </div>
       <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'fr' }}</h3>
