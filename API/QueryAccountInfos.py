@@ -56,10 +56,18 @@ class QueryAccountInfos(Resource):
                 account_infos['fullname'] = participant['participant_name']
                 account_infos['project_id'] = participant['id_project']
                 if participant['id_project']:
+                    # Get project apps
                     apps = app_access.query_project_apps(participant['id_project'])
                     apps_json = [app.to_json() for app in apps]
                     app_access.query_app_config(apps_json)
                     account_infos['apps'] = apps_json
+                    # Get project name
+                    projects = Globals.service.get_from_opentera('/api/service/projects',
+                                                                 'id_project=' +
+                                                                 str(participant['id_project']))
+                    if projects is not None:
+                        projects = projects.json()
+                        account_infos['project_name'] = projects[0]['project_name']
 
         if current_login_type == LoginType.USER_LOGIN:
             user = current_user_client.get_user_info()
