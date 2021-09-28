@@ -30,7 +30,6 @@ export class AppLinkComponent implements OnInit {
         break;
       default:
         this.router.navigate([Pages.createPath(Pages.appPage), {app: this.app.app_name?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')}]);
-        console.log('def');
     }
     if (this.app.app_config) {
       this.selectedSourceService.setSelectedSource(this.app.app_config.app_config_url);
