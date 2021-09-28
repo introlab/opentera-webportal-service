@@ -34,7 +34,7 @@ class QueryApps(Resource):
     @api.doc(description='Get apps for the portal',
              responses={200: 'Success - Return the list of apps',
                         501: 'Not implemented yet for that login type'})
-    @ServiceAccessManager.token_required
+    @ServiceAccessManager.token_required()
     def get(self):
         app_access = DBManager.app_access()
         parser = get_parser
@@ -55,7 +55,8 @@ class QueryApps(Resource):
         apps_json = [app.to_json() for app in apps]
 
         # Get with app config for participant
-        app_access.query_app_config(apps_json)
+        if args['with_config'] and current_login_type == LoginType.PARTICIPANT_LOGIN:
+            app_access.query_app_config(apps_json)
 
         # Get service associated to the app if OpenTera service
         if current_login_type == LoginType.USER_LOGIN:
@@ -71,7 +72,7 @@ class QueryApps(Resource):
                         403: 'Logged user can\'t create/update the specified app',
                         400: 'Badly formed JSON or missing fields(id_site) in the JSON body',
                         500: 'Internal error occurred when saving app'})
-    @ServiceAccessManager.token_required
+    @ServiceAccessManager.token_required()
     def post(self):
         app_access = DBManager.app_access()
         # Using request.json instead of parser, since parser messes up the json!
@@ -122,7 +123,7 @@ class QueryApps(Resource):
              responses={200: 'Success',
                         403: 'Logged user can\'t delete app',
                         500: 'Database error.'})
-    @ServiceAccessManager.token_required
+    @ServiceAccessManager.token_required()
     def delete(self):
         parser = delete_parser
         args = parser.parse_args()
