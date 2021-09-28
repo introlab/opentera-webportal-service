@@ -56,7 +56,6 @@ class QueryAccountInfos(Resource):
                 account_infos['fullname'] = participant['participant_name']
                 account_infos['project_id'] = participant['id_project']
                 if participant['id_project']:
-                    # TODO: Use database objects directly instead of using a query to get apps information
                     apps = app_access.query_project_apps(participant['id_project'])
                     apps_json = [app.to_json() for app in apps]
                     app_access.query_app_config(apps_json)
