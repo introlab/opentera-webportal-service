@@ -14,7 +14,7 @@ import {validateAllFields} from '@core/utils/validate-form';
 import {Participant} from '@shared/models/participant.model';
 import {GlobalConstants} from '@core/utils/global-constants';
 import {combineLatest, EMPTY, Subscription} from 'rxjs';
-import {filter, switchMap, tap} from 'rxjs/operators';
+import {switchMap, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-event-form',
@@ -73,7 +73,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
           this.event = new Event();
           this.event.id_event = 0;
           this.event.user_uuid = this.account.login_uuid;
-          this.eventForm.controls.clinician.setValue(this.account.login_uuid);
+          this.eventForm.controls.clinician.setValue(this.account.fullname);
           this.setUpValidators();
           return EMPTY;
         }
@@ -122,10 +122,10 @@ export class EventFormComponent implements OnInit, OnDestroy {
   private setValues(): void {
     const controls = this.eventForm.controls;
     controls.name.setValue(this.event.event_name);
-    controls.clinician.setValue(this.event.user_uuid);
     controls.startDate.setValue(new Date(this.event.event_start_datetime));
     controls.startTime.setValue(new Date(this.event.event_start_datetime));
     controls.endTime.setValue(new Date(this.event.event_end_datetime));
+    controls.clinician.setValue(this.event.user_fullname);
     if (this.event.session) {
       this.hasSession = true;
       this.session = this.event.session[0];

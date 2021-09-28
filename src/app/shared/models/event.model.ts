@@ -8,4 +8,5 @@ export class Event {
   event_static_url?: string;
   session_participant_uuids?: string[];
   session?: any;
+  user_fullname?: string;
 }
