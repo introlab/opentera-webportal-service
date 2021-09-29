@@ -1,11 +1,11 @@
 <div class="card">
-  <div class="date">
+  <div class="row date">
     {{event.event_start_datetime | date:'dd MMM yyyy'}}
     <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Contrôles" *ngIf="!isPastEvent && isUser">
       <mat-icon>more_horiz</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="openForm(event.id_event)" *ngIf="isEventToCome">
+      <button mat-menu-item (click)="openForm(event.id_event)" *ngIf="!isPastEvent">
         <mat-icon>edit</mat-icon>
         Modifier
       </button>
@@ -15,21 +15,27 @@
       </button>
     </mat-menu>
   </div>
-  <div class="time">
-    <span [style.background-color]="'#54cdfb'"></span>
+  <div class="row time">
+    <mat-icon [class.is-live]="isLive">schedule</mat-icon>
+    <span class="is-live" *ngIf="isLive">Live</span>
     {{event.event_start_datetime | date:'HH:mm'}}-{{event.event_end_datetime | date:'HH:mm'}}
   </div>
-  <div class="name">{{event.event_name}}</div>
-  <div class="participants" *ngIf="isUser && event.session">
+  <div class="row name">{{event.event_name}} avec {{event.user_fullname}}</div>
+  <div class="row participants" *ngIf="isUser && event.session">
     Participants:
     <ng-container *ngFor="let participant of event.session[0].session_participants; let last = last">
       {{participant.participant_name}} <span *ngIf="!last">-</span>
     </ng-container>
   </div>
-  <ng-container *ngIf="!isPastEvent">
-    <button mat-stroked-button [color]="'accent'" class="connect" (click)="connect(event.event_static_url)"
-            *ngIf="isEventToCome">
+  <ng-container *ngIf="!isPastEvent && !isUser">
+    <button mat-stroked-button [color]="'accent'" class="connect" (click)="connect()">
       Se connecter
     </button>
+  </ng-container>
+  <ng-container *ngIf="!isPastEvent && isUser">
+    <div class="message-connection-user">
+      <mat-icon>exit_to_app</mat-icon>
+      Se connecter avec l'application OpenTeraPlus
+    </div>
   </ng-container>
 </div>
