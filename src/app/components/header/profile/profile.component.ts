@@ -8,6 +8,7 @@ import {UserService} from '@services/user.service';
 import {MatDialog} from '@angular/material/dialog';
 import {NotificationService} from '@services/notification.service';
 import {ProfileFormComponent} from '@components/forms/profile-form/profile-form.component';
+import {isUser} from '@core/utils/utility-functions';
 
 @Component({
   selector: 'app-profile',
@@ -17,6 +18,7 @@ import {ProfileFormComponent} from '@components/forms/profile-form/profile-form.
 export class ProfileComponent implements OnInit, OnDestroy {
   initial = '';
   name = 'name';
+  isUser = false;
   private subscription!: Subscription;
 
   constructor(private authService: AuthenticationService,
@@ -27,9 +29,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = this.accountService.account$().subscribe((res) => {
-      if (res.fullname != null) {
-        this.name = res.fullname;
+    this.subscription = this.accountService.account$().subscribe((account) => {
+      this.isUser = isUser(account);
+      if (account.fullname != null) {
+        this.name = account.fullname;
         this.initial = this.name.charAt(0);
       }
     });

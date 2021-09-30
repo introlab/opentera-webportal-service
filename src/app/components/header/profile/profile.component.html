@@ -1,7 +1,7 @@
 <div class="profile">
-  <span class="dot" (click)="editProfile()">{{initial}}</span>
+  <span class="dot" (click)="isUser && editProfile()">{{initial}}</span>
   <div class="infos">
-    <span>{{name}}</span>
+    <span (click)="isUser && editProfile()">{{name}}</span>
     <a (click)="logout()">Déconnexion</a>
   </div>
 </div>
