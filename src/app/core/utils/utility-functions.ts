@@ -1,5 +1,6 @@
 import {Account} from '@shared/models/account.model';
 import {GlobalConstants} from '@core/utils/global-constants';
+import {Pages} from '@core/utils/pages';
 
 export function dateToISOLikeButLocal(date: Date): string {
   const offsetMs = date.getTimezoneOffset() * 60 * 1000;
@@ -38,7 +39,6 @@ export function isObjectEmpty(object: any): boolean {
   return !object || !Object.keys(object).length;
 }
 
-// https://(url du serveur):(port)/webportal/participant?token=(token du participant))
 export function createParticipantUrl(token: string): string {
-  return `${GlobalConstants.protocol}://${GlobalConstants.hostname}:${GlobalConstants.port}/webportal/participant?token=${token}`;
+  return `${GlobalConstants.protocol}://${GlobalConstants.hostname}:${GlobalConstants.port}/${Pages.participantConnectionURL}?token=${token}`;
 }

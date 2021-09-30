@@ -13,7 +13,7 @@ import {EventFormComponent} from '@pages/event-form/event-form.component';
 
 const routes: Routes = [
   {path: '', redirectTo: Pages.calendarPage, pathMatch: 'full'},
-  {path: 'rehab/participant', component: CallbackComponent},
+  {path: Pages.participantConnectionURL, component: CallbackComponent},
   {path: 'rehab/user', component: CallbackComponent},
   {
     path: '',

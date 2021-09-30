@@ -19,6 +19,7 @@ export class Pages {
   static applicationsPage = 'sections';
 
 // Participants
+  static participantConnectionURL = 'login/participant';
   static appPage = 'app';
   static emailPage = 'courriel';
 
