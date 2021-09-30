@@ -44,31 +44,21 @@ class DBManagerCalendarAccess:
             return events
         return []
 
-    def query_overlaps_user(self, user_uuid, start_time, end_time, id_event=0):
-        events = WebPortalCalendarEvent.query.filter(
-            and_(WebPortalCalendarEvent.id_event != id_event,
-                 or_(WebPortalCalendarEvent.event_start_datetime.between(start_time, end_time),
-                     WebPortalCalendarEvent.event_end_datetime.between(start_time, end_time),
-                     literal(start_time).between(WebPortalCalendarEvent.event_start_datetime,
-                                                 WebPortalCalendarEvent.event_end_datetime),
-                     literal(end_time).between(WebPortalCalendarEvent.event_start_datetime,
-                                               WebPortalCalendarEvent.event_end_datetime))),
-            WebPortalCalendarEvent.user_uuid == user_uuid).all()
+    def query_overlaps(self, start_time, end_time, user_uuid=None, participants_uuids=[]):
+        queries = [or_(WebPortalCalendarEvent.event_start_datetime.between(start_time, end_time),
+                       WebPortalCalendarEvent.event_end_datetime.between(start_time, end_time),
+                       literal(start_time).between(WebPortalCalendarEvent.event_start_datetime,
+                                                   WebPortalCalendarEvent.event_end_datetime),
+                       literal(end_time).between(WebPortalCalendarEvent.event_start_datetime,
+                                                 WebPortalCalendarEvent.event_end_datetime))]
+        if user_uuid is not None:
+            queries.append(WebPortalCalendarEvent.user_uuid == user_uuid)
+        elif participants_uuids is not []:
+            queries.append(
+                WebPortalCalendarEvent.session_participant_uuids.contains(cast([participants_uuids], ARRAY(String))))
 
-        if events:
-            return events
-        return []
-
-    def query_overlaps_participants(self, participants_uuids, start_time, end_time, id_event=0):
-        events = WebPortalCalendarEvent.query.filter(
-            and_(WebPortalCalendarEvent.id_event != id_event,
-                 or_(WebPortalCalendarEvent.event_start_datetime.between(start_time, end_time),
-                     WebPortalCalendarEvent.event_end_datetime.between(start_time, end_time),
-                     literal(start_time).between(WebPortalCalendarEvent.event_start_datetime,
-                                                 WebPortalCalendarEvent.event_end_datetime),
-                     literal(end_time).between(WebPortalCalendarEvent.event_start_datetime,
-                                               WebPortalCalendarEvent.event_end_datetime))),
-            WebPortalCalendarEvent.session_participant_uuids.contains(cast([participants_uuids], ARRAY(String)))).all()
+        events = WebPortalCalendarEvent.query.filter(*queries).order_by(
+            WebPortalCalendarEvent.event_start_datetime.asc()).all()
 
         if events:
             return events
