@@ -83,7 +83,6 @@ export class EventFormComponent implements OnInit, OnDestroy {
         this.event = event[0];
         this.setValues();
       }
-      console.log(this.event);
       this.setUpValidators();
     });
   }
@@ -131,7 +130,6 @@ export class EventFormComponent implements OnInit, OnDestroy {
       this.session = this.event.session[0];
       this.title = this.session.session_name;
       this.sessionParticipants = this.session.session_participants;
-      console.log(this.sessionParticipants);
     }
   }
 
@@ -189,6 +187,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
 
   private saveEvent(): void {
     this.calendarService.update(this.event).subscribe((result) => {
+      this.location.back();
       this.notificationService.showSuccess(`L'évenement ${this.event.event_name} a été sauvegardé.`);
     });
   }
@@ -207,7 +206,6 @@ export class EventFormComponent implements OnInit, OnDestroy {
     const isoStartDate = dateToISOLikeButLocal(setDate(date, startTime));
     const isoEndDate = dateToISOLikeButLocal(setDate(date, endTime));
     const participantsUUIDs: string[] = this.sessionParticipants.map((part) => part.participant_uuid);
-    console.log(participants);
     this.calendarService.checkOverlaps(isoStartDate, isoEndDate, participantsUUIDs).subscribe((res) => {
       console.log('overlaps participant', res);
     });
