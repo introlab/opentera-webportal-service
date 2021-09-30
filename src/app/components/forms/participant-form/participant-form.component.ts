@@ -77,6 +77,7 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
 
   private createParticipant(): void {
     const controls = this.participantForm.controls;
+    this.participant.participant_token_enabled = true;
     this.participant.participant_name = controls.name.value;
     this.participant.participant_email = controls.email.value;
     this.participant.participant_enabled = controls.enable.value;

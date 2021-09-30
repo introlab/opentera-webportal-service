@@ -47,7 +47,7 @@ export class ParticipantsComponent implements OnInit, OnDestroy, AfterViewInit {
     const newPart = new Participant();
     newPart.id_participant = 0;
     newPart.participant_enabled = true;
-    newPart.participant_login_enabled = true;
+    newPart.participant_login_enabled = false;
     return newPart;
   }
 

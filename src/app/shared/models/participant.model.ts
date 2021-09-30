@@ -20,4 +20,5 @@ export class Participant {
   participant_project?: Project;
   site?: Site;
   connection_url?: string;
+  participant_token_enabled?: boolean;
 }
