@@ -45,7 +45,7 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
         tap((account) => this.account = account),
         filter((account) => isUser(account)),
         switchMap(() => this.serviceService.getByKey())
-      ).subscribe((res) => console.log(res))
+      ).subscribe()
     );
   }
 

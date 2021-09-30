@@ -9,11 +9,10 @@ import {ActivatedRoute} from '@angular/router';
   templateUrl: './planning.component.html',
   styleUrls: ['./planning.component.scss']
 })
-export class PlanningComponent implements OnInit, OnDestroy {
+export class PlanningComponent implements OnInit {
   participantsUUIDs: string[] = [];
   participant = '';
   events: Event[] = [];
-  private subscriptions: Subscription[] = [];
 
   constructor(private route: ActivatedRoute) {
   }
@@ -27,10 +26,6 @@ export class PlanningComponent implements OnInit, OnDestroy {
     if (name) {
       this.participant = name;
     }
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   participantChange(participant: Participant): void {

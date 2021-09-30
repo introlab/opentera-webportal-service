@@ -50,7 +50,6 @@ export class AuthenticationService {
   }
 
   loginWithToken(token: string): void {
-    console.log('login with token');
     this.isLoggedIn = true;
     this.cookieService.set(this.cookieValue, token, null, '/');
     this.router.navigate([this._lastAuthenticatedPath]);

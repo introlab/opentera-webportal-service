@@ -17,7 +17,6 @@ export class ServiceResolver implements Resolve<Service[]> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Service[]> {
     return this.serviceService.getByKey().pipe(
       tap((dataFromApi) => {
-        console.log(dataFromApi[0]);
         this.service = dataFromApi[0];
       }),
       shareReplay(1),

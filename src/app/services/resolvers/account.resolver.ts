@@ -32,10 +32,8 @@ export class AccountResolver implements Resolve<Account> {
     return this.accountService.getWithToken().pipe(
       shareReplay(1),
       tap((accountFromAPI) => {
-        console.log(accountFromAPI);
         this.account = accountFromAPI;
         if (isUser(accountFromAPI)) {
-          console.log('refresh user token');
           this.authService.startRefreshTokenTimer();
         }
       }),

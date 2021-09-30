@@ -30,7 +30,6 @@ export class SessionTypeSelectorComponent implements OnInit, OnChanges, OnDestro
   }
 
   ngOnChanges(): void {
-    console.log(this.idEventSessionType);
     this.selectType();
   }
 

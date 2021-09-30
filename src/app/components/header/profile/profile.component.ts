@@ -52,7 +52,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(
       take(1)
     ).subscribe((result) => {
-      console.log('new user', result);
       if (result) {
         this.userService.update(result).subscribe((updated) => {
           this.notificationService.showSuccess('La modification du profil a été faite.');

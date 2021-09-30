@@ -161,7 +161,6 @@ export class ParticipantsComponent implements OnInit, OnDestroy, AfterViewInit {
     dialogRef.afterClosed().pipe(
       take(1)
     ).subscribe((result) => {
-      console.log('new participant', result);
       if (result) {
         if (!result.id_participant) {
           result.id_participant = 0;

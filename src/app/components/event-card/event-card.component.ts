@@ -89,7 +89,6 @@ export class EventCardComponent implements OnInit, OnDestroy {
   connect(): void {
     if (!this.isUser) {
       const videoRehabApp = this.account.apps.find((app) => app.app_service_key === 'VideoRehabService');
-      console.log(videoRehabApp);
       if (videoRehabApp && videoRehabApp.app_config) {
         this.selectedSourceService.setSelectedSource(videoRehabApp.app_config.app_config_url);
         const app = videoRehabApp.app_name?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');

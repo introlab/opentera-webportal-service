@@ -36,7 +36,6 @@ export class AppComponent implements OnInit, OnDestroy {
   private refreshToken(): void {
     this.subscription = this.accountService.account$().subscribe((account) => {
       if (isUser(account) && !!this.cookieService.get(GlobalConstants.cookieValue)) {
-        console.log('refresh token user');
         this.authService.startRefreshTokenTimer();
       }
     });

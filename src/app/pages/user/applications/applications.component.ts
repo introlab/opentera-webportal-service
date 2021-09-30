@@ -164,7 +164,7 @@ export class ApplicationsComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         this.appService.update(result).pipe(
           switchMap((updated) => {
-            this.router.navigate([Pages.applicationsPage]);
+            this.router.navigate([Pages.createPath(Pages.applicationsPage, true)]);
             this.notificationService.showSuccess('La section ' + updated[0].app_name + ' a été sauvegardée.');
             return this.refreshApps();
           })
