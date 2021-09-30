@@ -35,6 +35,7 @@ const routes: Routes = [
       {path: Pages.loginPage, component: LoginComponent},
     ]
   },
+  {path: '**', redirectTo: Pages.fourofourPage}
 ];
 
 @NgModule({
