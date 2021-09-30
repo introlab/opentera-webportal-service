@@ -8,7 +8,7 @@ export class GlobalConstants {
   static cookieValue = 'PromoSanteCookie';
   static serviceKey = 'WebPortalService';
   static version = '1.0';
-  static organism = 'Centre de Recherche sur le Vieillissement de Sherbrooke - Regroupement INTER - 2020';
+  static organism = 'Centre de Recherche sur le Vieillissement de Sherbrooke - Regroupement INTER - ' + new Date().getFullYear();
 
   static applicationTypes = {external: 0, 'OpenTera Service': 1};
 
