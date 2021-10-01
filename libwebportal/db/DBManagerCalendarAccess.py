@@ -55,7 +55,7 @@ class DBManagerCalendarAccess:
             queries.append(WebPortalCalendarEvent.user_uuid == user_uuid)
         elif participants_uuids is not []:
             queries.append(
-                WebPortalCalendarEvent.session_participant_uuids.contains(cast([participants_uuids], ARRAY(String))))
+                WebPortalCalendarEvent.session_participant_uuids.overlap(cast([participants_uuids], ARRAY(String))))
 
         events = WebPortalCalendarEvent.query.filter(*queries).order_by(
             WebPortalCalendarEvent.event_start_datetime.asc()).all()
