@@ -44,13 +44,15 @@ class DBManagerCalendarAccess:
             return events
         return []
 
-    def query_overlaps(self, start_time, end_time, user_uuid=None, participants_uuids=[]):
+    def query_overlaps(self, start_time, end_time, user_uuid=None, participants_uuids=[], id_event=None):
         queries = [or_(WebPortalCalendarEvent.event_start_datetime.between(start_time, end_time),
                        WebPortalCalendarEvent.event_end_datetime.between(start_time, end_time),
                        literal(start_time).between(WebPortalCalendarEvent.event_start_datetime,
                                                    WebPortalCalendarEvent.event_end_datetime),
                        literal(end_time).between(WebPortalCalendarEvent.event_start_datetime,
                                                  WebPortalCalendarEvent.event_end_datetime))]
+        if id_event is not None:
+            queries.append(WebPortalCalendarEvent.id_event != id_event)
         if user_uuid is not None:
             queries.append(WebPortalCalendarEvent.user_uuid == user_uuid)
         elif participants_uuids is not []:
@@ -71,7 +73,7 @@ class DBManagerCalendarAccess:
             queries.append(WebPortalCalendarEvent.user_uuid == user_uuid)
         elif participants_uuids is not []:
             queries.append(
-                WebPortalCalendarEvent.session_participant_uuids.contains(cast([participants_uuids], ARRAY(String))))
+                WebPortalCalendarEvent.session_participant_uuids.overlap(cast([participants_uuids], ARRAY(String))))
 
         events = WebPortalCalendarEvent.query.filter(*queries).order_by(
             WebPortalCalendarEvent.event_start_datetime.asc()).limit(3).all()
