@@ -12,7 +12,8 @@ export class PasswordFormComponent implements OnInit, OnDestroy {
   @Output() passwordChange = new EventEmitter<string>();
   form: FormGroup;
   parentErrorStateMatcher = new ParentErrorStateMatcher();
-  private regex = '^(?=(?:\\D*\\d){2}).{8,}$';
+  // private regex = '^(?=(?:\\D*\\d){2}).{8,}$';
+  private regex = '(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\\W)(.{10,})$';
   private idParticipantSubject = new BehaviorSubject<number>(0);
   @Input() parentForm: FormGroup;
 
