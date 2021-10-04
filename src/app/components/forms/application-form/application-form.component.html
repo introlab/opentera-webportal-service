@@ -38,18 +38,21 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Lien</mat-label>
-      <input matInput formControlName="url" [placeholder]="urlExample">
-    </mat-form-field>
-
     <mat-radio-group aria-label="Type" formControlName="type" (change)="changeType($event.value)">
       <span>Type:</span>
       <mat-radio-button [color]="color" value="{{appType.external}}">Externe</mat-radio-button>
       <mat-radio-button [color]="color" value="{{appType['OpenTera Service']}}">Service OpenTera</mat-radio-button>
     </mat-radio-group>
 
-    <mat-form-field appearance="outline" *ngIf="showServiceControl">
+    <mat-form-field appearance="outline" *ngIf="!isOpenTeraServiceApp">
+      <mat-label>Lien</mat-label>
+      <input matInput formControlName="url" [placeholder]="urlExample">
+      <mat-error>
+        {{required}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" *ngIf="isOpenTeraServiceApp">
       <mat-label>Service</mat-label>
       <mat-select formControlName="service" [value]="selectedService">
         <mat-option *ngFor="let service of services" [value]="service">

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, Output, EventEmitter, Input, OnChanges} from '@angular/core';
+import {Component, OnDestroy, OnInit, Input, OnChanges} from '@angular/core';
 import {SessionType} from '@shared/models/session-type.model';
 import {SelectedProjectService} from '@services/selected-project.service';
 import {Subscription} from 'rxjs';

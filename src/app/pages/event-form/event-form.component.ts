@@ -7,7 +7,7 @@ import {NotificationService} from '@services/notification.service';
 import {TimeInputValidator} from '@core/validators/time-input.validator';
 import {AccountService} from '@services/account.service';
 import {Account} from '@shared/models/account.model';
-import {dateToISOLikeButLocal, getDuration, isObjectEmpty, setDate} from '@core/utils/utility-functions';
+import {dateToISOLikeButLocal, getDuration, isObjectEmpty} from '@core/utils/utility-functions';
 import {Session} from '@shared/models/session.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {validateAllFields} from '@core/utils/validate-form';
@@ -15,6 +15,7 @@ import {Participant} from '@shared/models/participant.model';
 import {GlobalConstants} from '@core/utils/global-constants';
 import {combineLatest, EMPTY, Subscription} from 'rxjs';
 import {switchMap, tap} from 'rxjs/operators';
+import {Pages} from '@core/utils/pages';
 
 @Component({
   selector: 'app-event-form',
@@ -30,6 +31,13 @@ export class EventFormComponent implements OnInit, OnDestroy {
   hasSession = false;
   sessionParticipants: Participant[] = [];
   required = GlobalConstants.requiredMessage;
+  startTimeControlName = 'startTime';
+  endTimeControlName = 'endTime';
+  inOneHour: Date;
+  startTime: Date;
+  today = new Date();
+  overlappingParticipants: string[] = [];
+  selectedUserUUID = '';
   private account: Account;
   private subscriptions: Subscription[] = [];
 
@@ -60,6 +68,10 @@ export class EventFormComponent implements OnInit, OnDestroy {
 
     combineLatest([account$, routeParam$]).pipe(
       tap(([account, params]) => {
+        if (params.participantsUUIDs) {
+          const uuids = params.participantsUUIDs;
+          console.log(uuids);
+        }
         if (params.time) {
           const date = new Date(params.time);
           this.setNewTime(date);
@@ -73,7 +85,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
           this.event = new Event();
           this.event.id_event = 0;
           this.event.user_uuid = this.account.login_uuid;
-          this.eventForm.controls.clinician.setValue(this.account.fullname);
+          this.selectedUserUUID = this.account.login_uuid;
           this.setUpValidators();
           return EMPTY;
         }
@@ -88,15 +100,11 @@ export class EventFormComponent implements OnInit, OnDestroy {
   }
 
   private initializeForm(): void {
-    const today = EventFormComponent.roundToNearestQuarter(new Date());
-    const inOneHour = EventFormComponent.roundToNearestQuarter(new Date());
-    inOneHour.setHours(inOneHour.getHours() + 1);
+    this.startTime = EventFormComponent.roundToNearestQuarter(this.today);
+    this.inOneHour = EventFormComponent.roundToNearestQuarter(this.today);
+    this.inOneHour.setHours(this.inOneHour.getHours() + 1);
     this.eventForm = this.fb.group({
       name: new FormControl('', Validators.required),
-      clinician: new FormControl({value: '', disabled: true}, Validators.required),
-      startDate: new FormControl(today, Validators.required),
-      startTime: new FormControl(today, Validators.required),
-      endTime: new FormControl(inOneHour, Validators.required)
     }, {
       validators: TimeInputValidator.validateTimes,
       updateOn: 'blur'
@@ -106,7 +114,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
   private setUpValidators(): void {
     this.onChanges();
     this.eventForm.setAsyncValidators([TimeInputValidator.checkIfTimeSlotsTaken(
-      this.calendarService, this.event.user_uuid, this.event.id_event, this.sessionParticipants)]);
+      this.calendarService, this.event.user_uuid, this.event.id_event, this.sessionParticipants).bind(this)]);
     this.eventForm.updateValueAndValidity();
   }
 
@@ -121,10 +129,9 @@ export class EventFormComponent implements OnInit, OnDestroy {
   private setValues(): void {
     const controls = this.eventForm.controls;
     controls.name.setValue(this.event.event_name);
-    controls.startDate.setValue(new Date(this.event.event_start_datetime));
     controls.startTime.setValue(new Date(this.event.event_start_datetime));
     controls.endTime.setValue(new Date(this.event.event_end_datetime));
-    controls.clinician.setValue(this.event.user_fullname);
+    this.selectedUserUUID = this.event.user_uuid;
     if (this.event.session) {
       this.hasSession = true;
       this.session = this.event.session[0];
@@ -134,12 +141,9 @@ export class EventFormComponent implements OnInit, OnDestroy {
   }
 
   private setNewTime(time: Date): void {
-    const start = EventFormComponent.roundToNearestQuarter(time);
-    const inOneHour = EventFormComponent.roundToNearestQuarter(time);
-    inOneHour.setHours(inOneHour.getHours() + 1);
-    this.eventForm.controls.startDate.setValue(start);
-    this.eventForm.controls.startTime.setValue(start);
-    this.eventForm.controls.endTime.setValue(inOneHour);
+    this.startTime = EventFormComponent.roundToNearestQuarter(time);
+    this.inOneHour = EventFormComponent.roundToNearestQuarter(time);
+    this.inOneHour.setHours(this.inOneHour.getHours() + 1);
   }
 
   validate(): void {
@@ -162,38 +166,40 @@ export class EventFormComponent implements OnInit, OnDestroy {
   }
 
   private createEvent(): void {
-    const date = this.eventForm.controls.startDate.value;
-    const start = this.eventForm.controls.startTime.value;
-    const end = this.eventForm.controls.endTime.value;
-    this.event.event_name = this.eventForm.controls.name.value;
-    this.event.event_start_datetime = dateToISOLikeButLocal(setDate(date, start));
-    this.event.event_end_datetime = dateToISOLikeButLocal(setDate(date, end));
+    const controls = this.eventForm.controls;
+    const startTime = controls.startTime.value;
+    const endTime = controls.endTime.value;
+    this.event.event_name = controls.name.value;
+    this.event.event_start_datetime = dateToISOLikeButLocal(startTime);
+    this.event.event_end_datetime = dateToISOLikeButLocal(endTime);
     this.event.session = this.createSession();
     this.event.session.session_start_datetime = this.event.event_start_datetime;
-    this.event.session.session_duration = getDuration(start, end);
+    this.event.session.session_duration = getDuration(startTime, endTime);
     this.event.session_participant_uuids = this.sessionParticipants.map(a => a.participant_uuid);
+    this.event.user_uuid = controls.clinician.value.user_uuid;
   }
 
   private createSession(): Session {
+    const controls = this.eventForm.controls;
     const session = new Session();
-    session.session_name = this.eventForm.controls.name.value;
+    session.session_name = controls.name.value;
     session.id_session = !isObjectEmpty(this.session) ? this.session.id_session : 0;
-    session.session_users_uuids = [this.account.login_uuid];
+    session.session_users_uuids = [controls.clinician.value.user_uuid];
     session.session_status = 0;
-    session.id_session_type = this.eventForm.controls.type.value.id_session_type;
+    session.id_session_type = controls.type.value.id_session_type;
     session.session_participants_uuids = this.sessionParticipants.map(a => a.participant_uuid);
     return session;
   }
 
   private saveEvent(): void {
     this.calendarService.update(this.event).subscribe((result) => {
-      this.location.back();
+      this.router.navigate([Pages.calendarPage]);
       this.notificationService.showSuccess(`L'évenement ${this.event.event_name} a été sauvegardé.`);
     });
   }
 
   cancel(): void {
-    this.location.back();
+    this.router.navigate([Pages.calendarPage]);
   }
 
   participantsChange(participants: Participant[]): void {
@@ -202,12 +208,14 @@ export class EventFormComponent implements OnInit, OnDestroy {
     const control = this.eventForm.controls;
     const startTime = new Date(control.startTime.value);
     const endTime = new Date(control.endTime.value);
-    const date = new Date(control.startDate.value);
-    const isoStartDate = dateToISOLikeButLocal(setDate(date, startTime));
-    const isoEndDate = dateToISOLikeButLocal(setDate(date, endTime));
+    const isoStartDate = dateToISOLikeButLocal(startTime);
+    const isoEndDate = dateToISOLikeButLocal(endTime);
     const participantsUUIDs: string[] = this.sessionParticipants.map((part) => part.participant_uuid);
     this.calendarService.checkOverlaps(isoStartDate, isoEndDate, participantsUUIDs).subscribe((res) => {
-      console.log('overlaps participant', res);
+      this.overlappingParticipants = [];
+      res.forEach((event) => {
+        this.overlappingParticipants = [...this.overlappingParticipants, ...event.session_participant_uuids];
+      });
     });
   }
 

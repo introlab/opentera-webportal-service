@@ -1,10 +1,10 @@
 <div class="container">
   <section class="events-container">
+    <h3>Événements du {{viewDate | date: 'dd MMM yyyy'}}</h3>
     <button *ngIf="isUser" class="add-button" mat-raised-button [color]="'primary'" (click)="openFormWithTime(currentDate)">
       <mat-icon>add</mat-icon>
       Ajouter
     </button>
-
     <app-events [events]="eventsWithDetails"></app-events>
   </section>
   <section class="calendar-container">
@@ -32,20 +32,20 @@
              mwlCalendarPreviousView
              [view]="view"
              [(viewDate)]="viewDate"
-             (viewDateChange)="closeOpenMonthViewDay($event)">
+             (viewDateChange)="viewDateChange($event)">
           <mat-icon>chevron_left</mat-icon>
         </div>
         <div class="button"
              mwlCalendarToday
              [(viewDate)]="viewDate"
-             (viewDateChange)="closeOpenMonthViewDay($event)">
+             (viewDateChange)="viewDateChange($event)">
           Aujourd'hui
         </div>
         <div class="button icon"
              mwlCalendarNextView
              [view]="view"
              [(viewDate)]="viewDate"
-             (viewDateChange)="closeOpenMonthViewDay($event)">
+             (viewDateChange)="viewDateChange($event)">
           <mat-icon>chevron_right</mat-icon>
         </div>
       </div>

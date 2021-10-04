@@ -1,6 +1,9 @@
 <div class="page-container">
+  <app-participants-selector *ngIf="isUser" [noneOption]="true" (selectedParticipantChange)="participantChange($event)"></app-participants-selector>
+  <h2>Calendrier de {{calendarName}}</h2>
   <section class="next-events">
+    <h4>Événements à venir</h4>
     <app-events [events]="nextEvents"></app-events>
   </section>
-  <app-calendar></app-calendar>
+  <app-calendar [participantsUUIDs]="participantsUUIDs"></app-calendar>
 </div>

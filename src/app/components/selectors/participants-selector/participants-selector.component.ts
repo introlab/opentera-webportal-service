@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Participant} from '@shared/models/participant.model';
 import {ParticipantService} from '@services/participant/participant.service';
 import {SelectedProjectService} from '@services/selected-project.service';
@@ -11,8 +11,10 @@ import {switchMap} from 'rxjs/operators';
   styleUrls: ['./participants-selector.component.scss']
 })
 export class ParticipantsSelectorComponent implements OnInit, OnDestroy {
+  @Input() noneOption = false;
   @Output() selectedParticipantChange = new EventEmitter();
   participants$: Observable<Participant[]>;
+  selectedParticipant: Participant;
   private subscriptions: Subscription[] = [];
 
 
@@ -35,8 +37,19 @@ export class ParticipantsSelectorComponent implements OnInit, OnDestroy {
     );
   }
 
-  onValueChanged(value: Participant): void {
-    this.selectedParticipantChange.emit(value);
+  onValueChanged(selected: Participant): void {
+    this.selectedParticipantChange.emit(selected);
+    if (this.isDifferentParticipant(selected)) {
+      if (!!selected) {
+        this.selectedParticipantChange.emit(selected);
+      } else {
+        this.selectedParticipantChange.emit(null);
+      }
+    }
+  }
+
+  private isDifferentParticipant(selected: Participant): boolean {
+    return this.selectedParticipant?.id_participant !== selected?.id_participant;
   }
 
   ngOnDestroy(): void {

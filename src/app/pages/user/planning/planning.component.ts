@@ -1,6 +1,5 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Event} from '@shared/models/event.model';
-import {Subscription} from 'rxjs';
 import {Participant} from '@shared/models/participant.model';
 import {ActivatedRoute} from '@angular/router';
 

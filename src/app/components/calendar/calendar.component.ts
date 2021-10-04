@@ -111,6 +111,7 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
     this.dateChange();
   }
 
@@ -166,7 +167,7 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  closeOpenMonthViewDay(date: Date): void {
+  viewDateChange(date: Date): void {
     this.activeDayIsOpen = false;
     switch (this.view) {
       case CalendarView.Day:
@@ -194,15 +195,7 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
     const end = CalendarComponent.getDateString(endDate);
     if (this.account) {
       if (this.isUser) {
-        if (this.router.url.includes(Pages.planningPage)) {
-          if (this.participantsUUIDs.length > 0) {
-            // Get events for a participant
-            this.calendarService.getCalendar(start, end, this.participantsUUIDs).subscribe();
-          }
-        } else {
-          // Get events of the connected user
-          this.calendarService.getCalendar(start, end).subscribe();
-        }
+        this.calendarService.getCalendar(start, end, this.participantsUUIDs).subscribe();
       } else {
         // Get events of the connected participant
         this.participantsUUIDs = [this.account.login_uuid];
@@ -214,14 +207,14 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   openForm(event: CalendarEvent): void {
     if (this.isUser) {
       const idEvent = event.meta.event.id_event;
-      this.router.navigate([Pages.eventFormPage, {idEvent}]);
+      this.router.navigate([Pages.eventFormPage, {idEvent, participantsUUIDs: this.participantsUUIDs}]);
     }
   }
 
   openFormWithTime(date: Date): void {
     if (this.isUser) {
       const time = date.toISOString();
-      this.router.navigate([Pages.eventFormPage, {time}]);
+      this.router.navigate([Pages.eventFormPage, {time, participantsUUIDs: this.participantsUUIDs}]);
     }
   }
 

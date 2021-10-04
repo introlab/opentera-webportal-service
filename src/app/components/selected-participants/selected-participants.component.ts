@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Participant} from '@shared/models/participant.model';
 
 @Component({
@@ -6,14 +6,19 @@ import {Participant} from '@shared/models/participant.model';
   templateUrl: './selected-participants.component.html',
   styleUrls: ['./selected-participants.component.scss']
 })
-export class SelectedParticipantsComponent implements OnInit {
+export class SelectedParticipantsComponent implements OnInit, OnChanges {
   @Input() selectedParticipants: Participant[];
+  @Input() overlappingParticipants: string[] = [];
   @Output() participantsChange = new EventEmitter();
 
   constructor() {
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.overlappingParticipants);
   }
 
   remove(participant: Participant, index: number): void {

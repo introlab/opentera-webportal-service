@@ -1,13 +1,17 @@
 // Time picker
 
-.owl-dt-container-buttons {
-  color: var(--primary-color);
-}
+.ngx-mat-timepicker {
+  font-size: 16px !important;
 
-.owl-dt-calendar-table .owl-dt-calendar-cell-selected {
-  background-color: var(--primary-color);
-}
+  form {
+    min-width: 100% !important;
 
+    .ngx-mat-timepicker-table .ngx-mat-timepicker-tbody tr td .mat-form-field {
+      min-width: 40px !important;
+      width: 40px !important;
+    }
+  }
+}
 
 // Calendar
 

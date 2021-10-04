@@ -26,12 +26,12 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
   selectedService: Service;
   selectedIcon: Icon;
   icons = icons;
-  showServiceControl = false;
+  isOpenTeraServiceApp = false;
   appType = GlobalConstants.applicationTypes;
   positions: number[] = [1, 2, 3, 4, 5, 6];
   required = GlobalConstants.requiredMessage;
   color: ThemePalette = 'primary';
-  urlExample = 'www.example.com';
+  urlExample = 'ex.: www.example.com';
   canSave = false;
   private app: Application;
   private subscriptions: Subscription[] = [];
@@ -82,12 +82,12 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
   private initializeForm(): void {
     this.appForm = this.fb.group({
       name: new FormControl('', Validators.required),
-      url: new FormControl(''),
       enable: new FormControl(true),
       icon: new FormControl('', Validators.required),
       order: new FormControl(this.positions[0], Validators.required),
       type: new FormControl(GlobalConstants.applicationTypes.external.toString(), Validators.required),
       service: new FormControl(''),
+      url: new FormControl('')
     });
   }
 
@@ -95,6 +95,7 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
     this.appForm.controls.name.setValue(this.app.app_name);
     this.appForm.controls.order.setValue(this.app.app_order);
     this.appForm.controls.enable.setValue(this.app.app_enabled);
+    this.appForm.controls.url.setValue(this.app.app_static_url);
     this.setAppType();
     this.setSelectedIcon();
     if (!!this.app.service) {
@@ -143,13 +144,13 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
   }
 
   changeType(value: any): void {
-    this.showServiceControl = Number(value) === GlobalConstants.applicationTypes['OpenTera Service'];
-    if (this.showServiceControl) {
+    this.isOpenTeraServiceApp = Number(value) === GlobalConstants.applicationTypes['OpenTera Service'];
+    if (this.isOpenTeraServiceApp) {
+      this.appForm.controls.url.clearValidators();
       this.appForm.controls.service.setValidators([Validators.required]);
-      this.urlExample = `ex.: https://${GlobalConstants.hostname}:${GlobalConstants.port}/rehab/`;
     } else {
       this.appForm.controls.service.clearValidators();
-      this.urlExample = 'ex.: www.example.com';
+      this.appForm.controls.url.setValidators([Validators.required]);
     }
     this.appForm.controls.service.updateValueAndValidity();
   }
@@ -159,13 +160,14 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
     this.app.app_name = controls.name.value;
     this.app.app_enabled = controls.enable.value;
     this.app.app_icon = controls.icon.value.code;
-    this.app.app_static_url = controls.url.value;
     this.app.app_order = controls.order.value;
     this.app.app_type = Number(controls.type.value);
     this.app.id_project = this.selectedProject.id_project;
-    if (this.app.app_type === GlobalConstants.applicationTypes['OpenTera Service']) {
+    if (this.isOpenTeraServiceApp) {
       this.app.app_service_key = controls.service.value.service_key;
+      this.app.app_static_url = '';
     } else {
+      this.app.app_static_url = controls.url.value;
       this.app.app_service_key = '';
     }
   }

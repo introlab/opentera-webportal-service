@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {distinctUntilChanged, distinctUntilKeyChanged, filter, switchMap} from 'rxjs/operators';
+import {distinctUntilChanged, filter, switchMap} from 'rxjs/operators';
 import {combineLatest, Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {PermissionsService} from '@services/permissions.service';
@@ -73,7 +73,7 @@ export class ProjectSelectorComponent implements OnInit, OnDestroy {
   onValueChanged(selected: Project): void {
     if (selected && this.isDifferentProject(selected)) {
       this.selectedProjectService.setSelectedProject(selected);
-      // this.getProjectPermission(selected);
+      this.getProjectPermission(selected);
     }
   }
 

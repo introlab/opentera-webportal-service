@@ -7,7 +7,6 @@ import {catchError, map, shareReplay, tap} from 'rxjs/operators';
 import {CookieService} from 'ngx-cookie-service';
 import {AuthenticationService} from '@services/authentication.service';
 import {isUser} from '@core/utils/utility-functions';
-import {GlobalConstants} from '@core/utils/global-constants';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +38,11 @@ export class AccountResolver implements Resolve<Account> {
       }),
       map((accountFromAPI) => accountFromAPI),
       catchError((err) => {
-        this.authService.logout(isUser(this.account));
+        if (this.account) {
+          this.authService.logout(isUser(this.account));
+        } else {
+          this.authService.reset();
+        }
         return throwError(err);
       })
     );

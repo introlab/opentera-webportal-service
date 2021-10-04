@@ -59,12 +59,16 @@ export class AuthenticationService {
     const apiUrl = isManager ? `${this.API_URL}user/logout` : `${this.API_URL}participant/logout`;
     return this.http.get(apiUrl).pipe(
       tap(() => {
-        this.isLoggedIn = false;
-        this.router.navigate([Pages.loginPage]);
-        this.cookieService.delete(this.cookieValue, '/');
-        this.stopRefreshTokenTimer();
+        this.reset();
       })
     );
+  }
+
+  reset(): void {
+    this.isLoggedIn = false;
+    this.router.navigate([Pages.loginPage]);
+    this.cookieService.delete(this.cookieValue, '/');
+    this.stopRefreshTokenTimer();
   }
 
   startRefreshTokenTimer(): void {

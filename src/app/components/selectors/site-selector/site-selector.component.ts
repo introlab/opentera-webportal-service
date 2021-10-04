@@ -67,8 +67,7 @@ export class SiteSelectorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private getSitePermission(site: Site): Observable<Permission> {
-    // return this.permissionsService.getSitePermission(site.id_site);
-    return of(null);
+    return this.permissionsService.getSitePermission(site.id_site);
   }
 
   manageSites(): boolean {

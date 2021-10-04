@@ -8,8 +8,6 @@ import {MaterialModule} from '@shared/material.module';
 import localeFr from '@angular/common/locales/fr';
 import {registerLocaleData} from '@angular/common';
 import {ParticipantLayoutComponent} from '@shared/layout/participant-layout/participant-layout.component';
-import {OWL_DATE_TIME_LOCALE, OwlDateTimeIntl} from '@danielmoncada/angular-datetime-picker';
-import {DefaultIntl} from '@core/utils/datetime-picker.config';
 import {LoginComponent} from '@pages/login/login.component';
 import {NotFoundComponent} from '@pages/not-found/not-found.component';
 import {CoreModule} from '@core/core.module';
@@ -43,8 +41,6 @@ registerLocaleData(localeFr, 'fr');
   ],
   providers: [
     {provide: LOCALE_ID, useValue: 'FR-fr'},
-    {provide: OwlDateTimeIntl, useClass: DefaultIntl},
-    {provide: OWL_DATE_TIME_LOCALE, useValue: 'fr'},
   ],
   bootstrap: [AppComponent]
 })

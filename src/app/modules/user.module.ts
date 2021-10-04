@@ -34,7 +34,7 @@ import {UserRoutingModule} from '@src/app/modules/user-routing.module';
     CommonModule,
     SharedModule,
     MaterialModule,
-    UserRoutingModule
+    UserRoutingModule,
   ]
 })
 export class UserModule {

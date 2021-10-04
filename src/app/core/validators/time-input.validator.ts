@@ -12,35 +12,45 @@ export class TimeInputValidator {
   }
 
   public static validateTimes(control: AbstractControl): null {
-    const startTime = control.get('startTime');
-    const endTime = control.get('endTime');
-    const start = new Date(startTime.value);
-    const end = new Date(endTime.value);
+    const startControl = control.get('startTime');
+    const endControl = control.get('endTime');
 
-    if (start.getHours() > end.getHours()) {
-      startTime.setErrors({startTimeAfterEndTime: true});
-      endTime.setErrors({startTimeAfterEndTime: true});
-    } else if (start.getHours() === end.getHours() && start.getMinutes() >= end.getMinutes()) {
-      startTime.setErrors({startTimeAfterEndTime: true});
-      endTime.setErrors({startTimeAfterEndTime: true});
+    if (!startControl || !endControl) {
+      return null;
+    }
+
+    const startTime = new Date(startControl.value);
+    const endTime = new Date(endControl.value);
+
+    if (startTime >= endTime) {
+      startControl.setErrors({startTimeAfterEndTime: true});
+      endControl.setErrors({startTimeAfterEndTime: true});
     } else {
-      endTime.setErrors(null);
-      startTime.setErrors(null);
+      startControl.setErrors(null);
+      endControl.setErrors(null);
     }
     return null;
   }
 
   public static checkIfTimeSlotsTaken(calendarService: CalendarService, uuidUser: string, eventId: number, participants: Participant[]): any {
-    if ( participants.length > 0) {
+    console.log(participants);
+    if (participants.length > 0) {
       const participantsUUIDs: string[] = participants.map((participant) => participant.participant_uuid);
     }
     if (uuidUser) {
       return (control: AbstractControl): Observable<ValidationErrors | null> => {
-        const startTime = new Date(control.get('startTime').value);
-        const endTime = new Date(control.get('endTime').value);
-        const date = new Date(control.get('startDate').value);
-        const isoStartDate = dateToISOLikeButLocal(setDate(date, startTime));
-        const isoEndDate = dateToISOLikeButLocal(setDate(date, endTime));
+        const startControl = control.get('startTime');
+        const endControl = control.get('endTime');
+
+        if (!startControl || !endControl) {
+          return null;
+        }
+
+        const startTime = new Date(startControl.value);
+        const endTime = new Date(endControl.value);
+        const isoStartDate = dateToISOLikeButLocal(startTime);
+        const isoEndDate = dateToISOLikeButLocal(endTime);
+
         return calendarService.checkOverlaps(isoStartDate, isoEndDate, [])
           .pipe(
             debounceTime(200),

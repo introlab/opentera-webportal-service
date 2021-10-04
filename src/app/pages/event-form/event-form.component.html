@@ -4,10 +4,8 @@
 
   <form [formGroup]="eventForm">
     <h4>Informations</h4>
-    <mat-form-field appearance="outline">
-      <mat-label>Clinicien</mat-label>
-      <input matInput formControlName="clinician">
-    </mat-form-field>
+    <app-user-selector [selectedUserUUID]="selectedUserUUID" [form]="eventForm"></app-user-selector>
+
     <mat-form-field appearance="outline">
       <mat-label>Nom de l'événement</mat-label>
       <input matInput formControlName="name" [placeholder]="title">
@@ -17,41 +15,11 @@
     </mat-form-field>
 
     <h4>Date et heures</h4>
-    <mat-form-field appearance="outline">
-      <mat-label>
-        Date
-      </mat-label>
-      <input matInput [owlDateTimeTrigger]="startDate" [owlDateTime]="startDate" formControlName="startDate">
-      <owl-date-time [pickerType]="'calendar'" #startDate></owl-date-time>
-      <mat-error>
-        {{required}}
-      </mat-error>
-    </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>
-        Début
-      </mat-label>
-      <input matInput [owlDateTimeTrigger]="start" [owlDateTime]="start" formControlName="startTime">
-      <owl-date-time [pickerType]="'timer'" [stepMinute]="15" #start></owl-date-time>
-      <mat-error class="time-error" *ngIf="eventForm.controls.endTime.hasError('startTimeAfterEndTime')">
-        L'heure de début doit être avant l'heure de fin.
-      </mat-error>
-      <mat-error *ngIf="eventForm.controls.startTime.hasError('required')">
-        {{required}}
-      </mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>
-        Fin
-      </mat-label>
-      <input matInput [owlDateTimeTrigger]="end" [owlDateTime]="end" formControlName="endTime">
-      <owl-date-time [pickerType]="'timer'" [stepMinute]="15" #end></owl-date-time>
-      <mat-error *ngIf="eventForm.controls.endTime.hasError('required')">
-        {{required}}
-      </mat-error>
-    </mat-form-field>
+    <app-datetime-selector [label]="'Début'" [default]="startTime" [form]="eventForm"
+                           [controlName]="startTimeControlName" [minDate]="today"></app-datetime-selector>
+    <app-datetime-selector [label]="'Fin'" [default]="inOneHour" [form]="eventForm" [controlName]="endTimeControlName"
+                           [minDate]="startTime"></app-datetime-selector>
 
     <div *ngIf="eventForm.hasError('timesOverlapping')" class="period overlap">
       <mat-icon>close</mat-icon>
@@ -66,7 +34,7 @@
     <app-session-type-selector [idEventSessionType]="session?.id_session_type"
                                [form]="eventForm"></app-session-type-selector>
 
-    <app-selected-participants [selectedParticipants]="sessionParticipants"
+    <app-selected-participants [selectedParticipants]="sessionParticipants" [overlappingParticipants]="overlappingParticipants"
                                (participantsChange)="participantsChange($event)"></app-selected-participants>
   </form>
 
