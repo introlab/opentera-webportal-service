@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthenticationService} from '@services/authentication.service';
 import {AccountService} from '@services/account.service';
 import {Subscription} from 'rxjs';
-import {ApplicationFormComponent} from '@components/forms/application-form/application-form.component';
 import {take} from 'rxjs/operators';
 import {UserService} from '@services/user.service';
 import {MatDialog} from '@angular/material/dialog';

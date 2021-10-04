@@ -9,14 +9,11 @@ import {BehaviorSubject} from 'rxjs';
   styleUrls: ['./password-form.component.scss']
 })
 export class PasswordFormComponent implements OnInit, OnDestroy {
-  form: FormGroup;
-  private regex = '^(?=(?:\\D*\\d){2}).{8,}$';
-  parentErrorStateMatcher = new ParentErrorStateMatcher();
-
-  private idParticipantSubject = new BehaviorSubject<number>(0);
-
-  @Output() formGroupChange = new EventEmitter<FormGroup>();
   @Output() passwordChange = new EventEmitter<string>();
+  form: FormGroup;
+  parentErrorStateMatcher = new ParentErrorStateMatcher();
+  private regex = '^(?=(?:\\D*\\d){2}).{8,}$';
+  private idParticipantSubject = new BehaviorSubject<number>(0);
   @Input() parentForm: FormGroup;
 
   @Input() set idAccount(value: number) {
@@ -39,7 +36,6 @@ export class PasswordFormComponent implements OnInit, OnDestroy {
         this.form.controls.password.setValidators([Validators.pattern(this.regex)]);
       }
       this.parentForm.addControl('password', this.form);
-      this.formGroupChange.emit(this.parentForm);
     });
   }
 

@@ -9,7 +9,6 @@ import {UserService} from '@services/user.service';
 import {switchMap} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {Account} from '@shared/models/account.model';
-import {UsernameValidator} from '@core/validators/username.validator';
 import {validateAllFields} from '@core/utils/validate-form';
 
 @Component({
@@ -33,7 +32,6 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
               private accountService: AccountService,
               private userService: UserService,
               private cdr: ChangeDetectorRef,
-              public usernameValidator: UsernameValidator,
               @Inject(MAT_DIALOG_DATA) public data: User) {
   }
 
@@ -44,7 +42,6 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
       this.accountService.account$().pipe(
         switchMap((account) => {
           this.account = account;
-          this.setUsernameValidator();
           return this.userService.getById(account.login_id);
         })
       ).subscribe((user) => {
@@ -63,23 +60,18 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
 
   private initializeForm(): void {
     this.profileForm = this.fb.group({
-      username: new FormControl('', Validators.required),
+      username: new FormControl({value: '', disabled: true}, Validators.required),
+      firstName: new FormControl('', Validators.required),
+      lastName: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
     });
   }
 
   private setValues(): void {
     this.profileForm.controls.username.setValue(this.user.user_username);
+    this.profileForm.controls.firstName.setValue(this.user.user_firstname);
+    this.profileForm.controls.lastName.setValue(this.user.user_lastname);
     this.profileForm.controls.email.setValue(this.user.user_email);
-  }
-
-  private setUsernameValidator(): void {
-    const usernameControl = this.profileForm.controls.username;
-    if (this.account.login_type === 'user') {
-      usernameControl.setAsyncValidators(this.usernameValidator.checkUserUsername(this.account.login_id).bind(this.user));
-    } else if (this.account.login_type === 'participant') {
-      usernameControl.setAsyncValidators(this.usernameValidator.checkParticipantUsername(this.account.login_id).bind(this.usernameValidator));
-    }
   }
 
   onNoClick(): void {
@@ -92,27 +84,21 @@ export class ProfileFormComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.canSave) {
-      this.createUser();
-      this.dialogRef.close(this.user);
+      this.dialogRef.close(this.createUser());
     }
   }
 
-  private createUser(): void {
+  private createUser(): User {
+    const temp = new User();
     const controls = this.profileForm.controls;
-    if (this.hasChanged(controls.email.value, 'user_email')) {
-      this.user.user_email = controls.email.value;
-    }
-    if (this.hasChanged(controls.username.value, 'user_username')) {
-      this.user.user_username = controls.username.value;
-    }
+    temp.id_user = this.user.id_user;
+    temp.user_email = controls.email.value;
+    temp.user_firstname = controls.firstName.value;
+    temp.user_lastname = controls.lastName.value;
     if (!!this.newPassword) {
-      this.user.user_password = this.newPassword;
+      temp.user_password = this.newPassword;
     }
-  }
-
-  private hasChanged(newValue: string, key: string): boolean {
-    const initialValue = this.user[key as keyof User];
-    return newValue !== initialValue;
+    return temp;
   }
 
   updatePassword(password: string): void {
