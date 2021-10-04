@@ -59,12 +59,12 @@ class QueryCalendar(Resource):
                 end_time = datetime.fromisoformat(args['end_date'])
                 events = calendar_access.query_overlaps(start_time, end_time, user_uuid=current_user_client.user_uuid)
         elif args['three']:
-            if current_user_client:
-                # Find next three events
-                events = calendar_access.query_next_three(user_uuid=current_user_client.user_uuid)
-            elif participant_uuids:
+            if participant_uuids:
                 # Find next three events for participant
                 events = calendar_access.query_next_three(participants_uuids=participant_uuids)
+            elif current_user_client:
+                # Find next three events
+                events = calendar_access.query_next_three(user_uuid=current_user_client.user_uuid)
         else:
             if args['id_event']:
                 # Get infos of event
@@ -148,8 +148,8 @@ class QueryCalendar(Resource):
             return gettext('Can\'t edit a passed event.'), 400
 
         # Check if there is already a event for that room between the times of the event
-        overlapping_events = calendar_access.query_overlaps_user(event_json['user_uuid'], start_time, end_time,
-                                                                 event_json['id_event'])
+        overlapping_events = calendar_access.query_overlaps(start_time, end_time, user_uuid=event_json['user_uuid'],
+                                                            id_event=event_json['id_event'])
         if overlapping_events:
             return gettext('An event already uses this time slot'), 400
 
