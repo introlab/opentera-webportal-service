@@ -10,7 +10,7 @@ class DBManagerAppAccess:
     def query_apps_in_order(self, id_project: int, enabled_only=False):
         queries = [WebPortalApp.id_project == id_project]
         if enabled_only:
-            queries.append(WebPortalApp.app_enabled is True)
+            queries.append(WebPortalApp.app_enabled == enabled_only)
 
         # Order apps by app_order and if same order, alphabetically
         apps = WebPortalApp.query.filter(*queries).order_by(WebPortalApp.app_order.asc(),
@@ -39,7 +39,6 @@ class DBManagerAppAccess:
         if apps:
             return apps
         return []
-
 
     def query_app_config(self, apps_json):
         for app in apps_json:

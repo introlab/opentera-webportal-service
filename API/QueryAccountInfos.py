@@ -57,7 +57,7 @@ class QueryAccountInfos(Resource):
                 account_infos['project_id'] = participant['id_project']
                 if participant['id_project']:
                     # Get project apps
-                    apps = app_access.query_project_apps(participant['id_project'])
+                    apps = app_access.query_apps_in_order(id_project=participant['id_project'], enabled_only=True)
                     apps_json = [app.to_json() for app in apps]
                     app_access.query_app_config(apps_json)
                     account_infos['apps'] = apps_json
