@@ -138,6 +138,15 @@ input {
   display: flex;
 }
 
+.inactive-item {
+  opacity: 0.7;
+  font-style: italic;
+
+  & > * {
+    color: var(--warn-darker-color) !important;
+  }
+}
+
 
 /*=============== MATERIAL UI TWEAKS ===============*/
 mat-error {

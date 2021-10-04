@@ -61,7 +61,8 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          [ngClass]="{'inactive-item': !row.app_enabled}"></tr>
 
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" colspan="4">Aucune donnée présente pour "{{input.value}}"</td>

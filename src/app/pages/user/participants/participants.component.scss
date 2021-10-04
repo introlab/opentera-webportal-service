@@ -55,15 +55,6 @@
   }
 }
 
-.inactive {
-  opacity: 0.7;
-
-  & > * {
-    color: var(--warn-darker-color);
-  }
-}
-
-
 @media screen and (max-width: 600px) {
   .page-container {
     .filter {
