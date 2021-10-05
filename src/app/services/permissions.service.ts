@@ -17,7 +17,7 @@ export class PermissionsService {
     this.initializePermissions();
   }
 
-  private initializePermissions(): void {
+  initializePermissions(): void {
     this.permissions.project_admin = false;
     this.permissions.site_admin = false;
     this.permissionSubject.next(this.permissions);

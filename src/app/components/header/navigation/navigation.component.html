@@ -6,7 +6,7 @@
   </ng-container>
   <ng-container *ngIf="isUser">
     <ng-container *ngFor="let link of userLinks;index as i">
-      <a [routerLink]="link.path" [title]="link.name" [routerLinkActive]="'active'">
+      <a *ngIf="!link.forProjectAdmin || (link.forProjectAdmin && permissions.project_admin)" [routerLink]="link.path" [title]="link.name" [routerLinkActive]="'active'">
         <span>{{link.name}}</span>
       </a>
     </ng-container>

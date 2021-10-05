@@ -8,6 +8,11 @@ import {Router} from '@angular/router';
 import {CookieService} from 'ngx-cookie-service';
 import {AccountService} from '@services/account.service';
 import {Pages} from '@core/utils/pages';
+import {SelectedProjectService} from '@services/selected-project.service';
+import {SelectedSiteService} from '@services/selected-site.service';
+import {Site} from '@shared/models/site.model';
+import {Project} from '@shared/models/project.model';
+import {PermissionsService} from '@services/permissions.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +32,9 @@ export class AuthenticationService {
   constructor(private http: HttpClient,
               private cookieService: CookieService,
               private accountService: AccountService,
+              private selectedProjectService: SelectedProjectService,
+              private selectedSiteService: SelectedSiteService,
+              private permissionsService: PermissionsService,
               private router: Router) {
   }
 
@@ -68,6 +76,9 @@ export class AuthenticationService {
     this.isLoggedIn = false;
     this.router.navigate([Pages.loginPage]);
     this.cookieService.delete(this.cookieValue, '/');
+    this.selectedProjectService.setSelectedProject(new Project());
+    this.selectedSiteService.setSelectedSite(new Site());
+    this.permissionsService.initializePermissions();
     this.stopRefreshTokenTimer();
   }
 
