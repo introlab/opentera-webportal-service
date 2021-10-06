@@ -12,12 +12,12 @@ import {isSameDay, isSameMonth} from 'date-fns';
 
 const colors: any = {
   session: {
-    primary: '#ad2121',
-    secondary: '#FAE3E3',
+    primary: 'var(--accent-color)',
+    secondary: 'var(--accent-lighter-color)',
   },
   normal: {
-    primary: '#1e90ff',
-    secondary: '#D1E8FF',
+    primary: 'var(--primary-color)',
+    secondary: 'var(--primary-lighter-color)',
   },
 };
 

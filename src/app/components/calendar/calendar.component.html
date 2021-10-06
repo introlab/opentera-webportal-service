@@ -69,6 +69,7 @@
         [viewDate]="viewDate"
         [events]="calendarData"
         [refresh]="refresh"
+        [eventTemplate]="customWeekEvent"
         (eventClicked)="openForm($event.event)"
         (hourSegmentClicked)="openFormWithTime($event.date)"
       >
@@ -78,6 +79,7 @@
         [viewDate]="viewDate"
         [events]="calendarData"
         [refresh]="refresh"
+        [eventTemplate]="customWeekEvent"
         (eventClicked)="openForm($event.event)"
         (hourSegmentClicked)="openFormWithTime($event.date)"
       >
@@ -135,10 +137,16 @@
 </ng-template>
 
 <ng-template #customWeekEvent let-weekEvent="weekEvent">
-  <div class="cal-event" [style.backgroundColor]="weekEvent.event.color?.secondary"
-       [style.borderColor]="weekEvent.event.color?.primary">
-    <div class="event">{{weekEvent.event.start | date: 'h:mm a'}}
-      - {{weekEvent.event.end | date: 'h:mm a'}}: {{ weekEvent.event.title }}</div>
+  <div class="cal-event" (click)="openForm(weekEvent.event)" [style.background-color]="'#fff'"
+       [style.border-color]="weekEvent.event.meta?.event?.session[0]?.session_type?.session_type_color">
+    <div class="event">
+      {{weekEvent.event.start | date: 'h:mm a'}} - {{weekEvent.event.end | date: 'h:mm a'}}: {{weekEvent.event.title}}
+      avec
+      <ng-container
+        *ngFor="let participant of weekEvent.event.meta?.event?.session[0]?.session_participants; let last = last">
+        {{participant.participant_name}} <span *ngIf="!last">, </span>
+      </ng-container>
+    </div>
   </div>
 </ng-template>
 
