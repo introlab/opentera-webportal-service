@@ -121,8 +121,13 @@ export class ParticipantsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        participant.participant_enabled = false;
-        this.participantService.update(participant).subscribe(() => {
+        const temp = new Participant();
+        temp.participant_enabled = false;
+        temp.participant_token_enabled = false;
+        temp.id_participant_group = participant.id_participant_group;
+        temp.id_project = participant.id_project;
+        temp.id_participant = participant.id_participant;
+        this.participantService.update(temp).subscribe(() => {
           this.notificationService.showSuccess('Le participant ' + participant.participant_name + ' a été désactivé.');
         }, (err) => {
           console.error('Ce compte ne possède pas les permissions pour désactiver ce participant.', err);
