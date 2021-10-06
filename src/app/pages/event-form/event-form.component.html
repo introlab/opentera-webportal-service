@@ -29,9 +29,14 @@
       Cette période est libre.
     </div>
 
-    <h4>Type de séance</h4>
+    <h4>Séance</h4>
     <app-session-type-selector [idEventSessionType]="session?.id_session_type"
                                [form]="eventForm"></app-session-type-selector>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Lien externe</mat-label>
+      <input matInput formControlName="url" [placeholder]="'Invitation Teams, Zoom ou autre'">
+    </mat-form-field>
 
     <app-selected-participants [selectedParticipants]="sessionParticipants" [overlappingParticipants]="overlappingParticipants"
                                (participantsChange)="participantsChange($event)"></app-selected-participants>

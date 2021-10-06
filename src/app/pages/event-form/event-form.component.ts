@@ -105,6 +105,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
     this.inOneHour.setHours(this.inOneHour.getHours() + 1);
     this.eventForm = this.fb.group({
       name: new FormControl('', Validators.required),
+      url: new FormControl('')
     }, {
       validators: TimeInputValidator.validateTimes,
       updateOn: 'blur'
@@ -131,6 +132,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
     controls.name.setValue(this.event.event_name);
     controls.startTime.setValue(new Date(this.event.event_start_datetime));
     controls.endTime.setValue(new Date(this.event.event_end_datetime));
+    controls.url.setValue(this.event.event_static_url);
     this.selectedUserUUID = this.event.user_uuid;
     if (this.event.session) {
       this.hasSession = true;
@@ -172,6 +174,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
     this.event.event_name = controls.name.value;
     this.event.event_start_datetime = dateToISOLikeButLocal(startTime);
     this.event.event_end_datetime = dateToISOLikeButLocal(endTime);
+    this.event.event_static_url = controls.url.value;
     this.event.session = this.createSession();
     this.event.session.session_start_datetime = this.event.event_start_datetime;
     this.event.session.session_duration = getDuration(startTime, endTime);
