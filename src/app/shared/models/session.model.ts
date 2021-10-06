@@ -1,4 +1,5 @@
 import {Participant} from '@shared/models/participant.model';
+import {SessionType} from '@shared/models/session-type.model';
 
 export class Session {
   id_session?: number;
@@ -17,4 +18,5 @@ export class Session {
   session_participants?: Participant[];
   session_participants_uuids?: string[];
   session_users_uuids?: string[];
+  session_type?: SessionType;
 }

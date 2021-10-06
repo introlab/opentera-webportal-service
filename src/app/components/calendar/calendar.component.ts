@@ -11,17 +11,13 @@ import {CalendarService} from '@services/calendar.service';
 import {isSameDay, isSameMonth} from 'date-fns';
 
 const colors: any = {
-  red: {
+  session: {
     primary: '#ad2121',
     secondary: '#FAE3E3',
   },
-  blue: {
+  normal: {
     primary: '#1e90ff',
     secondary: '#D1E8FF',
-  },
-  yellow: {
-    primary: '#e3bc08',
-    secondary: '#FDF1BA',
   },
 };
 
@@ -40,11 +36,12 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   activeDayIsOpen = false;
   eventsWithDetails: Event[] = [];
   view: CalendarView = CalendarView.Month;
-  CalendarView = CalendarView;
+  calendarView = CalendarView;
   viewDate: Date = new Date();
   refresh: Subject<any> = new Subject();
-  calendarEvents: CalendarEvent[] = [];
+  calendarData: CalendarEvent[] = [];
   currentDate: Date;
+  showAddButton: any;
   private subscriptions: Subscription[] = [];
 
   private static getPreviousMonday(date: Date): Date {
@@ -66,7 +63,7 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
 
   private static createCalendarEvent(event: Event): CalendarEvent {
     return {
-      title: `${event.event_name} (${event.user_uuid})`,
+      title: `${event.event_name} (${event.user_fullname})`,
       start: new Date(event.event_start_datetime),
       end: new Date(event.event_end_datetime),
       color: event.session_uuid ? colors.session : colors.normal,
@@ -105,6 +102,7 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
     const events$ = this.calendarService.events$();
     this.subscriptions.push(
       events$.subscribe((events) => {
+        console.log(events);
         this.transformEventsForCalendar(events);
       })
     );
@@ -117,10 +115,10 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
 
   private transformEventsForCalendar(eventsFromAPI: Event[]): void {
     const calendarData: CalendarEvent[] = [];
-    eventsFromAPI.forEach(event => {
+    eventsFromAPI.forEach((event) => {
       calendarData.push(CalendarComponent.createCalendarEvent(event));
     });
-    this.calendarEvents = calendarData;
+    this.calendarData = calendarData;
     this.refresh.next();
   }
 

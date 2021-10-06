@@ -11,6 +11,7 @@ import {AccountService} from '@services/account.service';
 import {Subscription} from 'rxjs';
 import {Account} from '@shared/models/account.model';
 import {SelectedSourceService} from '@services/selected-source.service';
+import {Session} from '@shared/models/session.model';
 
 @Component({
   selector: 'app-event-card',
@@ -19,6 +20,7 @@ import {SelectedSourceService} from '@services/selected-source.service';
 })
 export class EventCardComponent implements OnInit, OnDestroy {
   @Input() event: Event;
+  session: Session;
   duration: string;
   isUser = false;
   isLive = false;
@@ -35,6 +37,7 @@ export class EventCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.session = this.event.session && this.event.session.length > 0 ? this.event.session[0] : null;
     this.checkIfEventIsLive();
     this.checkIfEventIsPassed();
     this.getDuration();

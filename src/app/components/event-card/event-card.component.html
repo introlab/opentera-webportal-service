@@ -16,14 +16,14 @@
     </mat-menu>
   </div>
   <div class="row time">
-    <mat-icon [class.is-live]="isLive">schedule</mat-icon>
+    <mat-icon [style.color]="session.session_type.session_type_color" [class.is-live]="isLive">schedule</mat-icon>
     <span class="is-live" *ngIf="isLive">Live</span>
     {{event.event_start_datetime | date:'HH:mm'}}-{{event.event_end_datetime | date:'HH:mm'}}
   </div>
-  <div class="row name">{{event.event_name}} avec {{event.user_fullname}}</div>
+  <div class="row name">{{event.event_name}} avec {{event.user_fullname}} ({{session.session_type.session_type_name}})</div>
   <div class="row participants" *ngIf="isUser && event.session">
     Participants:
-    <ng-container *ngFor="let participant of event.session[0].session_participants; let last = last">
+    <ng-container *ngFor="let participant of session.session_participants; let last = last">
       {{participant.participant_name}} <span *ngIf="!last">-</span>
     </ng-container>
   </div>
