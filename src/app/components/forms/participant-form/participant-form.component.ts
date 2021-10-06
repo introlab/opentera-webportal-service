@@ -12,6 +12,7 @@ import {Group} from '@shared/models/group.model';
 import {SelectedGroupService} from '@services/selected-group.service';
 import {Application} from '@shared/models/application.model';
 import {validateAllFields} from '@core/utils/validate-form';
+import {createParticipantUrl} from '@core/utils/utility-functions';
 
 @Component({
   selector: 'app-participant-form',
@@ -77,7 +78,7 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
     this.participantForm = this.fb.group({
       name: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required, Validators.email]),
-      url: new FormControl(''),
+      connectionUrl: new FormControl({value: '', disabled: true}),
       enable: new FormControl(true),
     });
   }
@@ -86,6 +87,7 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
     this.participantForm.controls.name.setValue(this.participant.participant_name);
     this.participantForm.controls.enable.setValue(this.participant.participant_enabled);
     this.participantForm.controls.email.setValue(this.participant.participant_email);
+    this.participantForm.controls.connectionUrl.setValue(createParticipantUrl(this.participant.participant_token));
   }
 
   private createParticipant(): void {
