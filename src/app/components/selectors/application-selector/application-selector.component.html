@@ -1,56 +1,12 @@
-<mat-form-field appearance="outline" *ngIf="!refreshing">
-  <mat-label>Applications</mat-label>
-  <mat-select (selectionChange)="onValueChanged($event.value)" [value]="selectedApplication">
-    <mat-option *ngFor="let application of applications" [value]="application">
-      {{application.app_name}}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
-
-<div class="refreshing">
-  <mat-progress-spinner
-    *ngIf="refreshing"
-    [mode]="'indeterminate'"
-    [value]="50"
-    [diameter]="30"
-    [color]="'primary'">
-  </mat-progress-spinner>
-</div>
-
-<div class="mat-elevation-z0 table">
-  <table mat-table [dataSource]="dataSource" matSort>
-    <ng-container matColumnDef="app_name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
-      <td mat-cell *matCellDef="let row">{{row.app_name}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="url">
-      <th mat-header-cell *matHeaderCellDef>Lien</th>
-      <td mat-cell *matCellDef="let row">
-        <div class="internal-link" *ngIf="row.app_type === types['OpenTera Service']">
-          Lien auto-généré
-        </div>
-
-        <mat-form-field appearance="outline" *ngIf="row.app_type === types.external">
-          <mat-label>Lien</mat-label>
-          <input matInput (change)="updateURL($event, row.id_app)">
-          <mat-error>
-            {{required}}
-          </mat-error>
-        </mat-form-field>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="controls">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let row" class="controls">
-        <mat-icon (click)="remove(row.id_app)" [title]="'Supprimer'">
-          delete
-        </mat-icon>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</div>
+<ng-container *ngFor="let app of applications;index as i">
+  <div class="application" *ngIf="app.app_type === types.external">
+    <div class="name">{{app.app_name}}</div>
+    <mat-form-field appearance="outline" formControlName="{{app.app_name}}">
+      <mat-label>Lien</mat-label>
+      <input matInput (change)="updateURL($event, i)">
+      <mat-error>
+        {{required}}
+      </mat-error>
+    </mat-form-field>
+  </div>
+</ng-container>

@@ -67,7 +67,7 @@
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Annuler</button>
-  <button mat-stroked-button [disabled]="!canSave" [color]="color" (click)="onSave()">
+  <button mat-stroked-button [disabled]="!canSave" [color]="color" (click)="validate()">
     Sauvegarder
   </button>
 </div>

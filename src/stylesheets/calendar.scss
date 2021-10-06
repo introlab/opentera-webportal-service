@@ -15,10 +15,52 @@
 
 // Calendar
 
-.cal-month-view .cal-day-badge {
-  background-color: var(--primary-color);
+.cal-month-view {
+  .cal-day-badge {
+    background-color: var(--primary-color);
+  }
+
+  .cal-cell-top {
+    flex: initial;
+  }
+
+  .cal-day-cell.cal-weekend .cal-day-number {
+    color: var(--accent-color);
+  }
+
+  .cal-day-cell {
+    height: 150px;
+    min-width: 0;
+  }
 }
 
-.cal-month-view .cal-day-cell.cal-weekend .cal-day-number {
-  color: var(--accent-color);
+@media screen and (max-width: 700px) {
+  .cal-month-view {
+    .cal-cell-row {
+      flex-direction: column;
+    }
+
+    .cal-header {
+      display: none;
+    }
+
+    .cal-day-cell {
+      border-bottom: 1px solid #e1e1e1;
+
+      .cal-day-number,
+      &.cal-weekend .cal-day-number {
+        color: var(--text-color);
+        opacity: 1;
+      }
+
+      &.cal-out-month .cal-day-number {
+        color: var(--text-color);
+        opacity: 0.6;
+      }
+    }
+  }
+
+  .cal-open-day-events {
+    display: none;
+  }
 }

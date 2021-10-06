@@ -16,6 +16,7 @@ import {ParticipantModule} from '@src/app/modules/participant.module';
 import {HeaderModule} from '@src/app/modules/header.module';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {EventDialogComponent} from '@components/event-dialog/event-dialog.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -27,6 +28,7 @@ registerLocaleData(localeFr, 'fr');
     LoginLayoutComponent,
     ParticipantLayoutComponent,
     NotFoundComponent,
+    EventDialogComponent,
   ],
   imports: [
     BrowserAnimationsModule,

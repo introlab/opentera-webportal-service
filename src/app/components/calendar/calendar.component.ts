@@ -9,6 +9,8 @@ import {isUser} from '@core/utils/utility-functions';
 import {Account} from '@shared/models/account.model';
 import {CalendarService} from '@services/calendar.service';
 import {isSameDay, isSameMonth} from 'date-fns';
+import {EventDialogComponent} from '@components/event-dialog/event-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 const colors: any = {
   session: {
@@ -78,6 +80,7 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(private accountService: AccountService,
               private router: Router,
+              public dialog: MatDialog,
               private calendarService: CalendarService) {
     this.currentDate = new Date();
   }
@@ -213,6 +216,16 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
     if (this.isUser) {
       const time = date.toISOString();
       this.router.navigate([Pages.eventFormPage, {time, participantsUUIDs: this.participantsUUIDs}]);
+    }
+  }
+
+  showEventInfos(event: CalendarEvent): void  {
+    if (this.isUser) {
+      this.openForm(event);
+    } else {
+      this.dialog.open(EventDialogComponent, {
+        data: event.meta.event
+      });
     }
   }
 

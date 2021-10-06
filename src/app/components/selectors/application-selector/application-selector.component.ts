@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import { Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {SelectedProjectService} from '@services/selected-project.service';
@@ -7,7 +7,6 @@ import {ApplicationService} from '@services/application.service';
 import {Application} from '@shared/models/application.model';
 import {GlobalConstants} from '@core/utils/global-constants';
 import {MatTableDataSource} from '@angular/material/table';
-import {MatSort} from '@angular/material/sort';
 
 @Component({
   selector: 'app-application-selector',
@@ -17,15 +16,11 @@ import {MatSort} from '@angular/material/sort';
 export class ApplicationSelectorComponent implements OnInit, OnDestroy {
   @Input() participantApps: Application[];
   @Output() selectedAppsChange = new EventEmitter();
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
-  displayedColumns: string[] = ['app_name', 'url', 'controls'];
   applications: Application[] = [];
   selectedApplications: Application[] = [];
   refreshing: boolean;
-  selectedApplication: Application;
   types = GlobalConstants.applicationTypes;
   required = GlobalConstants.requiredMessage;
-  dataSource: MatTableDataSource<Application>;
   private subscription: Subscription;
 
   constructor(private router: Router,
@@ -34,8 +29,8 @@ export class ApplicationSelectorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // TODO create form with form control with app names
     this.selectedApplications = this.participantApps;
-    this.setDataSource();
     this.getApplications();
   }
 
@@ -59,19 +54,12 @@ export class ApplicationSelectorComponent implements OnInit, OnDestroy {
     if (!alreadySelected) {
       this.selectedApplications.unshift(selected);
       this.selectedAppsChange.emit(this.selectedApplications);
-      this.setDataSource();
     }
   }
 
   remove(idApp: number): void {
     this.selectedApplications = this.selectedApplications.filter(p => p.id_app !== idApp);
     this.selectedAppsChange.emit(this.selectedApplications);
-    this.setDataSource();
-  }
-
-  private setDataSource(): void {
-    this.dataSource = new MatTableDataSource(this.selectedApplications);
-    this.dataSource.sort = this.sort;
   }
 
   ngOnDestroy(): void {

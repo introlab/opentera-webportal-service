@@ -1,4 +1,5 @@
 <div class="container">
+  <!--
   <section class="events-container">
     <h3>Événements du {{viewDate | date: 'dd MMM yyyy'}}</h3>
     <button *ngIf="isUser" class="add-button" mat-raised-button [color]="'primary'"
@@ -8,6 +9,7 @@
     </button>
     <app-events [events]="eventsWithDetails"></app-events>
   </section>
+  -->
   <section class="calendar-container">
     <div class="calendar-controls">
       <div class="button-group view">
@@ -58,8 +60,9 @@
         [viewDate]="viewDate"
         [events]="calendarData"
         [refresh]="refresh"
-        [activeDayIsOpen]="false"
+        [activeDayIsOpen]="activeDayIsOpen"
         [cellTemplate]="customCellTemplate"
+        [openDayEventsTemplate]="customDayEventsTemplate"
         (eventClicked)="openForm($event.event)"
         (dayClicked)="dayClicked($event.day)"
       >
@@ -97,50 +100,49 @@
     <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">
       {{day.badgeTotal}}
     </span>
-    <span class="cal-day-number">
-      <span>{{day.date | calendarDate:'monthViewDayNumber':locale}}</span>
-    </span>
+    <div class="cal-day-number">
+      <span class="date-weekday">
+        {{day.date | calendarDate:'weekViewColumnHeader':locale}}
+      </span>
+      <span class="date-number">
+        {{day.date | calendarDate:'monthViewDayNumber':locale}}
+      </span>
+    </div>
   </div>
   <div class="month-event" *ngFor="let event of day.events.slice(0, 3);">
-    <span>{{event.start | date: 'h:mm a'}}</span>: {{event.title}}
+    <span [style.border-color]="event.meta.event.session[0].session_type.session_type_color">{{event.start | date: 'H:mm'}}</span>: {{event.title}}
+    avec
+    <ng-container
+      *ngFor="let participant of event.meta?.event?.session[0]?.session_participants; let last = last">
+      {{participant.participant_name}} <span *ngIf="!last">, </span>
+    </ng-container>
   </div>
   <small class="month-event" *ngIf="day.events.length > 3">
     <span>...</span>
   </small>
 </ng-template>
 
-
-<ng-template #headerTemplate let-days="days" let-dayClicked="dayClicked"
-             let-eventDropped="eventDropped">
-  <div class="cal-cell-row cal-header">
-    <div class="classes" *ngFor="let day of days">
-      <div class="small-date">
-        {{day.date | date: 'EE'}}
-        {{day.date | date: 'd'}}
-      </div>
-      <div class="large-date">
-        {{day.date | date: 'EEEE'}}
-        {{day.date | date: 'd'}}
-      </div>
-    </div>
-  </div>
-</ng-template>
-
 <ng-template #customDayEventsTemplate let-events="events" let-eventClicked="eventClicked" let-isOpen="isOpen">
   <div class="cal-open-day-events" [@collapse] *ngIf="isOpen">
-    <div class="date">{{events[0].start | date: 'longDate' }}</div>
+    <h2>{{events[0].start | date: 'fullDate' }}</h2>
     <div *ngFor="let event of events">
-      <div class="event" (click)="openForm(event)">{{event.start | date: 'h:mm a'}}
-        - {{event.end | date: 'h:mm a'}}: {{ event.title }}</div>
+      <div class="event" (click)="showEventInfos(event)" [style.border-color]="event.meta.event.session[0].session_type.session_type_color">
+        <span>{{event.start | date: 'H:mm'}} - {{event.end | date: 'H:mm'}}</span>: {{ event.title }}
+        avec
+        <ng-container
+          *ngFor="let participant of event.meta?.event?.session[0]?.session_participants; let last = last">
+          {{participant.participant_name}} <span *ngIf="!last">, </span>
+        </ng-container>
+      </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #customWeekEvent let-weekEvent="weekEvent">
-  <div class="cal-event" (click)="openForm(weekEvent.event)" [style.background-color]="'#fff'"
+  <div class="cal-event" (click)="showEventInfos(weekEvent.event)" [style.background-color]="'#fff'"
        [style.border-color]="weekEvent.event.meta?.event?.session[0]?.session_type?.session_type_color">
     <div class="event">
-      {{weekEvent.event.start | date: 'h:mm a'}} - {{weekEvent.event.end | date: 'h:mm a'}}: {{weekEvent.event.title}}
+      {{weekEvent.event.start | date: 'H:mm'}} - {{weekEvent.event.end | date: 'H:mm'}}: {{weekEvent.event.title}}
       avec
       <ng-container
         *ngFor="let participant of weekEvent.event.meta?.event?.session[0]?.session_participants; let last = last">

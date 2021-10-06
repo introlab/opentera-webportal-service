@@ -18,11 +18,15 @@
 
   .calendar-container {
     flex: 1 1 auto;
-    margin-left: var(--content-margin);
+    //margin-left: var(--content-margin);
     background: var(--white);
     border-radius: 10px;
     padding: calc(var(--app-padding) / 4);
     box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+
+    .date-weekday {
+      display: none;
+    }
 
     .calendar-controls {
       display: flex;
@@ -103,29 +107,48 @@
 }
 
 .month-event {
-  margin: 5px 5px 0;
+  margin: 2px 0;
   line-height: initial;
   color: var(--text-color);
   font-size: var(--smaller-font-size);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 50px;
+  min-width: 94%;
 
   span {
     font-weight: bold;
+    border-left: 4px solid transparent;
   }
 
   &:first-of-type {
     margin-top: 0;
   }
-
-  &:nth-of-type(2) {
-    margin-bottom: 5px;
-  }
 }
 
 .cal-open-day-events {
+  background: var(--white);
+  color: var(--text-color);
+  box-shadow: inset 0 0 5px 0 rgba(0, 0, 0, 0.2);
+
+  h2 {
+    text-transform: capitalize;
+  }
+
   .event {
+    padding: 10px 2px;
+    margin: 5px 0;
+    line-height: normal;
+    border-left: 5px solid transparent;
+
     &:hover {
       text-decoration: underline;
       cursor: pointer;
+    }
+
+    span {
+      font-weight: bold;
     }
   }
 }
@@ -151,7 +174,6 @@
   cursor: pointer;
   transition: background-color var(--transition) ease-in-out;
   position: relative;
-
 
   .add {
     position: absolute;
@@ -196,6 +218,10 @@
 
     .calendar-container {
       margin-left: 0;
+
+      .date-weekday {
+        display: initial;
+      }
     }
   }
 }

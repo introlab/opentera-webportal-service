@@ -172,7 +172,7 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSave(): void {
+  validate(): void {
     if (this.appForm.invalid) {
       validateAllFields(this.appForm);
       return;
