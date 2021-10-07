@@ -22,6 +22,7 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
   nextEvents: Event[] = [];
   calendarName = '';
   participantsUUIDs: string[] = [];
+  firstParticipantSelected = '';
   private subscriptions: Subscription[] = [];
 
   constructor(private accountService: AccountService,
@@ -39,6 +40,8 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
     const uuid = this.route.snapshot.paramMap.get('uuid');
     const name = this.route.snapshot.paramMap.get('name');
     if (uuid) {
+      this.firstParticipantSelected = uuid;
+      console.log(uuid);
       this.participantsUUIDs.push(uuid);
     }
     if (name) {

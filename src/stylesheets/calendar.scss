@@ -15,13 +15,28 @@
 
 // Calendar
 
+.cal-week-view {
+  .cal-current-time-marker {
+    background-color: var(--accent-color);
+  }
+
+  .cal-hour-segment {
+    cursor: pointer;
+  }
+}
+
 .cal-month-view {
+  .cal-day-cell.cal-today {
+    background-color: var(--primary-lighter-color);
+  }
+
   .cal-day-badge {
     background-color: var(--primary-color);
   }
 
   .cal-cell-top {
     flex: initial;
+    min-height: initial;
   }
 
   .cal-day-cell.cal-weekend .cal-day-number {
@@ -29,9 +44,15 @@
   }
 
   .cal-day-cell {
-    height: 150px;
+    height: 125px;
     min-width: 0;
   }
+
+  .cal-cell-row .cal-cell:hover,
+  .cal-cell.cal-has-events.cal-open {
+    background-color: var(--accent-lighter-color);
+  }
+
 }
 
 @media screen and (max-width: 700px) {

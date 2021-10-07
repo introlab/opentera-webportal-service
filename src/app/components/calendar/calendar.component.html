@@ -92,41 +92,45 @@
 </div>
 
 <ng-template #customCellTemplate let-day="day" let-locale="locale">
-  <div class="cal-cell-top" (mouseenter)="showAddButton = day" (mouseleave)="showAddButton = null"
-       (click)="openFormWithTime(day.date)">
-    <div *ngIf="showAddButton == day" class="add" (click)="openFormWithTime(day.date)">
-      <mat-icon>add</mat-icon>
-    </div>
-    <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">
+  <div class="cell" (mouseenter)="showAddButton = day" (mouseleave)="showAddButton = null">
+    <div class="cal-cell-top"
+         (click)="openFormWithTime(day.date)">
+      <button mat-flat-button color="primary" *ngIf="showAddButton == day" class="add" (click)="openFormWithTime(day.date)">
+        <mat-icon>add</mat-icon> Ajouter
+      </button>
+      <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">
       {{day.badgeTotal}}
     </span>
-    <div class="cal-day-number">
+      <div class="cal-day-number">
       <span class="date-weekday">
         {{day.date | calendarDate:'weekViewColumnHeader':locale}}
       </span>
-      <span class="date-number">
+        <span class="date-number">
         {{day.date | calendarDate:'monthViewDayNumber':locale}}
       </span>
+      </div>
     </div>
+    <div class="month-event" *ngFor="let event of day.events.slice(0, 3);">
+      <span
+        [style.border-color]="event.meta.event.session[0].session_type.session_type_color">{{event.start | date: 'H:mm'}}</span>: {{event.title}}
+      avec
+      <ng-container
+        *ngFor="let participant of event.meta?.event?.session[0]?.session_participants; let last = last">
+        {{participant.participant_name}} <span *ngIf="!last">, </span>
+      </ng-container>
+    </div>
+    <small class="month-event" *ngIf="day.events.length > 3">
+      <span>...</span>
+    </small>
   </div>
-  <div class="month-event" *ngFor="let event of day.events.slice(0, 3);">
-    <span [style.border-color]="event.meta.event.session[0].session_type.session_type_color">{{event.start | date: 'H:mm'}}</span>: {{event.title}}
-    avec
-    <ng-container
-      *ngFor="let participant of event.meta?.event?.session[0]?.session_participants; let last = last">
-      {{participant.participant_name}} <span *ngIf="!last">, </span>
-    </ng-container>
-  </div>
-  <small class="month-event" *ngIf="day.events.length > 3">
-    <span>...</span>
-  </small>
 </ng-template>
 
 <ng-template #customDayEventsTemplate let-events="events" let-eventClicked="eventClicked" let-isOpen="isOpen">
   <div class="cal-open-day-events" [@collapse] *ngIf="isOpen">
     <h2>{{events[0].start | date: 'fullDate' }}</h2>
     <div *ngFor="let event of events">
-      <div class="event" (click)="showEventInfos(event)" [style.border-color]="event.meta.event.session[0].session_type.session_type_color">
+      <div class="event" (click)="showEventInfos(event)"
+           [style.border-color]="event.meta.event.session[0].session_type.session_type_color">
         <span>{{event.start | date: 'H:mm'}} - {{event.end | date: 'H:mm'}}</span>: {{ event.title }}
         avec
         <ng-container

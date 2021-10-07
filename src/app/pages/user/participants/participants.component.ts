@@ -171,7 +171,7 @@ export class ParticipantsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openCalendar(participant: Participant): void {
-    this.router.navigate([Pages.createPath(Pages.planningPage, true), {
+    this.router.navigate([Pages.calendarPage, {
       uuid: participant.participant_uuid,
       name: participant.participant_name
     }]);

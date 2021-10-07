@@ -26,13 +26,7 @@ const links: any = [
     name: 'Sections',
     path: Pages.createPath(Pages.applicationsPage, true),
     forProjectAdmin: true
-  },
-  {
-    id: 4,
-    name: 'Planification',
-    path: Pages.createPath(Pages.planningPage, true),
-    forProjectAdmin: false
-  },
+  }
 ];
 
 @Component({

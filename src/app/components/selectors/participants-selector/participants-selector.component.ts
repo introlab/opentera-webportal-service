@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Participant} from '@shared/models/participant.model';
 import {ParticipantService} from '@services/participant/participant.service';
 import {SelectedProjectService} from '@services/selected-project.service';
@@ -10,8 +10,9 @@ import {switchMap} from 'rxjs/operators';
   templateUrl: './participants-selector.component.html',
   styleUrls: ['./participants-selector.component.scss']
 })
-export class ParticipantsSelectorComponent implements OnInit, OnDestroy {
+export class ParticipantsSelectorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() noneOption = false;
+  @Input() selectedParticipantUUID = '';
   @Output() selectedParticipantChange = new EventEmitter();
   participants$: Observable<Participant[]>;
   selectedParticipant: Participant;
@@ -27,13 +28,25 @@ export class ParticipantsSelectorComponent implements OnInit, OnDestroy {
     this.getProjectParticipants();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+  }
+
   private getProjectParticipants(): void {
     const project$ = this.selectedProjectService.getSelectedProject();
     this.subscriptions.push(
       project$.pipe(
         switchMap((project) => {
           return this.participantService.getByProject(project.id_project);
-        })).subscribe()
+        })).subscribe((participants) => {
+        console.log('papa');
+        if (this.selectedParticipantUUID && this.selectedParticipantUUID.length > 0) {
+          const selected = participants.find((part) => part.participant_uuid === this.selectedParticipantUUID);
+          console.log(selected);
+          if (selected) {
+            this.selectedParticipant = selected;
+          }
+        }
+      })
     );
   }
 
