@@ -53,3 +53,10 @@ class DBManagerAppAccess:
                     pass
             app['app_config'] = app_config_json
         return apps_json
+
+    def query_app_configs_for_participant(self, participant_uuid):
+        configs = WebPortalAppConfig.query.filter(WebPortalAppConfig.participant_uuid == participant_uuid).all()
+
+        if configs:
+            return configs
+        return []
