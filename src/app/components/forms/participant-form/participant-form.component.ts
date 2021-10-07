@@ -5,7 +5,7 @@ import {ThemePalette} from '@angular/material/core';
 import {combineLatest, Subscription} from 'rxjs';
 import {Project} from '@shared/models/project.model';
 import {Participant} from '@shared/models/participant.model';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {SelectedProjectService} from '@services/selected-project.service';
 import {GroupService} from '@services/participant/group.service';
 import {Group} from '@shared/models/group.model';
@@ -13,6 +13,14 @@ import {SelectedGroupService} from '@services/selected-group.service';
 import {Application} from '@shared/models/application.model';
 import {validateAllFields} from '@core/utils/validate-form';
 import {createParticipantUrl} from '@core/utils/utility-functions';
+import {ApplicationService} from '@services/application.service';
+import {ApplicationConfig} from '@shared/models/application-config.model';
+import {ParticipantService} from '@services/participant/participant.service';
+import {Pages} from '@core/utils/pages';
+import {NotificationService} from '@services/notification.service';
+import {Router} from '@angular/router';
+import {switchMap} from 'rxjs/operators';
+import {ApplicationConfigService} from '@services/application-config.service';
 
 @Component({
   selector: 'app-participant-form',
@@ -25,18 +33,24 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
   required = GlobalConstants.requiredMessage;
   color: ThemePalette = 'primary';
   groups: Group[] = [];
-  participantApps: Application[] = [];
   canSave = false;
+  appConfigs: ApplicationConfig[] = [];
   private participant: Participant;
   private selectedProject: Project;
   private selectedGroup: Group;
   private subscriptions: Subscription[] = [];
+  private applications: Application[] = [];
 
   constructor(public dialogRef: MatDialogRef<ParticipantFormComponent>,
               private fb: FormBuilder,
               private groupService: GroupService,
               private selectedGroupService: SelectedGroupService,
               private selectedProjectService: SelectedProjectService,
+              private applicationService: ApplicationService,
+              private participantService: ParticipantService,
+              private notificationService: NotificationService,
+              private appConfigsService: ApplicationConfigService,
+              private router: Router,
               @Inject(MAT_DIALOG_DATA) public data: Participant) {
   }
 
@@ -64,11 +78,15 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
   private getServices(): void {
     const group$ = this.selectedGroupService.getSelectedGroup();
     const project$ = this.selectedProjectService.getSelectedProject();
+    const applications$ = this.applicationService.applications$();
+    const appConfigs$ = this.appConfigsService.getByParticipant(this.participant.participant_uuid);
 
     this.subscriptions.push(
-      combineLatest([project$, group$]).subscribe(([project, group]) => {
+      combineLatest([project$, group$, applications$, appConfigs$]).subscribe(([project, group, applications, appConfigs]) => {
         this.selectedProject = project;
         this.selectedGroup = group;
+        this.applications = applications;
+        this.appConfigs = appConfigs;
         this.setValues();
       })
     );
@@ -90,32 +108,55 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
     this.participantForm.controls.connectionUrl.setValue(createParticipantUrl(this.participant.participant_token));
   }
 
-  private createParticipant(): void {
-    const controls = this.participantForm.controls;
-    const temp = new Participant();
-    temp.participant_enabled = true;
-    temp.participant_token_enabled = true;
-    temp.participant_enabled = controls.enable.value;
-    if (controls.name.value.toLocaleLowerCase() !== this.participant.participant_name.toLocaleLowerCase()) {
-      temp.participant_name = controls.name.value;
-    }
-    if (controls.email.value.toLocaleLowerCase() !== this.participant.participant_email.toLocaleLowerCase()) {
-      temp.participant_name = controls.name.value;
-    }
-    temp.id_project = this.selectedProject.id_project;
-    temp.id_participant_group = this.selectedGroup.id_participant_group;
-    this.participant.id_participant ? temp.id_participant = this.participant.id_participant : temp.id_participant = 0;
-  }
-
   validate(): void {
     if (this.participantForm.invalid) {
       validateAllFields(this.participantForm);
       return;
     }
     if (this.canSave) {
-      this.createParticipant();
-      this.dialogRef.close(this.participant);
+      const participant = this.createParticipant();
+      this.save(participant);
+      this.dialogRef.close(participant);
     }
+  }
+
+  private createParticipant(): Participant {
+    const controls = this.participantForm.controls;
+    const temp = new Participant();
+    temp.participant_token_enabled = controls.enable.value;
+    temp.participant_enabled = controls.enable.value;
+    if (controls.name.value.toLocaleLowerCase() !== this.participant.participant_name?.toLocaleLowerCase()) {
+      temp.participant_name = controls.name.value;
+    }
+    if (controls.email.value.toLocaleLowerCase() !== this.participant.participant_email?.toLocaleLowerCase()) {
+      temp.participant_email = controls.email.value;
+    }
+    temp.id_project = this.selectedProject.id_project;
+    temp.id_participant_group = this.selectedGroup.id_participant_group;
+    temp.id_participant = this.participant.id_participant;
+    return temp;
+  }
+
+  private save(participant: Participant): void {
+    this.participantService.update(participant).pipe(switchMap((updated) => {
+      this.router.navigate([Pages.createPath(Pages.participantsPage, true)]);
+      this.notificationService.showSuccess('Le participant ' + updated[0].participant_name + ' a été sauvegardé.');
+      const appConfigs = this.createAppConfig(updated[0].participant_uuid);
+      return this.appConfigsService.update(appConfigs);
+    })).subscribe();
+  }
+
+  private createAppConfig(participantUUID: string): ApplicationConfig[] {
+    const controls = this.participantForm.controls;
+    const configs: ApplicationConfig[] = [];
+    this.applications.forEach((app) => {
+      const config = new ApplicationConfig();
+      config.id_app = app.id_app;
+      config.participant_uuid = participantUUID;
+      config.app_config_url = controls['app_' + app.app_name].value;
+      configs.push(config);
+    });
+    return configs;
   }
 
   onNoClick(): void {

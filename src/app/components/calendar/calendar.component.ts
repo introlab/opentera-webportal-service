@@ -105,14 +105,12 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
     const events$ = this.calendarService.events$();
     this.subscriptions.push(
       events$.subscribe((events) => {
-        console.log(events);
         this.transformEventsForCalendar(events);
       })
     );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     this.dateChange();
   }
 

@@ -24,8 +24,8 @@ import {Clipboard} from '@angular/cdk/clipboard';
   styleUrls: ['./participants.component.scss']
 })
 export class ParticipantsComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   participants: Participant[] = [];
   dataSource: MatTableDataSource<Participant>;
   displayedColumns: string[] = ['participant_name', 'group', 'status', 'url', 'controls'];
@@ -166,20 +166,15 @@ export class ParticipantsComponent implements OnInit, OnDestroy, AfterViewInit {
     dialogRef.afterClosed().pipe(
       take(1)
     ).subscribe((result) => {
-      if (result) {
-        if (!result.id_participant) {
-          result.id_participant = 0;
-        }
-        this.participantService.update(result).subscribe((updated) => {
-          this.router.navigate([Pages.createPath(Pages.participantsPage, true)]);
-          this.notificationService.showSuccess('Le participant ' + updated[0].participant_name + ' a été sauvegardé.');
-        });
-      }
+      this.refreshParticipants();
     });
   }
 
   openCalendar(participant: Participant): void {
-    this.router.navigate([Pages.createPath(Pages.planningPage, true), {uuid: participant.participant_uuid, name: participant.participant_name}]);
+    this.router.navigate([Pages.createPath(Pages.planningPage, true), {
+      uuid: participant.participant_uuid,
+      name: participant.participant_name
+    }]);
   }
 
   ngOnDestroy(): void {

@@ -1,23 +1,24 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import { Subscription} from 'rxjs';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {SelectedProjectService} from '@services/selected-project.service';
 import {distinctUntilChanged, switchMap} from 'rxjs/operators';
 import {ApplicationService} from '@services/application.service';
 import {Application} from '@shared/models/application.model';
 import {GlobalConstants} from '@core/utils/global-constants';
-import {MatTableDataSource} from '@angular/material/table';
+import {FormControl, FormGroup} from '@angular/forms';
+import {ApplicationConfig} from '@shared/models/application-config.model';
 
 @Component({
   selector: 'app-application-selector',
   templateUrl: './application-selector.component.html',
   styleUrls: ['./application-selector.component.scss']
 })
-export class ApplicationSelectorComponent implements OnInit, OnDestroy {
-  @Input() participantApps: Application[];
+export class ApplicationSelectorComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() appConfigs: ApplicationConfig[] = [];
+  @Input() form: FormGroup;
   @Output() selectedAppsChange = new EventEmitter();
   applications: Application[] = [];
-  selectedApplications: Application[] = [];
   refreshing: boolean;
   types = GlobalConstants.applicationTypes;
   required = GlobalConstants.requiredMessage;
@@ -29,9 +30,6 @@ export class ApplicationSelectorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // TODO create form with form control with app names
-    this.selectedApplications = this.participantApps;
-    this.getApplications();
   }
 
   private getApplications(): void {
@@ -46,27 +44,20 @@ export class ApplicationSelectorComponent implements OnInit, OnDestroy {
     ).subscribe((applications) => {
       this.applications = applications;
       this.refreshing = false;
+      this.applications.forEach((app) => {
+        this.form.addControl('app_' + app.app_name, new FormControl(''));
+      });
+      this.appConfigs.forEach((config) => {
+        this.form.controls['app_' + config.application.app_name].setValue(config.app_config_url);
+      });
     });
   }
 
-  onValueChanged(selected: Application): void {
-    const alreadySelected = this.selectedApplications.find(p => p.id_app === selected.id_app);
-    if (!alreadySelected) {
-      this.selectedApplications.unshift(selected);
-      this.selectedAppsChange.emit(this.selectedApplications);
-    }
-  }
-
-  remove(idApp: number): void {
-    this.selectedApplications = this.selectedApplications.filter(p => p.id_app !== idApp);
-    this.selectedAppsChange.emit(this.selectedApplications);
+  ngOnChanges(changes: SimpleChanges): void {
+    this.getApplications();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-  }
-
-  updateURL(event: Event, idApp: number): void {
-    console.log(event, idApp);
   }
 }
