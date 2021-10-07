@@ -71,6 +71,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
         if (params.participantsUUIDs) {
           const uuids = params.participantsUUIDs;
           console.log(uuids);
+          // TODO start form with selected participant
         }
         if (params.time) {
           const date = new Date(params.time);
@@ -115,7 +116,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
   private setUpValidators(): void {
     this.checkFormChange();
     this.eventForm.setAsyncValidators([TimeInputValidator.checkIfTimeSlotsTaken(
-      this.calendarService, this.event.user_uuid, this.event.id_event, this.sessionParticipants).bind(this)]);
+      this.calendarService, this.event.user_uuid, this.event.id_event, this.sessionParticipants)]);
     this.eventForm.updateValueAndValidity();
   }
 
@@ -160,7 +161,8 @@ export class EventFormComponent implements OnInit, OnDestroy {
   }
 
   enableSave(): void {
-    this.canSave = !(this.eventForm.invalid || this.hasNoParticipant());
+    const inPast = this.eventForm.controls.startTime && this.eventForm.controls.startTime.value < this.today;
+    this.canSave = !(this.eventForm.invalid || this.hasNoParticipant() && inPast);
   }
 
   hasNoParticipant(): boolean {

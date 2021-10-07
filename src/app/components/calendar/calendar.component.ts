@@ -44,6 +44,7 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   calendarData: CalendarEvent[] = [];
   currentDate: Date;
   showAddButton: any;
+  today: Date;
   private subscriptions: Subscription[] = [];
 
   private static getPreviousMonday(date: Date): Date {
@@ -86,6 +87,7 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.today = new Date();
     this.getAccount();
     this.getEvents();
   }

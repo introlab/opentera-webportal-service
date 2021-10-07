@@ -38,10 +38,8 @@ export class ParticipantsSelectorComponent implements OnInit, OnChanges, OnDestr
         switchMap((project) => {
           return this.participantService.getByProject(project.id_project);
         })).subscribe((participants) => {
-        console.log('papa');
         if (this.selectedParticipantUUID && this.selectedParticipantUUID.length > 0) {
           const selected = participants.find((part) => part.participant_uuid === this.selectedParticipantUUID);
-          console.log(selected);
           if (selected) {
             this.selectedParticipant = selected;
           }

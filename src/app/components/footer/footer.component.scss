@@ -4,13 +4,13 @@ footer {
   color: var(--text);
   align-items: center;
   box-sizing: border-box;
-  background-color: var(--background);
+  background-color: var(--primary-lighter-color);
   justify-content: space-between;
   min-height: var(--app-content-padding);
-  padding: 0 calc(var(--app-content-padding) / 2);
+  padding: 10px calc(var(--app-padding) / 2);
 
   a:hover {
-    color: var(--accent-lighter-color);
+    color: var(--primary-darker-color);
   }
 
   span:last-of-type {

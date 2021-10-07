@@ -41,7 +41,6 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
     const name = this.route.snapshot.paramMap.get('name');
     if (uuid) {
       this.firstParticipantSelected = uuid;
-      console.log(uuid);
       this.participantsUUIDs.push(uuid);
     }
     if (name) {

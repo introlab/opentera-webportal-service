@@ -25,6 +25,7 @@ export class EventCardComponent implements OnInit, OnDestroy {
   isUser = false;
   isLive = false;
   isPastEvent = true;
+  hasEventURL = false;
   private subscription: Subscription;
   private account: Account;
 
@@ -40,6 +41,7 @@ export class EventCardComponent implements OnInit, OnDestroy {
     this.session = this.event.session && this.event.session.length > 0 ? this.event.session[0] : null;
     this.checkIfEventIsLive();
     this.checkIfEventIsPassed();
+    this.checkIfEventURL();
     this.getDuration();
     this.subscription = this.accountService.account$().subscribe((account) => {
       this.account = account;
@@ -58,6 +60,10 @@ export class EventCardComponent implements OnInit, OnDestroy {
     const now = new Date();
     const end = new Date(this.event.event_end_datetime);
     this.isPastEvent = end < now;
+  }
+
+  private checkIfEventURL(): void {
+    this.hasEventURL = this.event.event_static_url && this.event.event_static_url.length > 0;
   }
 
   private getDuration(): void {
@@ -90,7 +96,9 @@ export class EventCardComponent implements OnInit, OnDestroy {
   }
 
   connect(): void {
-    if (!this.isUser) {
+    if (this.hasEventURL) {
+      window.open(this.event.event_static_url, '_blank');
+    } else if (!this.isUser) {
       const videoRehabApp = this.account.apps.find((app) => app.app_service_key === 'VideoRehabService');
       if (videoRehabApp && videoRehabApp.app_config) {
         this.selectedSourceService.setSelectedSource(videoRehabApp.app_config.app_config_url);

@@ -1,15 +1,4 @@
 <div class="container">
-  <!--
-  <section class="events-container">
-    <h3>Événements du {{viewDate | date: 'dd MMM yyyy'}}</h3>
-    <button *ngIf="isUser" class="add-button" mat-raised-button [color]="'primary'"
-            (click)="openFormWithTime(currentDate)">
-      <mat-icon>add</mat-icon>
-      Ajouter
-    </button>
-    <app-events [events]="eventsWithDetails"></app-events>
-  </section>
-  -->
   <section class="calendar-container">
     <div class="calendar-controls">
       <div class="button-group view">
@@ -95,8 +84,10 @@
   <div class="cell" (mouseenter)="showAddButton = day" (mouseleave)="showAddButton = null">
     <div class="cal-cell-top"
          (click)="openFormWithTime(day.date)">
-      <button mat-flat-button color="primary" *ngIf="showAddButton == day" class="add" (click)="openFormWithTime(day.date)">
-        <mat-icon>add</mat-icon> Ajouter
+      <button mat-flat-button color="primary" *ngIf="isUser && showAddButton == day && day.date >= today" class="add"
+              (click)="openFormWithTime(day.date)">
+        <mat-icon>add</mat-icon>
+        Ajouter
       </button>
       <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">
       {{day.badgeTotal}}
