@@ -16,8 +16,12 @@
     <h4>Date et heures</h4>
 
     <app-datetime-selector [label]="'Début'" [default]="startTime" [form]="eventForm"
+                           [sessionParticipants]="sessionParticipants"
+                           (overlappingParticipants)="overlappingParticipantsChange($event)"
                            [controlName]="startTimeControlName" [minDate]="today"></app-datetime-selector>
     <app-datetime-selector [label]="'Fin'" [default]="inOneHour" [form]="eventForm" [controlName]="endTimeControlName"
+                           [sessionParticipants]="sessionParticipants"
+                           (overlappingParticipants)="overlappingParticipantsChange($event)"
                            [minDate]="startTime"></app-datetime-selector>
 
     <div *ngIf="eventForm.hasError('timesOverlapping')" class="period overlap">
@@ -38,7 +42,8 @@
       <input matInput formControlName="url" [placeholder]="'Invitation Teams, Zoom ou autre'">
     </mat-form-field>
 
-    <app-selected-participants [selectedParticipants]="sessionParticipants" [overlappingParticipants]="overlappingParticipants"
+    <app-selected-participants [selectedParticipants]="sessionParticipants"
+                               [overlappingParticipants]="overlappingParticipants"
                                (participantsChange)="participantsChange($event)"></app-selected-participants>
   </form>
 

@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Event} from '@shared/models/event.model';
-import {Location} from '@angular/common';
 import {CalendarService} from '@services/calendar.service';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NotificationService} from '@services/notification.service';
@@ -51,12 +50,12 @@ export class EventFormComponent implements OnInit, OnDestroy {
               private accountService: AccountService,
               private fb: FormBuilder,
               private router: Router,
-              private location: Location,
               private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
     this.initializeForm();
+    this.checkFormChange();
     this.getData();
     this.title = 'Nouvelle entrée au calendrier';
     this.canSave = false;
@@ -70,7 +69,6 @@ export class EventFormComponent implements OnInit, OnDestroy {
       tap(([account, params]) => {
         if (params.participantsUUIDs) {
           const uuids = params.participantsUUIDs;
-          console.log(uuids);
           // TODO start form with selected participant
         }
         if (params.time) {
@@ -87,7 +85,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
           this.event.id_event = 0;
           this.event.user_uuid = this.account.login_uuid;
           this.selectedUserUUID = this.account.login_uuid;
-          this.setUpValidators();
+          this.setUpAsyncValidators();
           return EMPTY;
         }
       })
@@ -96,7 +94,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
         this.event = event[0];
         this.setValues();
       }
-      this.setUpValidators();
+      this.setUpAsyncValidators();
     });
   }
 
@@ -113,10 +111,9 @@ export class EventFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  private setUpValidators(): void {
-    this.checkFormChange();
+  private setUpAsyncValidators(): void {
     this.eventForm.setAsyncValidators([TimeInputValidator.checkIfTimeSlotsTaken(
-      this.calendarService, this.event.user_uuid, this.event.id_event, this.sessionParticipants)]);
+      this.calendarService, this.event.user_uuid, this.event.id_event)]);
     this.eventForm.updateValueAndValidity();
   }
 
@@ -222,6 +219,10 @@ export class EventFormComponent implements OnInit, OnDestroy {
         this.overlappingParticipants = [...this.overlappingParticipants, ...event.session_participant_uuids];
       });
     });
+  }
+
+  overlappingParticipantsChange(UUIDs: string[]): void {
+    this.overlappingParticipants = UUIDs;
   }
 
   ngOnDestroy(): void {

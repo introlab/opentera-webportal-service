@@ -1,20 +1,26 @@
 .wrapper {
   width: 100%;
   max-width: 700px;
-  background-color: var(--text);
+  font-size: 1.2em;
+  background-color: var(--primary-lighter-color);
   margin: var(--app-padding) auto;
-  color: var(--background);
+  color: var(--text-color);
   padding: var(--app-padding);
   box-sizing: border-box;
   border-radius: 4px;
 
   a {
-    align-self: flex-end;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    font-size: var(--h3-font-size);
+    white-space: normal;
+    margin-top: 20px;
+    text-align: right;
+    justify-content: center;
 
-    i {
-      font-size: 14px;
-      height: 14px;
+    mat-icon {
+      margin-left: 10px;
     }
   }
 }

@@ -4,7 +4,7 @@
       {{label}}
     </mat-label>
     <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date" [formControl]="dateControl"
-           [min]="minDate">
+           [min]="minDate" (dateChange)="onTimeChange($event)">
     <mat-datepicker-toggle matSuffix [for]="pickerFixed"></mat-datepicker-toggle>
     <ngx-mat-datetime-picker #picker [showSeconds]="showSeconds" [stepMinute]="stepMinute" [touchUi]="touchUi"
                              [color]="color">

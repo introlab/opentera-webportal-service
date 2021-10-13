@@ -1,8 +1,8 @@
 <div class="wrapper">
-  <p>Cliquer sur <b>Aller vers mon Gmail</b> pour aller voir vos courriels. Cela ouvrira un nouvel onglet vers votre
+  <p>Cliquer sur <b>Aller vers ma boîte courriel</b> pour aller voir vos courriels. Cela ouvrira un nouvel onglet vers votre
     boîte de messagerie Gmail.</p>
-  <a [target]="'_blank'" [href]="source" [title]="'Gmail'" mat-raised-button color="primary">
-    Aller vers mon Gmail
+  <a (click)="openInbox()" [title]="'Aller vers ma boîte courriel'" mat-raised-button color="primary">
+    Aller vers ma boîte courriel
     <mat-icon>
       open_in_new
     </mat-icon>

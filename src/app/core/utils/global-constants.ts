@@ -11,11 +11,7 @@ export class GlobalConstants {
   static organism = 'Centre de Recherche sur le Vieillissement de Sherbrooke - Regroupement INTER - ' + new Date().getFullYear();
 
   static applicationTypes = {external: 0, 'OpenTera Service': 1};
-
-  // TODO to be app_config_url probably
   static emailLink = 'https://mail.google.com/';
-  static seanceLink = 'https://telesante.cdrv.ca:40001?webId=ihkLMOuLvzYdpE2QEcX435kn';
-  static physiotecLink = 'https://physiotec.ca/ca/en/login/';
 
   // Strings
   static requiredMessage = 'Ce champ est requis.';

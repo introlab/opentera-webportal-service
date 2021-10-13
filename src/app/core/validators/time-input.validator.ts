@@ -32,11 +32,7 @@ export class TimeInputValidator {
     return null;
   }
 
-  public static checkIfTimeSlotsTaken(calendarService: CalendarService, uuidUser: string, eventId: number, participants: Participant[]): any {
-    console.log(participants);
-    if (participants.length > 0) {
-      const participantsUUIDs: string[] = participants.map((participant) => participant.participant_uuid);
-    }
+  public static checkIfTimeSlotsTaken(calendarService: CalendarService, uuidUser: string, eventId: number): any {
     if (uuidUser) {
       return (control: AbstractControl): Observable<ValidationErrors | null> => {
         const startControl = control.get('startTime');

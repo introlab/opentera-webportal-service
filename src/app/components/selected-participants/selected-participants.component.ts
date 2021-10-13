@@ -6,8 +6,9 @@ import {Participant} from '@shared/models/participant.model';
   templateUrl: './selected-participants.component.html',
   styleUrls: ['./selected-participants.component.scss']
 })
-export class SelectedParticipantsComponent implements OnInit, OnChanges {
+export class SelectedParticipantsComponent implements OnInit {
   @Input() selectedParticipants: Participant[];
+  @Input() selectedParticipantUUID = '';
   @Input() overlappingParticipants: string[] = [];
   @Output() participantsChange = new EventEmitter();
 
@@ -15,10 +16,6 @@ export class SelectedParticipantsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.overlappingParticipants);
   }
 
   remove(participant: Participant, index: number): void {
