@@ -13,6 +13,7 @@ import {SelectedSiteService} from '@services/selected-site.service';
 import {Site} from '@shared/models/site.model';
 import {Project} from '@shared/models/project.model';
 import {PermissionsService} from '@services/permissions.service';
+import {WebsocketService} from '@services/websocket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,7 @@ export class AuthenticationService {
               private selectedProjectService: SelectedProjectService,
               private selectedSiteService: SelectedSiteService,
               private permissionsService: PermissionsService,
+              private websocketService: WebsocketService,
               private router: Router) {
   }
 
@@ -52,6 +54,7 @@ export class AuthenticationService {
         this.isLoggedIn = true;
         this.cookieService.set(this.cookieValue, token, 0.5, '/');
         this.router.navigate([this._lastAuthenticatedPath]);
+        this.websocketService.connect(response.websocket_url);
         this.startRefreshTokenTimer();
       })
     );
@@ -79,6 +82,7 @@ export class AuthenticationService {
     this.selectedProjectService.setSelectedProject(new Project());
     this.selectedSiteService.setSelectedSite(new Site());
     this.permissionsService.initializePermissions();
+    this.websocketService.close();
     this.stopRefreshTokenTimer();
   }
 
