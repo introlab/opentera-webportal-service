@@ -64,6 +64,8 @@
         [eventTemplate]="customWeekEvent"
         (eventClicked)="openForm($event.event)"
         (hourSegmentClicked)="openFormWithTime($event.date)"
+        [dayStartHour]="dayStartHour"
+        [dayEndHour]="dayEndHour"
       >
       </mwl-calendar-week-view>
       <mwl-calendar-day-view
@@ -74,6 +76,8 @@
         [eventTemplate]="customWeekEvent"
         (eventClicked)="openForm($event.event)"
         (hourSegmentClicked)="openFormWithTime($event.date)"
+        [dayStartHour]="dayStartHour"
+        [dayEndHour]="dayEndHour"
       >
       </mwl-calendar-day-view>
     </div>

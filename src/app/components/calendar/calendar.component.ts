@@ -45,6 +45,8 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   currentDate: Date;
   showAddButton: any;
   today: Date;
+  dayStartHour = 7;
+  dayEndHour = 21;
   private subscriptions: Subscription[] = [];
 
   private static getPreviousMonday(date: Date): Date {
