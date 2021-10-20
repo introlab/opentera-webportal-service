@@ -1,4 +1,4 @@
-import {NgModule, Optional, SkipSelf} from '@angular/core';
+import {LOCALE_ID, NgModule, Optional, SkipSelf} from '@angular/core';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {ServerErrorInterceptor} from '@core/interceptors/server-error.interceptor';
 import {AuthenticationService} from '@services/authentication.service';
@@ -26,6 +26,28 @@ import {SelectedGroupService} from '@services/selected-group.service';
 import {UserService} from '@services/user.service';
 import {UsernameValidator} from '@core/validators/username.validator';
 import {SelectedSourceService} from '@services/selected-source.service';
+import {NGX_MAT_DATE_FORMATS, NgxMatDateFormats} from '@angular-material-components/datetime-picker';
+
+const INTL_DATE_INPUT_FORMAT = {
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  hourCycle: 'h23',
+  hour: '2-digit',
+  minute: '2-digit',
+};
+
+const MAT_DATE_FORMATS: NgxMatDateFormats = {
+  parse: {
+    dateInput: INTL_DATE_INPUT_FORMAT,
+  },
+  display: {
+    dateInput: INTL_DATE_INPUT_FORMAT,
+    monthYearLabel: { year: 'numeric', month: 'short' },
+    dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
+    monthYearA11yLabel: { year: 'numeric', month: 'long' },
+  },
+};
 
 @NgModule({
   providers: [
@@ -54,7 +76,9 @@ import {SelectedSourceService} from '@services/selected-source.service';
     SelectedSourceService,
     UsernameValidator,
     {provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
+    {provide: LOCALE_ID, useValue: 'FR-fr'},
+    {provide: NGX_MAT_DATE_FORMATS, useValue: MAT_DATE_FORMATS}
   ]
 })
 export class CoreModule {
