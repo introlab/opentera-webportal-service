@@ -97,6 +97,9 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.push(
       account$.subscribe((account) => {
         this.isUser = isUser(account);
+        if (!this.isUser) {
+          this.view = CalendarView.Week;
+        }
         this.account = account;
         this.dateChange();
       })
