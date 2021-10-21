@@ -8,3 +8,7 @@ export function makeApiURL(forPSService = false): string {
     return url + GlobalConstants.osService;
   }
 }
+
+export function getVideoRehabURL(): string{
+  return GlobalConstants.protocol + '://' + GlobalConstants.hostname + ':' + GlobalConstants.port + '/' + GlobalConstants.rehabService;
+}

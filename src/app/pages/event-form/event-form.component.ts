@@ -187,6 +187,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
     session.session_name = controls.name.value;
     session.id_session = !isObjectEmpty(this.session) ? this.session.id_session : 0;
     session.session_users_uuids = [controls.clinician.value.user_uuid];
+    session.id_creator_user = controls.clinician.value.id_user;
     session.session_status = 0;
     session.id_session_type = controls.type.value.id_session_type;
     session.session_participants_uuids = this.sessionParticipants.map(a => a.participant_uuid);

@@ -5,8 +5,11 @@ import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Route
 import {delay} from 'rxjs/operators';
 import {AccountService} from '@services/account.service';
 import {GlobalConstants} from '@core/utils/global-constants';
-import {Subscription} from 'rxjs';
+import {Subscription, throwError} from 'rxjs';
 import {isUser} from '@core/utils/utility-functions';
+import {WebsocketService} from '@services/websocket.service';
+import {Pages} from '@core/utils/pages';
+import {SelectedSourceService} from '@services/selected-source.service';
 
 @Component({
   selector: 'app-root',
@@ -17,10 +20,13 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'Promo Santé';
   loading: boolean;
   private subscription: Subscription;
+  private websocketSub: Subscription;
 
   constructor(private cookieService: CookieService,
               private authService: AuthenticationService,
               private accountService: AccountService,
+              private webSocketService: WebsocketService,
+              private selectedSourceService: SelectedSourceService,
               private router: Router) {
   }
 
@@ -30,7 +36,9 @@ export class AppComponent implements OnInit, OnDestroy {
         this.navigationInterceptor(e);
       }
     });
-    //this.refreshToken();
+
+    this.websocketSub = this.webSocketService.websocketData.subscribe(data => this.webSocketMessage(data));
+    // this.refreshToken();
   }
 
   private refreshToken(): void {
@@ -50,7 +58,23 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Process websocket events
+  webSocketMessage(msg_data: any): void {
+
+    const msgType = msg_data['@type'];
+
+    if (msgType === 'type.googleapis.com/opentera.protobuf.JoinSessionEvent'){
+      console.log('Join session event');
+      const fullname = this.accountService.getAccount().fullname;
+      const current_session_url = msg_data.sessionUrl + '&name=' + fullname;
+      this.selectedSourceService.setSelectedSource(current_session_url);
+      this.router.navigate([Pages.createPath(Pages.appPage)]);
+    }
+
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.websocketSub.unsubscribe();
   }
 }

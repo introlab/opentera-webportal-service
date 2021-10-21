@@ -11,8 +11,11 @@
 
     .chips {
       display: flex;
-      width: 100%;
-      padding: calc(var(--app-padding) / 3) var(--app-padding) 0;
+      /*width: 100%;*/
+      position: absolute;
+      left: 100px;
+      top: 20px;
+      /*padding: calc(var(--app-padding) / 3) var(--app-padding) 0;*/
 
       span {
         display: flex;
@@ -54,5 +57,13 @@
 
   app-site-selector, app-project-selector {
     width: 100%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .glass-container section .chips {
+    position: relative;
+    top: 0;
+    left: 20px;
   }
 }

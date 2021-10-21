@@ -5,7 +5,8 @@ export class GlobalConstants {
   static port = 40075;
   static osService = 'api/';
   static psService = 'webportal/';
-  static cookieValue = 'PromoSanteCookie';
+  static rehabService = 'rehab/';
+  static cookieValue = 'WebPortalCookie';
   static serviceKey = 'WebPortalService';
   static version = '1.0';
   static organism = 'Centre de Recherche sur le Vieillissement de Sherbrooke - Regroupement INTER - ' + new Date().getFullYear();

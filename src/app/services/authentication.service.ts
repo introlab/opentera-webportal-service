@@ -54,6 +54,7 @@ export class AuthenticationService {
         this.isLoggedIn = true;
         this.cookieService.set(this.cookieValue, token, 0.5, '/');
         this.router.navigate([this._lastAuthenticatedPath]);
+        // Connect websocket
         this.websocketService.connect(response.websocket_url);
         this.startRefreshTokenTimer();
       })

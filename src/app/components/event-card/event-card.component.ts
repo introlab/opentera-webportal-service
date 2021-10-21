@@ -12,6 +12,9 @@ import {Subscription} from 'rxjs';
 import {Account} from '@shared/models/account.model';
 import {SelectedSourceService} from '@services/selected-source.service';
 import {Session} from '@shared/models/session.model';
+import {getVideoRehabURL} from '@core/utils/make-api-url';
+import {GlobalConstants} from '@core/utils/global-constants';
+import {CookieService} from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-event-card',
@@ -34,6 +37,7 @@ export class EventCardComponent implements OnInit, OnDestroy {
               private accountService: AccountService,
               private selectedSourceService: SelectedSourceService,
               private notificationService: NotificationService,
+              private cookieService: CookieService,
               public dialog: MatDialog) {
   }
 
@@ -105,6 +109,13 @@ export class EventCardComponent implements OnInit, OnDestroy {
         const app = videoRehabApp.app_name?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
         this.router.navigate([Pages.createPath(Pages.appPage), {app}]);
       }
+    }else{ // isUser
+      // User connect
+      const url = getVideoRehabURL() + 'user_session_lobby?token=' + this.cookieService.get(GlobalConstants.cookieValue) + '&session_uuid='
+        + this.event.session_uuid;
+      console.log('Loading session lobby at ' + url);
+      this.selectedSourceService.setSelectedSource(url);
+      this.router.navigate([Pages.createPath(Pages.appPage)]);
     }
   }
 
