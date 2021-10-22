@@ -6,7 +6,7 @@ import {NotificationService} from '@services/notification.service';
 import {TimeInputValidator} from '@core/validators/time-input.validator';
 import {AccountService} from '@services/account.service';
 import {Account} from '@shared/models/account.model';
-import {dateToISOLikeButLocal, getDuration, isObjectEmpty} from '@core/utils/utility-functions';
+import {dateToISOLikeButLocal, getDuration, isObjectEmpty, roundToNearestQuarter} from '@core/utils/utility-functions';
 import {Session} from '@shared/models/session.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {validateAllFields} from '@core/utils/validate-form';
@@ -40,11 +40,6 @@ export class EventFormComponent implements OnInit, OnDestroy {
   private account: Account;
   private subscriptions: Subscription[] = [];
 
-  private static roundToNearestQuarter(date: Date): Date {
-    const coefficient = 1000 * 60 * 15;
-    return new Date(Math.round(date.getTime() / coefficient) * coefficient);
-  }
-
   constructor(private calendarService: CalendarService,
               private notificationService: NotificationService,
               private accountService: AccountService,
@@ -59,6 +54,9 @@ export class EventFormComponent implements OnInit, OnDestroy {
     this.getData();
     this.title = 'Nouvelle entrée au calendrier';
     this.canSave = false;
+    this.startTime = roundToNearestQuarter(this.today);
+    this.inOneHour = roundToNearestQuarter(this.today);
+    this.inOneHour.setHours(this.inOneHour.getHours() + 1);
   }
 
   private getData(): void {
@@ -99,9 +97,6 @@ export class EventFormComponent implements OnInit, OnDestroy {
   }
 
   private initializeForm(): void {
-    this.startTime = EventFormComponent.roundToNearestQuarter(this.today);
-    this.inOneHour = EventFormComponent.roundToNearestQuarter(this.today);
-    this.inOneHour.setHours(this.inOneHour.getHours() + 1);
     this.eventForm = this.fb.group({
       name: new FormControl('', Validators.required),
       url: new FormControl('')
@@ -140,8 +135,8 @@ export class EventFormComponent implements OnInit, OnDestroy {
   }
 
   private setNewTime(time: Date): void {
-    this.startTime = EventFormComponent.roundToNearestQuarter(time);
-    this.inOneHour = EventFormComponent.roundToNearestQuarter(time);
+    this.startTime = roundToNearestQuarter(time);
+    this.inOneHour = roundToNearestQuarter(time);
     this.inOneHour.setHours(this.inOneHour.getHours() + 1);
   }
 

@@ -42,3 +42,8 @@ export function isObjectEmpty(object: any): boolean {
 export function createParticipantUrl(token: string): string {
   return `${GlobalConstants.protocol}://${GlobalConstants.hostname}:${GlobalConstants.port}/${Pages.participantConnectionURL}?token=${token}`;
 }
+
+export function roundToNearestQuarter(date: Date): Date {
+  const coefficient = 1000 * 60 * 15;
+  return new Date(Math.round(date.getTime() / coefficient) * coefficient);
+}
