@@ -18,7 +18,7 @@
           Jour
         </div>
       </div>
-      <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'fr' }}</h3>
+      <h3 class="large-screen">{{ viewDate | calendarDate:(view + 'ViewTitle'):'fr' }}</h3>
       <div class="button-group time">
         <div class="button icon"
              mwlCalendarPreviousView
@@ -41,6 +41,9 @@
           <mat-icon>chevron_right</mat-icon>
         </div>
       </div>
+    </div>
+    <div class="month">
+      <h3 class="small-screen">{{ viewDate | calendarDate:(view + 'ViewTitle'):'fr' }}</h3>
     </div>
     <div [ngSwitch]="view">
       <mwl-calendar-month-view

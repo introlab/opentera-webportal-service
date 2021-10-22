@@ -23,7 +23,6 @@
 
     button {
       flex: 1 1 auto;
-      max-width: 100px;
       margin: .25em 0 1.59em 10px;
     }
   }
@@ -58,6 +57,17 @@
 @media screen and (max-width: 600px) {
   .page-container {
     .filter {
+      app-group-selector {
+        margin-right: 0;
+      }
+
+      mat-form-field {
+        margin-right: 0;
+      }
+
+      button {
+        margin-left: 0;
+      }
     }
 
     .mobile-label {

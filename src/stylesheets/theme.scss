@@ -8,10 +8,6 @@
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 
-// Fonts
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Nunito:wght@500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css?family=Material+Icons");
-
 $fontConfig: (
   display-4: mat.define-typography-level(112px, 112px, 300, 'Open Sans', -0.0134em),
   display-3: mat.define-typography-level(56px, 56px, 400, 'Open Sans', -0.0089em),

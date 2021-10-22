@@ -130,14 +130,6 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
-
   iconChange(value: Icon): void {
     this.selectedIcon = value;
     this.data.app_icon = value.code;
@@ -181,5 +173,13 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
       this.createApp();
       this.dialogRef.close(this.app);
     }
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

@@ -1,7 +1,7 @@
 <div [formGroup]="form">
   <mat-form-field appearance="outline">
     <mat-label>Clinicien</mat-label>
-    <mat-select [value]="selectedUser"  formControlName="clinician">
+    <mat-select [value]="selectedUser" formControlName="clinician">
       <mat-option *ngFor="let user of users" [value]="user">
         {{user.user_firstname}} {{user.user_lastname}}
       </mat-option>

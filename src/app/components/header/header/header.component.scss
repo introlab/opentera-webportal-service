@@ -9,6 +9,12 @@ header {
   padding: 0 calc(var(--app-padding) / 2);
   justify-content: space-between;
 
+  app-logo,
+  app-navigation,
+  app-profile {
+    flex: 1 1 auto;
+  }
+
   app-navigation {
     text-align: center;
   }

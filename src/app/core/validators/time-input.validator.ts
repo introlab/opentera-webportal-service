@@ -1,10 +1,9 @@
 import {AbstractControl, ValidationErrors} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {debounceTime, map} from 'rxjs/operators';
-import {dateToISOLikeButLocal, setDate} from '@core/utils/utility-functions';
+import {dateToISOLikeButLocal} from '@core/utils/utility-functions';
 import {CalendarService} from '@services/calendar.service';
 import {Event} from '@shared/models/event.model';
-import {Participant} from '@shared/models/participant.model';
 
 export class TimeInputValidator {
 
@@ -46,6 +45,7 @@ export class TimeInputValidator {
         const endTime = new Date(endControl.value);
         const isoStartDate = dateToISOLikeButLocal(startTime);
         const isoEndDate = dateToISOLikeButLocal(endTime);
+        console.log(startTime, endTime);
 
         return calendarService.checkOverlaps(isoStartDate, isoEndDate, [])
           .pipe(

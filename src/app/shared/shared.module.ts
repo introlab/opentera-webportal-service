@@ -26,6 +26,7 @@ import {CalendarPageComponent} from '@pages/calendar/calendar.component';
 import {NgxMatDatetimePickerModule, NgxMatNativeDateModule} from '@angular-material-components/datetime-picker';
 import {DatetimeSelectorComponent} from '@components/selectors/datetime-selector/datetime-selector.component';
 import {UserSelectorComponent} from '@components/selectors/user-selector/user-selector.component';
+import {HttpClientModule} from '@angular/common/http';
 
 
 @NgModule({
@@ -53,28 +54,29 @@ import {UserSelectorComponent} from '@components/selectors/user-selector/user-se
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
-    SpinnerComponent,
-    SiteSelectorComponent,
-    ProjectSelectorComponent,
-    FrameComponent,
-    LogoComponent,
     MaterialModule,
     NgxMatDatetimePickerModule,
-    SessionTypeSelectorComponent,
-    ParticipantsSelectorComponent,
-    FooterComponent,
     AngularSvgIconModule,
     TruncatePipe,
     CalendarComponent,
     EventsComponent,
     DatetimeSelectorComponent,
     UserSelectorComponent,
+    SpinnerComponent,
+    SiteSelectorComponent,
+    ProjectSelectorComponent,
+    FrameComponent,
+    LogoComponent,
+    SessionTypeSelectorComponent,
+    ParticipantsSelectorComponent,
+    FooterComponent,
     EventCardComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     RouterModule,
+    HttpClientModule,
     ReactiveFormsModule,
     NgxMatDatetimePickerModule,
     NgxMatNativeDateModule,

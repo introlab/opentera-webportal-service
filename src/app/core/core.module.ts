@@ -27,6 +27,7 @@ import {UserService} from '@services/user.service';
 import {UsernameValidator} from '@core/validators/username.validator';
 import {SelectedSourceService} from '@services/selected-source.service';
 import {NGX_MAT_DATE_FORMATS, NgxMatDateFormats} from '@angular-material-components/datetime-picker';
+import {SelectedParticipantService} from '@services/selected-participant.service';
 
 const INTL_DATE_INPUT_FORMAT = {
   year: 'numeric',
@@ -64,6 +65,7 @@ const MAT_DATE_FORMATS: NgxMatDateFormats = {
     PermissionsService,
     ProjectService,
     RefreshingService,
+    SelectedParticipantService,
     SelectedProjectService,
     SelectedSiteService,
     ServiceService,

@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ParticipantsComponent} from '@pages/user/participants/participants.component';
 import {EventFormComponent} from '@pages/event-form/event-form.component';
-import {PlanningComponent} from '@pages/user/planning/planning.component';
 import {ApplicationsComponent} from '@pages/user/applications/applications.component';
 import {SharedModule} from '@shared/shared.module';
 import {MaterialModule} from '@shared/material.module';
@@ -20,7 +19,6 @@ import {UserRoutingModule} from '@src/app/modules/user-routing.module';
   declarations: [
     ParticipantsComponent,
     EventFormComponent,
-    PlanningComponent,
     ApplicationsComponent,
     ParticipantFormComponent,
     ApplicationFormComponent,
