@@ -32,8 +32,8 @@ export class EventFormComponent implements OnInit, OnDestroy {
   required = GlobalConstants.requiredMessage;
   startTimeControlName = 'startTime';
   endTimeControlName = 'endTime';
-  inOneHour: Date;
   startTime: Date;
+  endTime: Date;
   today = new Date();
   overlappingParticipants: string[] = [];
   selectedUserUUID = '';
@@ -55,8 +55,8 @@ export class EventFormComponent implements OnInit, OnDestroy {
     this.title = 'Nouvelle entrée au calendrier';
     this.canSave = false;
     this.startTime = roundToNearestQuarter(this.today);
-    this.inOneHour = roundToNearestQuarter(this.today);
-    this.inOneHour.setHours(this.inOneHour.getHours() + 1);
+    this.endTime = roundToNearestQuarter(this.today);
+    this.endTime.setHours(this.endTime.getHours() + 1);
   }
 
   private getData(): void {
@@ -107,7 +107,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
   }
 
   private setUpAsyncValidators(): void {
-    this.eventForm.setAsyncValidators([TimeInputValidator.checkIfTimeSlotsTaken(this.accountService, this.calendarService, this.event.id_event)]);
+    this.eventForm.setAsyncValidators([TimeInputValidator.checkIfTimeSlotsTaken(this.calendarService, this.event.id_event, this.account)]);
     this.eventForm.updateValueAndValidity();
   }
 
@@ -122,8 +122,8 @@ export class EventFormComponent implements OnInit, OnDestroy {
   private setValues(): void {
     const controls = this.eventForm.controls;
     controls.name.setValue(this.event.event_name);
-    controls.startTime.setValue(new Date(this.event.event_start_datetime));
-    controls.endTime.setValue(new Date(this.event.event_end_datetime));
+    this.startTime = new Date(this.event.event_start_datetime);
+    this.endTime = new Date(this.event.event_end_datetime);
     controls.url.setValue(this.event.event_static_url);
     this.selectedUserUUID = this.event.user_uuid;
     if (this.event.session) {
@@ -136,8 +136,8 @@ export class EventFormComponent implements OnInit, OnDestroy {
 
   private setNewTime(time: Date): void {
     this.startTime = roundToNearestQuarter(time);
-    this.inOneHour = roundToNearestQuarter(time);
-    this.inOneHour.setHours(this.inOneHour.getHours() + 1);
+    this.endTime = roundToNearestQuarter(time);
+    this.endTime.setHours(this.endTime.getHours() + 1);
   }
 
   validate(): void {

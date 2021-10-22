@@ -8,10 +8,13 @@ import {convertMinutesToHoursMinutes, getDuration, isUser} from '@core/utils/uti
 import {Router} from '@angular/router';
 import {Pages} from '@core/utils/pages';
 import {AccountService} from '@services/account.service';
-import {Subscription} from 'rxjs';
+import {combineLatest, Subscription} from 'rxjs';
 import {Account} from '@shared/models/account.model';
 import {SelectedSourceService} from '@services/selected-source.service';
 import {Session} from '@shared/models/session.model';
+import {PermissionsService} from '@services/permissions.service';
+import {CalendarView} from 'angular-calendar';
+import {Permission} from '@shared/models/permission.model';
 
 @Component({
   selector: 'app-event-card',
@@ -26,6 +29,7 @@ export class EventCardComponent implements OnInit, OnDestroy {
   isLive = false;
   isPastEvent = true;
   hasEventURL = false;
+  permissions: Permission;
   private subscription: Subscription;
   private account: Account;
 
@@ -33,6 +37,7 @@ export class EventCardComponent implements OnInit, OnDestroy {
               private router: Router,
               private accountService: AccountService,
               private selectedSourceService: SelectedSourceService,
+              private permissionsService: PermissionsService,
               private notificationService: NotificationService,
               public dialog: MatDialog) {
   }
@@ -43,7 +48,14 @@ export class EventCardComponent implements OnInit, OnDestroy {
     this.checkIfEventIsPassed();
     this.checkIfEventURL();
     this.getDuration();
-    this.subscription = this.accountService.account$().subscribe((account) => {
+    this.getAccount();
+  }
+
+  private getAccount(): void {
+    const account$ = this.accountService.account$();
+    const permissions$ = this.permissionsService.permissions$();
+    this.subscription = combineLatest([account$, permissions$]).subscribe(([account, permissions]) => {
+      this.permissions = permissions;
       this.account = account;
       this.isUser = isUser(account);
     });

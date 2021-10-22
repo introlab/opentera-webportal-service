@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit,
 import {Router} from '@angular/router';
 import {Event} from '@shared/models/event.model';
 import {CalendarEvent, CalendarView, collapseAnimation} from 'angular-calendar';
-import {Subject, Subscription} from 'rxjs';
+import {combineLatest, Subject, Subscription} from 'rxjs';
 import {AccountService} from '@services/account.service';
 import {Pages} from '@core/utils/pages';
 import {isUser} from '@core/utils/utility-functions';
@@ -11,6 +11,8 @@ import {CalendarService} from '@services/calendar.service';
 import {isSameDay, isSameMonth} from 'date-fns';
 import {EventDialogComponent} from '@components/event-dialog/event-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
+import {PermissionsService} from '@services/permissions.service';
+import {Permission} from '@shared/models/permission.model';
 
 const colors: any = {
   session: {
@@ -48,6 +50,7 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   dayStartHour = 7;
   dayEndHour = 21;
   private subscriptions: Subscription[] = [];
+  private permissions: Permission;
 
   private static getPreviousMonday(date: Date): Date {
     const prevSunday = new Date(date);
@@ -84,6 +87,7 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private accountService: AccountService,
               private router: Router,
               public dialog: MatDialog,
+              private permissionsService: PermissionsService,
               private calendarService: CalendarService) {
     this.currentDate = new Date();
   }
@@ -96,8 +100,10 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
 
   private getAccount(): void {
     const account$ = this.accountService.account$();
+    const permissions$ = this.permissionsService.permissions$();
     this.subscriptions.push(
-      account$.subscribe((account) => {
+      combineLatest([account$, permissions$]).subscribe(([account, permissions]) => {
+        this.permissions = permissions;
         this.isUser = isUser(account);
         if (!this.isUser) {
           this.view = CalendarView.Week;
@@ -211,7 +217,9 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   openForm(event: CalendarEvent): void {
-    if (this.isUser) {
+    if (this.isUser
+      && (this.permissions.site_admin // Either is site admin OR the connected user made the reservation
+        || (!this.permissions.site_admin && event.meta.event.user_uuid === this.account.login_uuid))) {
       const idEvent = event.meta.event.id_event;
       this.router.navigate([Pages.eventFormPage, {idEvent, participantsUUIDs: this.participantsUUIDs}]);
     }
@@ -224,8 +232,10 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  showEventInfos(event: CalendarEvent): void  {
-    if (this.isUser) {
+  showEventInfos(event: CalendarEvent): void {
+    if (this.isUser
+      && (this.permissions.site_admin // Either is site admin OR the connected user made the reservation
+        || (!this.permissions.site_admin && event.meta.event.user_uuid === this.account.login_uuid))) {
       this.openForm(event);
     } else {
       this.dialog.open(EventDialogComponent, {

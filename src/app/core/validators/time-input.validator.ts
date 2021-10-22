@@ -5,6 +5,7 @@ import {dateToISOLikeButLocal} from '@core/utils/utility-functions';
 import {CalendarService} from '@services/calendar.service';
 import {Event} from '@shared/models/event.model';
 import {AccountService} from '@services/account.service';
+import {Account} from '@shared/models/account.model';
 
 export class TimeInputValidator {
 
@@ -32,7 +33,7 @@ export class TimeInputValidator {
     return null;
   }
 
-  public static checkIfTimeSlotsTaken(accountService: AccountService, calendarService: CalendarService, eventId: number): any {
+  public static checkIfTimeSlotsTaken(calendarService: CalendarService, eventId: number, account: Account): any {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const startControl = control.get('startTime');
       const endControl = control.get('endTime');
@@ -48,13 +49,10 @@ export class TimeInputValidator {
       const isoEndDate = dateToISOLikeButLocal(endTime);
       const clinician = clinicianControl.value;
 
-      return accountService.account$()
+      let userUUID = '';
+      clinician && account.login_uuid === clinician.user_uuid ? userUUID = '' : userUUID = clinician.user_uuid;
+      return calendarService.checkOverlaps(isoStartDate, isoEndDate, [], userUUID)
         .pipe(
-          switchMap((account) => {
-            let userUUID = '';
-            clinician && account.login_uuid === clinician.user_uuid ? userUUID = '' : userUUID = clinician.user_uuid;
-            return calendarService.checkOverlaps(isoStartDate, isoEndDate, [], userUUID);
-          }),
           debounceTime(200),
           map((data: Event[]) => {
             data = data.filter(x => {

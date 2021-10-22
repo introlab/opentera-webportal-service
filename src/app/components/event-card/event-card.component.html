@@ -1,7 +1,8 @@
 <div class="card">
   <div class="row date">
     {{event.event_start_datetime | date:'dd MMM yyyy'}}
-    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Contrôles" *ngIf="!isPastEvent && isUser">
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Contrôles"
+            *ngIf="!isPastEvent && isUser && permissions.project_admin">
       <mat-icon>more_horiz</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
@@ -20,7 +21,8 @@
     <span class="is-live" *ngIf="isLive">Live</span>
     {{event.event_start_datetime | date:'HH:mm'}}-{{event.event_end_datetime | date:'HH:mm'}}
   </div>
-  <div class="row name">{{event.event_name}} avec {{event.user_fullname}} ({{session.session_type.session_type_name}})</div>
+  <div class="row name">{{event.event_name}} avec {{event.user_fullname}} ({{session.session_type.session_type_name}})
+  </div>
   <div class="row participants" *ngIf="isUser && event.session">
     Participants:
     <ng-container *ngFor="let participant of session.session_participants; let last = last">
@@ -32,7 +34,7 @@
       Se connecter à la séance
     </button>
   </ng-container>
-  <ng-container *ngIf="!isPastEvent && isUser && !hasEventURL">
+  <ng-container *ngIf="isUser && !isPastEvent && !hasEventURL">
     <div class="message-connection-user">
       <mat-icon>exit_to_app</mat-icon>
       Se connecter avec l'application OpenTeraPlus

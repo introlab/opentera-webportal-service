@@ -113,7 +113,7 @@
         [ngStyle]="event.meta.event.session && {'border-color': event.meta.event.session[0].session_type.session_type_color}">
         {{event.start | date: 'H:mm'}}
       </span>
-      : {{event.title}}      avec
+      : {{event.title}} avec
       <ng-container
         *ngFor="let participant of event.meta?.event?.session[0]?.session_participants; let last = last">
         {{participant.participant_name}} <span *ngIf="!last">, </span>
