@@ -112,8 +112,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
   }
 
   private setUpAsyncValidators(): void {
-    this.eventForm.setAsyncValidators([TimeInputValidator.checkIfTimeSlotsTaken(
-      this.calendarService, this.event.user_uuid, this.event.id_event)]);
+    this.eventForm.setAsyncValidators([TimeInputValidator.checkIfTimeSlotsTaken(this.accountService, this.calendarService, this.event.id_event)]);
     this.eventForm.updateValueAndValidity();
   }
 

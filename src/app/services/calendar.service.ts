@@ -75,12 +75,15 @@ export class CalendarService {
     );
   }
 
-  checkOverlaps(isoStartDate: string, isoEndDate: string, participantsUUIDs: string[] = []): Observable<Event[]> {
+  checkOverlaps(isoStartDate: string, isoEndDate: string, participantsUUIDs: string[] = [], userUUID: string = ''): Observable<Event[]> {
     let UUIDs = '';
     participantsUUIDs.forEach((uuid) => {
       UUIDs += '&participant_uuid=' + uuid;
     });
-    const args = `?overlaps=true&start_date=${isoStartDate}&end_date=${isoEndDate}${UUIDs}`;
+    let args = `?overlaps=true&start_date=${isoStartDate}&end_date=${isoEndDate}${UUIDs}`;
+    if (userUUID.length > 0) {
+      args += `&user_uuid=${userUUID}`;
+    }
     return this.http.get<Event[]>(this.API_URL + this.controller + args);
   }
 
