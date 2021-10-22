@@ -108,7 +108,7 @@ class QueryCalendar(Resource):
                 # If event has a session associated to it, get it from OpenTera
                 if event.session_uuid and args['full'] is True:
                     endpoint = '/api/service/sessions'
-                    params = {'uuid_session': event.session_uuid}
+                    params = {'uuid_session': event.session_uuid, 'with_session_type': True}
                     response = Globals.service.get_from_opentera(endpoint, params)
 
                     if response.status_code == 200:
