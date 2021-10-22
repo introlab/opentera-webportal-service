@@ -21,6 +21,8 @@ get_parser.add_argument('end_date', type=str, help='Date of last day to query')
 get_parser.add_argument('overlaps', type=inputs.boolean, help='Return only overlapping events')
 get_parser.add_argument('three', type=inputs.boolean, help='Return only three next events')
 get_parser.add_argument('full', type=inputs.boolean, help='Get additional information for event')
+get_parser.add_argument('user_uuid', type=str, help='User UUID with whom to check overlaps')
+
 
 post_parser = api.parser()
 delete_parser = reqparse.RequestParser()
@@ -57,7 +59,9 @@ class QueryCalendar(Resource):
                 # Find event overlaps for connected user
                 start_time = datetime.fromisoformat(args['start_date'])
                 end_time = datetime.fromisoformat(args['end_date'])
-                events = calendar_access.query_overlaps(start_time, end_time, user_uuid=current_user_client.user_uuid)
+                # If uuid user specified, check for this user, if not, check for current user
+                uuid_user = args['user_uuid'] if args['user_uuid'] else current_user_client.user_uuid
+                events = calendar_access.query_overlaps(start_time, end_time, user_uuid=uuid_user)
         elif args['three']:
             if participant_uuids:
                 # Find next three events for participant
