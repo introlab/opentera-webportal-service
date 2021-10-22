@@ -2,8 +2,9 @@ import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, Si
 import {Participant} from '@shared/models/participant.model';
 import {ParticipantService} from '@services/participant/participant.service';
 import {SelectedProjectService} from '@services/selected-project.service';
-import {Observable, Subscription} from 'rxjs';
+import {combineLatest, Subscription} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
+import {SelectedParticipantService} from '@services/selected-participant.service';
 
 @Component({
   selector: 'app-participants-selector',
@@ -14,24 +15,36 @@ export class ParticipantsSelectorComponent implements OnInit, OnChanges, OnDestr
   @Input() noneOption = false;
   @Input() selectedParticipantUUID = '';
   @Output() selectedParticipantChange = new EventEmitter();
-  participants$: Observable<Participant[]>;
+  participants: Participant[] = [];
   selectedParticipant: Participant;
   private subscriptions: Subscription[] = [];
 
 
   constructor(private participantService: ParticipantService,
+              private selectedParticipantService: SelectedParticipantService,
               private selectedProjectService: SelectedProjectService) {
   }
 
   ngOnInit(): void {
-    this.participants$ = this.participantService.participants$();
-    this.getProjectParticipants();
+    this.getParticipants();
+    this.refreshProjectParticipants();
+  }
+
+  private getParticipants(): void {
+    const participants$ = this.participantService.participants$();
+    const selected$ = this.selectedParticipantService.getSelectedParticipant();
+    this.subscriptions.push(
+      combineLatest([participants$, selected$]).subscribe(([participants, selectedParticipant]) => {
+        this.participants = participants;
+        // this.onValueChanged(selectedParticipant);
+      })
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
   }
 
-  private getProjectParticipants(): void {
+  private refreshProjectParticipants(): void {
     const project$ = this.selectedProjectService.getSelectedProject();
     this.subscriptions.push(
       project$.pipe(
@@ -49,7 +62,6 @@ export class ParticipantsSelectorComponent implements OnInit, OnChanges, OnDestr
   }
 
   onValueChanged(selected: Participant): void {
-    this.selectedParticipantChange.emit(selected);
     if (this.isDifferentParticipant(selected)) {
       if (!!selected) {
         this.selectedParticipantChange.emit(selected);

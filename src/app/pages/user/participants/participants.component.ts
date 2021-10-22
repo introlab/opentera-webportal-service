@@ -17,6 +17,7 @@ import {SelectedGroupService} from '@services/selected-group.service';
 import {createParticipantUrl, isObjectEmpty} from '@core/utils/utility-functions';
 import {ThemePalette} from '@angular/material/core';
 import {Clipboard} from '@angular/cdk/clipboard';
+import {SelectedParticipantService} from '@services/selected-participant.service';
 
 @Component({
   selector: 'app-participants',
@@ -37,6 +38,7 @@ export class ParticipantsComponent implements OnInit, OnDestroy, AfterViewInit {
               public dialog: MatDialog,
               private router: Router,
               private clipboard: Clipboard,
+              private selectedParticipantService: SelectedParticipantService,
               private selectedGroupService: SelectedGroupService,
               private participantService: ParticipantService,
               private selectedProjectService: SelectedProjectService) {
@@ -171,10 +173,8 @@ export class ParticipantsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openCalendar(participant: Participant): void {
-    this.router.navigate([Pages.calendarPage, {
-      uuid: participant.participant_uuid,
-      name: participant.participant_name
-    }]);
+    this.selectedParticipantService.setSelectedParticipant(participant);
+    this.router.navigate([Pages.calendarPage]);
   }
 
   ngOnDestroy(): void {
