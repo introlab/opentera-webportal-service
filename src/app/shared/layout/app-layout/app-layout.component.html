@@ -1,8 +1,8 @@
 <div class="glass-container">
   <app-header></app-header>
-  <app-responsive-navigation></app-responsive-navigation>
+  <app-responsive-navigation *ngIf="!inSession"></app-responsive-navigation>
   <section *ngIf="!navigationOpened">
-    <div class="chips" *ngIf="showSelectors">
+    <div class="chips" *ngIf="showSelectors && !inSession">
         <span>{{selectedSite?.site_name}}</span>
         <span>{{selectedProject?.project_name}}</span>
         <span [title]="'Changer de site / projet'" (click)="showSelectors = !showSelectors" class="edit">

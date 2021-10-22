@@ -7,6 +7,7 @@ import {MenuHamburgerComponent} from '@components/header/menu-hamburger/menu-ham
 import {HeaderComponent} from '@components/header/header/header.component';
 import {ResponsiveNavigationComponent} from '@components/header/responsive-navigation/responsive-navigation.component';
 import {SharedModule} from '@shared/shared.module';
+import {InSessionToolbarComponent} from '@components/header/in-session-toolbar/in-session-toolbar.component';
 
 
 @NgModule({
@@ -17,10 +18,12 @@ import {SharedModule} from '@shared/shared.module';
     MenuHamburgerComponent,
     HeaderComponent,
     ResponsiveNavigationComponent,
+    InSessionToolbarComponent
   ],
   exports: [
     ResponsiveNavigationComponent,
-    HeaderComponent
+    HeaderComponent,
+    InSessionToolbarComponent
   ],
   imports: [
     CommonModule,

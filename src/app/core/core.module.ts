@@ -26,6 +26,8 @@ import {SelectedGroupService} from '@services/selected-group.service';
 import {UserService} from '@services/user.service';
 import {UsernameValidator} from '@core/validators/username.validator';
 import {SelectedSourceService} from '@services/selected-source.service';
+import {WebsocketService} from '@services/websocket.service';
+import {SessionManagerService} from '@services/session-manager.service';
 
 @NgModule({
   providers: [
@@ -53,6 +55,8 @@ import {SelectedSourceService} from '@services/selected-source.service';
     UserService,
     SelectedSourceService,
     UsernameValidator,
+    WebsocketService,
+    SessionManagerService,
     {provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}
   ]
