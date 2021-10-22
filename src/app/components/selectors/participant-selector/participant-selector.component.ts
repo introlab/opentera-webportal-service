@@ -7,13 +7,14 @@ import {switchMap} from 'rxjs/operators';
 import {SelectedParticipantService} from '@services/selected-participant.service';
 
 @Component({
-  selector: 'app-participants-selector',
-  templateUrl: './participants-selector.component.html',
-  styleUrls: ['./participants-selector.component.scss']
+  selector: 'app-participant-selector',
+  templateUrl: './participant-selector.component.html',
+  styleUrls: ['./participant-selector.component.scss']
 })
-export class ParticipantsSelectorComponent implements OnInit, OnChanges, OnDestroy {
+export class ParticipantSelectorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() noneOption = false;
   @Input() selectedParticipantUUID = '';
+  @Input() label = 'Participants';
   @Output() selectedParticipantChange = new EventEmitter();
   participants: Participant[] = [];
   selectedParticipant: Participant;

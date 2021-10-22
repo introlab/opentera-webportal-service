@@ -51,7 +51,6 @@ export class TimeInputValidator {
       return accountService.account$()
         .pipe(
           switchMap((account) => {
-            console.log(account.login_uuid, clinician);
             let userUUID = '';
             clinician && account.login_uuid === clinician.user_uuid ? userUUID = '' : userUUID = clinician.user_uuid;
             return calendarService.checkOverlaps(isoStartDate, isoEndDate, [], userUUID);
@@ -61,7 +60,6 @@ export class TimeInputValidator {
             data = data.filter(x => {
               return x.id_event !== eventId;
             });
-            console.log(eventId, data);
             return data && data.length > 0 ? {timesOverlapping: true} : null;
           })
         );

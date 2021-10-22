@@ -15,7 +15,7 @@ import {EventCardComponent} from '@components/event-card/event-card.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SessionTypeSelectorComponent} from '@components/selectors/session-type-selector/session-type-selector.component';
 import {EventFormComponent} from '@pages/event-form/event-form.component';
-import {ParticipantsSelectorComponent} from '@components/selectors/participants-selector/participants-selector.component';
+import {ParticipantSelectorComponent} from '@components/selectors/participant-selector/participant-selector.component';
 import {CallbackComponent} from '@components/callback/callback.component';
 import {EventsComponent} from '@components/events/events.component';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
@@ -42,7 +42,7 @@ import {HttpClientModule} from '@angular/common/http';
     ConfirmationComponent,
     EventCardComponent,
     SessionTypeSelectorComponent,
-    ParticipantsSelectorComponent,
+    ParticipantSelectorComponent,
     LogoComponent,
     FooterComponent,
     CalendarComponent,
@@ -68,7 +68,7 @@ import {HttpClientModule} from '@angular/common/http';
     FrameComponent,
     LogoComponent,
     SessionTypeSelectorComponent,
-    ParticipantsSelectorComponent,
+    ParticipantSelectorComponent,
     FooterComponent,
     EventCardComponent
   ],

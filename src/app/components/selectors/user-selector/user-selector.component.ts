@@ -50,7 +50,6 @@ export class UserSelectorComponent implements OnInit, OnChanges, OnDestroy {
   private getUsers(): void {
     this.userService.users$().subscribe((users) => {
       this.users = users;
-      console.log(users);
       this.selectUser();
     });
   }
@@ -64,7 +63,6 @@ export class UserSelectorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     this.selectUser();
   }
 
