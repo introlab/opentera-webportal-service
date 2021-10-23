@@ -49,14 +49,14 @@ export class EventFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.startTime = roundToNearestQuarter(this.today);
+    this.endTime = roundToNearestQuarter(this.today);
+    this.endTime.setHours(this.endTime.getHours() + 1);
     this.initializeForm();
     this.checkFormChange();
     this.getData();
     this.title = 'Nouvelle entrée au calendrier';
     this.canSave = false;
-    this.startTime = roundToNearestQuarter(this.today);
-    this.endTime = roundToNearestQuarter(this.today);
-    this.endTime.setHours(this.endTime.getHours() + 1);
   }
 
   private getData(): void {
