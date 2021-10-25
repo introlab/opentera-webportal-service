@@ -19,7 +19,7 @@
                            [sessionParticipants]="sessionParticipants"
                            (overlappingParticipants)="overlappingParticipantsChange($event)"
                            [controlName]="startTimeControlName" [minDate]="today"></app-datetime-selector>
-    <app-datetime-selector [label]="'Fin'" [default]="inOneHour" [form]="eventForm" [controlName]="endTimeControlName"
+    <app-datetime-selector [label]="'Fin'" [default]="endTime" [form]="eventForm" [controlName]="endTimeControlName"
                            [sessionParticipants]="sessionParticipants"
                            (overlappingParticipants)="overlappingParticipantsChange($event)"
                            [minDate]="startTime"></app-datetime-selector>

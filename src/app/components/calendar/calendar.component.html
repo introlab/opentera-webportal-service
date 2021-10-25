@@ -18,7 +18,7 @@
           Jour
         </div>
       </div>
-      <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'fr' }}</h3>
+      <h3 class="large-screen">{{ viewDate | calendarDate:(view + 'ViewTitle'):'fr' }}</h3>
       <div class="button-group time">
         <div class="button icon"
              mwlCalendarPreviousView
@@ -42,6 +42,9 @@
         </div>
       </div>
     </div>
+    <div class="month">
+      <h3 class="small-screen">{{ viewDate | calendarDate:(view + 'ViewTitle'):'fr' }}</h3>
+    </div>
     <div [ngSwitch]="view">
       <mwl-calendar-month-view
         *ngSwitchCase="calendarView.Month"
@@ -64,6 +67,8 @@
         [eventTemplate]="customWeekEvent"
         (eventClicked)="openForm($event.event)"
         (hourSegmentClicked)="openFormWithTime($event.date)"
+        [dayStartHour]="dayStartHour"
+        [dayEndHour]="dayEndHour"
       >
       </mwl-calendar-week-view>
       <mwl-calendar-day-view
@@ -74,6 +79,8 @@
         [eventTemplate]="customWeekEvent"
         (eventClicked)="openForm($event.event)"
         (hourSegmentClicked)="openFormWithTime($event.date)"
+        [dayStartHour]="dayStartHour"
+        [dayEndHour]="dayEndHour"
       >
       </mwl-calendar-day-view>
     </div>
@@ -103,8 +110,10 @@
     </div>
     <div class="month-event" *ngFor="let event of day.events.slice(0, 3);">
       <span
-        [style.border-color]="event.meta.event.session[0].session_type.session_type_color">{{event.start | date: 'H:mm'}}</span>: {{event.title}}
-      avec
+        [ngStyle]="event.meta.event.session && {'border-color': event.meta.event.session[0].session_type.session_type_color}">
+        {{event.start | date: 'H:mm'}}
+      </span>
+      : {{event.title}} avec
       <ng-container
         *ngFor="let participant of event.meta?.event?.session[0]?.session_participants; let last = last">
         {{participant.participant_name}} <span *ngIf="!last">, </span>
@@ -121,7 +130,7 @@
     <h2>{{events[0].start | date: 'fullDate' }}</h2>
     <div *ngFor="let event of events">
       <div class="event" (click)="showEventInfos(event)"
-           [style.border-color]="event.meta.event.session[0].session_type.session_type_color">
+           [ngStyle]="event.meta.event.session && {'border-color': event.meta.event.session[0].session_type.session_type_color}">
         <span>{{event.start | date: 'H:mm'}} - {{event.end | date: 'H:mm'}}</span>: {{ event.title }}
         avec
         <ng-container
@@ -135,7 +144,7 @@
 
 <ng-template #customWeekEvent let-weekEvent="weekEvent">
   <div class="cal-event" (click)="showEventInfos(weekEvent.event)" [style.background-color]="'#fff'"
-       [style.border-color]="weekEvent.event.meta?.event?.session[0]?.session_type?.session_type_color">
+       [ngStyle]="weekEvent.meta.event.session && {'border-color': weekEvent.meta.event.session[0].session_type.session_type_color}">
     <div class="event">
       {{weekEvent.event.start | date: 'H:mm'}} - {{weekEvent.event.end | date: 'H:mm'}}: {{weekEvent.event.title}}
       avec

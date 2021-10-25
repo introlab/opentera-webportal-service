@@ -6,7 +6,7 @@ import {NotificationService} from '@services/notification.service';
 import {TimeInputValidator} from '@core/validators/time-input.validator';
 import {AccountService} from '@services/account.service';
 import {Account} from '@shared/models/account.model';
-import {dateToISOLikeButLocal, getDuration, isObjectEmpty} from '@core/utils/utility-functions';
+import {dateToISOLikeButLocal, getDuration, isObjectEmpty, roundToNearestQuarter} from '@core/utils/utility-functions';
 import {Session} from '@shared/models/session.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {validateAllFields} from '@core/utils/validate-form';
@@ -32,18 +32,13 @@ export class EventFormComponent implements OnInit, OnDestroy {
   required = GlobalConstants.requiredMessage;
   startTimeControlName = 'startTime';
   endTimeControlName = 'endTime';
-  inOneHour: Date;
   startTime: Date;
+  endTime: Date;
   today = new Date();
   overlappingParticipants: string[] = [];
   selectedUserUUID = '';
   private account: Account;
   private subscriptions: Subscription[] = [];
-
-  private static roundToNearestQuarter(date: Date): Date {
-    const coefficient = 1000 * 60 * 15;
-    return new Date(Math.round(date.getTime() / coefficient) * coefficient);
-  }
 
   constructor(private calendarService: CalendarService,
               private notificationService: NotificationService,
@@ -54,6 +49,9 @@ export class EventFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.startTime = roundToNearestQuarter(this.today);
+    this.endTime = roundToNearestQuarter(this.today);
+    this.endTime.setHours(this.endTime.getHours() + 1);
     this.initializeForm();
     this.checkFormChange();
     this.getData();
@@ -99,9 +97,6 @@ export class EventFormComponent implements OnInit, OnDestroy {
   }
 
   private initializeForm(): void {
-    this.startTime = EventFormComponent.roundToNearestQuarter(this.today);
-    this.inOneHour = EventFormComponent.roundToNearestQuarter(this.today);
-    this.inOneHour.setHours(this.inOneHour.getHours() + 1);
     this.eventForm = this.fb.group({
       name: new FormControl('', Validators.required),
       url: new FormControl('')
@@ -112,8 +107,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
   }
 
   private setUpAsyncValidators(): void {
-    this.eventForm.setAsyncValidators([TimeInputValidator.checkIfTimeSlotsTaken(
-      this.calendarService, this.event.user_uuid, this.event.id_event)]);
+    this.eventForm.setAsyncValidators([TimeInputValidator.checkIfTimeSlotsTaken(this.calendarService, this.event.id_event, this.account)]);
     this.eventForm.updateValueAndValidity();
   }
 
@@ -128,8 +122,8 @@ export class EventFormComponent implements OnInit, OnDestroy {
   private setValues(): void {
     const controls = this.eventForm.controls;
     controls.name.setValue(this.event.event_name);
-    controls.startTime.setValue(new Date(this.event.event_start_datetime));
-    controls.endTime.setValue(new Date(this.event.event_end_datetime));
+    this.startTime = new Date(this.event.event_start_datetime);
+    this.endTime = new Date(this.event.event_end_datetime);
     controls.url.setValue(this.event.event_static_url);
     this.selectedUserUUID = this.event.user_uuid;
     if (this.event.session) {
@@ -141,9 +135,9 @@ export class EventFormComponent implements OnInit, OnDestroy {
   }
 
   private setNewTime(time: Date): void {
-    this.startTime = EventFormComponent.roundToNearestQuarter(time);
-    this.inOneHour = EventFormComponent.roundToNearestQuarter(time);
-    this.inOneHour.setHours(this.inOneHour.getHours() + 1);
+    this.startTime = roundToNearestQuarter(time);
+    this.endTime = roundToNearestQuarter(time);
+    this.endTime.setHours(this.endTime.getHours() + 1);
   }
 
   validate(): void {

@@ -15,7 +15,7 @@ import {EventCardComponent} from '@components/event-card/event-card.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SessionTypeSelectorComponent} from '@components/selectors/session-type-selector/session-type-selector.component';
 import {EventFormComponent} from '@pages/event-form/event-form.component';
-import {ParticipantsSelectorComponent} from '@components/selectors/participants-selector/participants-selector.component';
+import {ParticipantSelectorComponent} from '@components/selectors/participant-selector/participant-selector.component';
 import {CallbackComponent} from '@components/callback/callback.component';
 import {EventsComponent} from '@components/events/events.component';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
@@ -26,6 +26,7 @@ import {CalendarPageComponent} from '@pages/calendar/calendar.component';
 import {NgxMatDatetimePickerModule, NgxMatNativeDateModule} from '@angular-material-components/datetime-picker';
 import {DatetimeSelectorComponent} from '@components/selectors/datetime-selector/datetime-selector.component';
 import {UserSelectorComponent} from '@components/selectors/user-selector/user-selector.component';
+import {HttpClientModule} from '@angular/common/http';
 
 
 @NgModule({
@@ -41,7 +42,7 @@ import {UserSelectorComponent} from '@components/selectors/user-selector/user-se
     ConfirmationComponent,
     EventCardComponent,
     SessionTypeSelectorComponent,
-    ParticipantsSelectorComponent,
+    ParticipantSelectorComponent,
     LogoComponent,
     FooterComponent,
     CalendarComponent,
@@ -53,28 +54,29 @@ import {UserSelectorComponent} from '@components/selectors/user-selector/user-se
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
-    SpinnerComponent,
-    SiteSelectorComponent,
-    ProjectSelectorComponent,
-    FrameComponent,
-    LogoComponent,
     MaterialModule,
     NgxMatDatetimePickerModule,
-    SessionTypeSelectorComponent,
-    ParticipantsSelectorComponent,
-    FooterComponent,
     AngularSvgIconModule,
     TruncatePipe,
     CalendarComponent,
     EventsComponent,
     DatetimeSelectorComponent,
     UserSelectorComponent,
+    SpinnerComponent,
+    SiteSelectorComponent,
+    ProjectSelectorComponent,
+    FrameComponent,
+    LogoComponent,
+    SessionTypeSelectorComponent,
+    ParticipantSelectorComponent,
+    FooterComponent,
     EventCardComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     RouterModule,
+    HttpClientModule,
     ReactiveFormsModule,
     NgxMatDatetimePickerModule,
     NgxMatNativeDateModule,

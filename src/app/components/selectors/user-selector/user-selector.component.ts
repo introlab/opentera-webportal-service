@@ -33,18 +33,14 @@ export class UserSelectorComponent implements OnInit, OnChanges, OnDestroy {
     this.getUsers();
     this.subscriptions.push(
       combineLatest([this.getPermissions(), this.getSelectedProject()]).pipe(
-        filter(([permissions, project]) => {
+        switchMap(([permissions, project]) => {
           if (!permissions.project_admin) {
             this.form.controls.clinician.disable();
           }
-          return permissions.project_admin;
-        }),
-        switchMap(([permissions, project]) => {
           return this.refreshUsers(project.id_project);
         })
       ).subscribe()
     );
-
   }
 
   private getPermissions(): Observable<Permission> {

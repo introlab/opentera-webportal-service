@@ -11,11 +11,14 @@
 
     .chips {
       display: flex;
-      /*width: 100%;*/
+      width: 100%;
+      padding: calc(var(--app-padding) / 3) var(--app-padding) 0;
+
+      /*display: flex;
+      width: 100%;
       position: absolute;
       left: 100px;
-      top: 20px;
-      /*padding: calc(var(--app-padding) / 3) var(--app-padding) 0;*/
+      top: 20px;*/
 
       span {
         display: flex;

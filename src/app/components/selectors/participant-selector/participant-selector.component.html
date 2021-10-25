@@ -1,8 +1,8 @@
 <mat-form-field appearance="outline">
-  <mat-label>Participants</mat-label>
+  <mat-label>{{label}}</mat-label>
   <mat-select (selectionChange)="onValueChanged($event.value)" [value]="selectedParticipant">
     <mat-option *ngIf="noneOption" [value]="null">Mon calendrier</mat-option>
-    <mat-option *ngFor="let participant of participants$ | async" [value]="participant">
+    <mat-option *ngFor="let participant of participants" [value]="participant">
       {{participant.participant_name}}
     </mat-option>
   </mat-select>

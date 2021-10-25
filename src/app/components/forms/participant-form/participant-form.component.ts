@@ -5,7 +5,7 @@ import {ThemePalette} from '@angular/material/core';
 import {combineLatest, Subscription} from 'rxjs';
 import {Project} from '@shared/models/project.model';
 import {Participant} from '@shared/models/participant.model';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {SelectedProjectService} from '@services/selected-project.service';
 import {GroupService} from '@services/participant/group.service';
 import {Group} from '@shared/models/group.model';
@@ -95,7 +95,7 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
   private initializeForm(): void {
     this.participantForm = this.fb.group({
       name: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      email: new FormControl('', [Validators.email]),
       connectionUrl: new FormControl({value: '', disabled: true}),
       enable: new FormControl(true),
     });
@@ -128,7 +128,7 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
     if (controls.name.value.toLocaleLowerCase() !== this.participant.participant_name?.toLocaleLowerCase()) {
       temp.participant_name = controls.name.value;
     }
-    if (controls.email.value.toLocaleLowerCase() !== this.participant.participant_email?.toLocaleLowerCase()) {
+    if (controls.email.value && controls.email.value.toLocaleLowerCase() !== this.participant.participant_email?.toLocaleLowerCase()) {
       temp.participant_email = controls.email.value;
     }
     temp.id_project = this.selectedProject.id_project;

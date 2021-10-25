@@ -2,5 +2,20 @@
   display: flex;
   flex-direction: column;
   padding: calc(var(--app-padding) / 3) var(--app-padding);
+
+  section.row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+
+    app-participant-selector {
+      flex: 2 1 auto;
+    }
+
+    h2 {
+      flex: 1 1 auto;
+    }
+  }
 }
 

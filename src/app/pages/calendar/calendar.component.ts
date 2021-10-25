@@ -8,6 +8,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {isUser} from '@core/utils/utility-functions';
 import {switchMap} from 'rxjs/operators';
 import {Participant} from '@shared/models/participant.model';
+import {SelectedParticipantService} from '@services/selected-participant.service';
 
 
 @Component({
@@ -28,24 +29,25 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
   constructor(private accountService: AccountService,
               private router: Router,
               private calendarService: CalendarService,
+              private selectedParticipantService: SelectedParticipantService,
               private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    this.getRouteParams();
+    this.getSelectedParticipant();
     this.getSessionData();
   }
 
-  private getRouteParams(): void {
-    const uuid = this.route.snapshot.paramMap.get('uuid');
-    const name = this.route.snapshot.paramMap.get('name');
-    if (uuid) {
-      this.firstParticipantSelected = uuid;
-      this.participantsUUIDs.push(uuid);
-    }
-    if (name) {
-      this.calendarName = name;
-    }
+  private getSelectedParticipant(): void {
+    this.subscriptions.push(
+      this.selectedParticipantService.getSelectedParticipant().subscribe((selected) => {
+        if (selected) {
+          this.calendarName = selected.participant_name;
+          this.firstParticipantSelected = selected.participant_uuid;
+          this.participantsUUIDs.push(selected.participant_uuid);
+        }
+      })
+    );
   }
 
   private getSessionData(): void {
@@ -83,9 +85,11 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
     if (participant) {
       this.calendarName = participant.participant_name;
       this.participantsUUIDs = [participant.participant_uuid];
+      this.selectedParticipantService.setSelectedParticipant(participant);
     } else {
       this.calendarName = this.account.fullname;
       this.participantsUUIDs = [];
+      this.selectedParticipantService.setSelectedParticipant(null);
     }
     this.getNextThreeEvents().subscribe((three) => {
       this.nextEvents = three;

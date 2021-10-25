@@ -7,7 +7,7 @@
   </ng-template>
   <app-navigation [hidden]="inSession"></app-navigation>
   <app-profile [hidden]="inSession"></app-profile>
-  <app-menu-hamburger [hidden]="inSession"></app-menu-hamburger>
+  <app-menu-hamburger *ngIf="!inSession"></app-menu-hamburger>
   <app-in-session-toolbar *ngIf="inSession"></app-in-session-toolbar>
 </header>
 

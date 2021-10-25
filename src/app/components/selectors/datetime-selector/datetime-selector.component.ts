@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {ThemePalette} from '@angular/material/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {GlobalConstants} from '@core/utils/global-constants';
-import {dateToISOLikeButLocal} from '@core/utils/utility-functions';
+import {dateToISOLikeButLocal, roundToNearestQuarter} from '@core/utils/utility-functions';
 import {CalendarService} from '@services/calendar.service';
 import {Participant} from '@shared/models/participant.model';
 
@@ -43,7 +43,9 @@ export class DatetimeSelectorComponent implements OnInit, OnChanges {
 
   onTimeChange(change: any): void {
     const control = this.form.controls;
-    if (new Date(change.value) !== new Date(this.dateControl.value)) {
+    const newTime = new Date(change.value);
+    this.updateEndTime(newTime);
+    if (newTime !== new Date(this.dateControl.value)) {
       const startTime = new Date(control.startTime.value);
       const endTime = new Date(control.endTime.value);
       const isoStartDate = dateToISOLikeButLocal(startTime);
@@ -56,6 +58,17 @@ export class DatetimeSelectorComponent implements OnInit, OnChanges {
         });
         this.overlappingParticipants.emit(overlappingParticipants);
       });
+    }
+  }
+
+  private updateEndTime(newTime: Date): void {
+    if (this.controlName === 'startTime') {
+      const control = this.form.controls;
+      const startTime = roundToNearestQuarter(newTime);
+      const endTime = roundToNearestQuarter(newTime);
+      endTime.setHours(endTime.getHours() + 1);
+      control.startTime.setValue(startTime);
+      control.endTime.setValue(endTime);
     }
   }
 }

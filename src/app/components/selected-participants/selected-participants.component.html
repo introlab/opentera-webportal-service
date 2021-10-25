@@ -1,4 +1,4 @@
-<app-participants-selector (selectedParticipantChange)="newParticipantSelected($event)"></app-participants-selector>
+<app-participant-selector (selectedParticipantChange)="newParticipantSelected($event)"></app-participant-selector>
 <ng-container *ngFor="let participant of selectedParticipants;index as i; trackBy: trackByFn">
   <div class="row" [ngClass]="{'overlap': overlappingParticipants.includes(participant.participant_uuid)}">
     {{participant.participant_name}}
