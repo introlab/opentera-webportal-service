@@ -46,7 +46,7 @@ export class AuthenticationService {
   }
 
   login(username: string, password: string, isManager: boolean = false): Observable<any> {
-    const apiUrl = isManager ? `${this.API_URL}user/login` : `${this.API_URL}participant/login`;
+    const apiUrl = isManager ? `${this.API_URL}user/login?with_websocket=true` : `${this.API_URL}participant/login`;
     const headers = new HttpHeaders().set('Authorization', 'Basic ' + btoa(username + ':' + password));
     return this.http.get(apiUrl, {headers}).pipe(
       tap((response: any) => {
@@ -105,7 +105,7 @@ export class AuthenticationService {
   refreshToken(): Observable<any> {
     return this.accountService.account$().pipe(
       switchMap((account) => {
-        const apiUrl = account.login_type === 'user' ? `${this.API_URL}user/refresh_token` : `${this.API_URL}participant/refresh_token`;
+        const apiUrl = account.login_type === 'user' ? `${this.API_URL}user/refresh_token?with_websocket=true` : `${this.API_URL}participant/refresh_token`;
         return this.http.get<any>(apiUrl)
           .pipe(map((user) => {
             this.startRefreshTokenTimer();

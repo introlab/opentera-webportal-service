@@ -26,7 +26,7 @@ export class WebsocketService implements OnDestroy {
       console.log('Returning existing websocket$.');
       return this.websocket$;
     }
-    this.websocket$ = webSocket(url);
+    this.websocket$ = webSocket(url, );
     this.websocket$
       .subscribe(
         (msg) => {

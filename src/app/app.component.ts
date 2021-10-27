@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {CookieService} from 'ngx-cookie-service';
 import {AuthenticationService} from '@services/authentication.service';
 import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterEvent} from '@angular/router';
@@ -56,8 +56,23 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Detects page leaving and/or browser refresh
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnload($event: any): void {
+    $event.preventDefault();
+    $event.returnValue = true;
+    // console.log('Leaving site...');
+    // this.authService.reset();
+  }
+
+  @HostListener('window:unload', ['$event'])
+  onUnload($event: any): void {
+    console.log('Leaving site...');
+    this.authService.reset();
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-
   }
+
 }
