@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'promo-sante'`, () => {
+  it(`should have as title 'opentera-webportal'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('promo-sante');
+    expect(app.title).toEqual('opentera-webportal');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('promo-sante app is running!');
+    expect(compiled.querySelector('.content span').textContent).toContain('opentera-webportal app is running!');
   });
 });

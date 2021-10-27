@@ -1,5 +1,5 @@
 export class GlobalConstants {
-  static title = 'Promo Santé';
+  static title = 'Portail Web';
   static protocol = 'https';
   static hostname = 'localhost';
   static port = 40075;

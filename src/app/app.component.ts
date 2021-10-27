@@ -18,7 +18,7 @@ import {SessionManagerService} from '@services/session-manager.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'Promo Santé';
+  title = 'Portail Web';
   loading: boolean;
   private subscription: Subscription;
 

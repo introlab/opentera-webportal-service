@@ -15,7 +15,7 @@
     &.banner {
       flex-direction: column;
       align-items: center;
-      background-image: url('~assets/images/riski-andriansyah-Gl6GljPtJpo-unsplash.jpg');
+      background-image: url('~assets/images/banner.jpg');
       background-position: center;
       background-repeat: no-repeat;
       background-size: cover;
@@ -27,6 +27,7 @@
         line-height: 3rem;
         opacity: 0.9;
         color: var(--white);
+        text-align: center;
       }
     }
 
