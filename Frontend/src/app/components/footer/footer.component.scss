@@ -1,0 +1,19 @@
+footer {
+  display: flex;
+  font-size: 11px;
+  color: var(--text-color);
+  align-items: center;
+  box-sizing: border-box;
+  background-color: var(--primary-lighter-color);
+  justify-content: space-between;
+  min-height: var(--app-content-padding);
+  padding: 10px calc(var(--app-padding) / 2);
+
+  a:hover {
+    color: var(--primary-darker-color);
+  }
+
+  span:last-of-type {
+    text-align: right;
+  }
+}

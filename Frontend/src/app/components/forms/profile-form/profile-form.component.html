@@ -1,0 +1,52 @@
+<h1 mat-dialog-title>{{title}}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="profileForm">
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nom d'utilisateur</mat-label>
+      <input matInput placeholder="Nom" formControlName="username">
+      <mat-error *ngIf="profileForm.controls.username.hasError('required')">
+        {{required}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Prénom</mat-label>
+      <input matInput placeholder="Prénom" formControlName="firstName">
+      <mat-error *ngIf="profileForm.controls.username.hasError('required')">
+        {{required}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nom</mat-label>
+      <input matInput placeholder="Nom" formControlName="lastName">
+      <mat-error *ngIf="profileForm.controls.username.hasError('required')">
+        {{required}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Courriel</mat-label>
+      <input matInput placeholder="Courriel" formControlName="email">
+      <mat-error>
+        Le champ doit contenir une adresse courriel valide.
+      </mat-error>
+    </mat-form-field>
+
+    <h4>Mot de passe</h4>
+
+    <app-password-form (passwordChange)="updatePassword($event)"
+                       [parentForm]="profileForm"
+                       [idAccount]="account.login_id">
+    </app-password-form>
+
+  </form>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Annuler</button>
+  <button mat-stroked-button [disabled]="!canSave" [color]="color" [mat-dialog-close]="data" (click)="onSave()">
+    Sauvegarder
+  </button>
+</div>

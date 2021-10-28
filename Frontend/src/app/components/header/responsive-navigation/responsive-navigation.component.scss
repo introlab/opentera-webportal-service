@@ -1,0 +1,18 @@
+.menu-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: calc(var(--app-padding) * 2);
+  background-color: var(--background);
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  box-sizing: border-box;
+
+  app-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+}

@@ -1,0 +1,14 @@
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  mat-checkbox {
+    margin: 15px 0;
+  }
+}
+
+app-application-selector {
+  min-height: 300px;
+  display: block;
+}

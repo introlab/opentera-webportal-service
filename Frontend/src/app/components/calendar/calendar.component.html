@@ -1,0 +1,159 @@
+<div class="container">
+  <section class="calendar-container">
+    <div class="calendar-controls">
+      <div class="button-group view">
+        <div class="button"
+             (click)="setView(calendarView.Month)"
+             [class.active]="view === calendarView.Month">
+          Mois
+        </div>
+        <div class="button"
+             (click)="setView(calendarView.Week)"
+             [class.active]="view === calendarView.Week">
+          Semaine
+        </div>
+        <div class="button"
+             (click)="setView(calendarView.Day)"
+             [class.active]="view === calendarView.Day">
+          Jour
+        </div>
+      </div>
+      <h3 class="large-screen">{{ viewDate | calendarDate:(view + 'ViewTitle'):'fr' }}</h3>
+      <div class="button-group time">
+        <div class="button icon"
+             mwlCalendarPreviousView
+             [view]="view"
+             [(viewDate)]="viewDate"
+             (viewDateChange)="viewDateChange($event)">
+          <mat-icon>chevron_left</mat-icon>
+        </div>
+        <div class="button"
+             mwlCalendarToday
+             [(viewDate)]="viewDate"
+             (viewDateChange)="viewDateChange($event)">
+          Aujourd'hui
+        </div>
+        <div class="button icon"
+             mwlCalendarNextView
+             [view]="view"
+             [(viewDate)]="viewDate"
+             (viewDateChange)="viewDateChange($event)">
+          <mat-icon>chevron_right</mat-icon>
+        </div>
+      </div>
+    </div>
+    <div class="month">
+      <h3 class="small-screen">{{ viewDate | calendarDate:(view + 'ViewTitle'):'fr' }}</h3>
+    </div>
+    <div [ngSwitch]="view">
+      <mwl-calendar-month-view
+        *ngSwitchCase="calendarView.Month"
+        [locale]="'fr'"
+        [viewDate]="viewDate"
+        [events]="calendarData"
+        [refresh]="refresh"
+        [activeDayIsOpen]="activeDayIsOpen"
+        [cellTemplate]="customCellTemplate"
+        [openDayEventsTemplate]="customDayEventsTemplate"
+        (eventClicked)="openForm($event.event)"
+        (dayClicked)="dayClicked($event.day)"
+      >
+      </mwl-calendar-month-view>
+      <mwl-calendar-week-view
+        *ngSwitchCase="calendarView.Week"
+        [viewDate]="viewDate"
+        [events]="calendarData"
+        [refresh]="refresh"
+        [eventTemplate]="customWeekEvent"
+        (eventClicked)="openForm($event.event)"
+        (hourSegmentClicked)="openFormWithTime($event.date)"
+        [dayStartHour]="dayStartHour"
+        [dayEndHour]="dayEndHour"
+      >
+      </mwl-calendar-week-view>
+      <mwl-calendar-day-view
+        *ngSwitchCase="calendarView.Day"
+        [viewDate]="viewDate"
+        [events]="calendarData"
+        [refresh]="refresh"
+        [eventTemplate]="customWeekEvent"
+        (eventClicked)="openForm($event.event)"
+        (hourSegmentClicked)="openFormWithTime($event.date)"
+        [dayStartHour]="dayStartHour"
+        [dayEndHour]="dayEndHour"
+      >
+      </mwl-calendar-day-view>
+    </div>
+  </section>
+</div>
+
+<ng-template #customCellTemplate let-day="day" let-locale="locale">
+  <div class="cell" (mouseenter)="showAddButton = day" (mouseleave)="showAddButton = null">
+    <div class="cal-cell-top"
+         (click)="openFormWithTime(day.date)">
+      <button mat-flat-button color="primary" *ngIf="isUser && showAddButton == day && day.date >= today" class="add"
+              (click)="openFormWithTime(day.date)">
+        <mat-icon>add</mat-icon>
+        Ajouter
+      </button>
+      <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">
+      {{day.badgeTotal}}
+    </span>
+      <div class="cal-day-number">
+      <span class="date-weekday">
+        {{day.date | calendarDate:'weekViewColumnHeader':locale}}
+      </span>
+        <span class="date-number">
+        {{day.date | calendarDate:'monthViewDayNumber':locale}}
+      </span>
+      </div>
+    </div>
+    <div class="month-event" *ngFor="let event of day.events.slice(0, 3);">
+      <span
+        [ngStyle]="event.meta.event.session && {'border-color': event.meta.event.session[0].session_type.session_type_color}">
+        {{event.start | date: 'H:mm'}}
+      </span>
+      : {{event.title}} avec
+      <ng-container
+        *ngFor="let participant of event.meta?.event?.session[0]?.session_participants; let last = last">
+        {{participant.participant_name}} <span *ngIf="!last">, </span>
+      </ng-container>
+    </div>
+    <small class="month-event" *ngIf="day.events.length > 3">
+      <span>...</span>
+    </small>
+  </div>
+</ng-template>
+
+<ng-template #customDayEventsTemplate let-events="events" let-eventClicked="eventClicked" let-isOpen="isOpen">
+  <div class="cal-open-day-events" [@collapse] *ngIf="isOpen">
+    <h2>{{events[0].start | date: 'fullDate' }}</h2>
+    <div *ngFor="let event of events">
+      <div class="event" (click)="showEventInfos(event)"
+           [ngStyle]="event.meta.event.session && {'border-color': event.meta.event.session[0].session_type.session_type_color}">
+        <span>{{event.start | date: 'H:mm'}} - {{event.end | date: 'H:mm'}}</span>: {{ event.title }}
+        avec
+        <ng-container
+          *ngFor="let participant of event.meta?.event?.session[0]?.session_participants; let last = last">
+          {{participant.participant_name}} <span *ngIf="!last">, </span>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #customWeekEvent let-weekEvent="weekEvent">
+  <div class="cal-event" (click)="showEventInfos(weekEvent.event)" [style.background-color]="'#fff'"
+       [ngStyle]="weekEvent.meta.event.session && {'border-color': weekEvent.meta.event.session[0].session_type.session_type_color}">
+    <div class="event">
+      {{weekEvent.event.start | date: 'H:mm'}} - {{weekEvent.event.end | date: 'H:mm'}}: {{weekEvent.event.title}}
+      avec
+      <ng-container
+        *ngFor="let participant of weekEvent.event.meta?.event?.session[0]?.session_participants; let last = last">
+        {{participant.participant_name}} <span *ngIf="!last">, </span>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+

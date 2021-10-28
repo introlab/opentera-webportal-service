@@ -1,0 +1,24 @@
+<form [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <mat-label>
+      {{label}}
+    </mat-label>
+    <input matInput [ngxMatDatetimePicker]="picker" placeholder="Choisir la date et l'heure" [formControl]="dateControl"
+           [min]="minDate" (dateChange)="onTimeChange($event)">
+    <mat-datepicker-toggle matSuffix [for]="pickerFixed"></mat-datepicker-toggle>
+    <ngx-mat-datetime-picker #picker [showSeconds]="showSeconds" [stepMinute]="stepMinute" [touchUi]="touchUi"
+                             [color]="color">
+      <!-- Custom icon or text of Apply icon -->
+      <ng-template>
+        <!-- <mat-icon>star</mat-icon> -->
+        <span>OK</span>
+      </ng-template>
+    </ngx-mat-datetime-picker>
+    <mat-error *ngIf="dateControl.hasError('required')">
+      {{required}}
+    </mat-error>
+    <mat-error class="time-error" *ngIf="dateControl.hasError('startTimeAfterEndTime')">
+      L'heure de début doit être avant l'heure de fin.
+    </mat-error>
+  </mat-form-field>
+</form>

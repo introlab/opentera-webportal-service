@@ -1,0 +1,9 @@
+iframe {
+  width: 100%;
+  height: calc(100% - var(--header-height) - calc(var(--app-padding) / 2));
+  position: absolute;
+}
+
+.no-content {
+  text-align: center;
+}
