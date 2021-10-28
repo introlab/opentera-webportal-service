@@ -6,8 +6,12 @@ import sys
 import uuid
 import json
 import logging
+from google.protobuf.json_format import Parse, ParseError
+from google.protobuf.message import DecodeError
 
 from FlaskModule import flask_app
+from opentera.services.ServiceOpenTera import ServiceOpenTera
+import opentera.messages.python as messages
 
 # Configuration 
 from ConfigManager import ConfigManager
@@ -17,6 +21,7 @@ from opentera.redis.RedisVars import RedisVars
 # Modules
 from FlaskModule import FlaskModule
 from opentera.services.BaseWebRTCService import BaseWebRTCService
+from opentera.modules.BaseModule import ModuleNames, create_module_event_topic_from_name
 
 # Local
 
@@ -26,11 +31,9 @@ from sqlalchemy.exc import OperationalError
 from libwebportal.db.DBManager import DBManager
 
 
-class WebPortalService(BaseWebRTCService):
+class WebPortalService(ServiceOpenTera):
     def __init__(self, config_man: ConfigManager, service_info: dict):
-        BaseWebRTCService.__init__(self, config_man, service_info)
-
-        super().__init__(config_man, service_info)
+        ServiceOpenTera.__init__(self, config_man, service_info)
 
         # Create REST backend
         self.flaskModule = FlaskModule(config_man)
@@ -44,6 +47,54 @@ class WebPortalService(BaseWebRTCService):
     def setup_rpc_interface(self):
         super().setup_rpc_interface()
         # TODO ADD more rpc interface here
+
+    @defer.inlineCallbacks
+    def register_to_events(self):
+        # Need to register to events produced by UserManagerModule
+        ret1 = yield self.subscribe_pattern_with_callback(create_module_event_topic_from_name(
+            ModuleNames.DATABASE_MODULE_NAME, 'session'), self.database_event_received)
+
+        print(ret1)
+
+    def database_event_received(self, pattern, channel, message):
+        print('WebPortalService - database_event_received', pattern, channel, message)
+        try:
+            tera_event = messages.TeraEvent()
+            if isinstance(message, str):
+                ret = tera_event.ParseFromString(message.encode('utf-8'))
+            elif isinstance(message, bytes):
+                ret = tera_event.ParseFromString(message)
+
+            database_event = messages.DatabaseEvent()
+
+            # Look for DatabaseEvent
+            for any_msg in tera_event.events:
+                if any_msg.Unpack(database_event):
+                    self.handle_database_event(database_event)
+
+        except DecodeError as decode_error:
+            print('WebPortalService - DecodeError ', pattern, channel, message, decode_error)
+        except ParseError as parse_error:
+            print('WebPortalService - Failure in redisMessageReceived', parse_error)
+
+    def handle_database_event(self, event: messages.DatabaseEvent):
+        print('WebPortalService.handle_database_event', event)
+
+        if event.type == messages.DatabaseEvent.DB_DELETE:
+            print("Delete Session Event")
+            # TODO delete event linked to the deleted session, event_name = 'session'
+            calendar_access = DBManager.calendar_access()
+            session_info = json.loads(event.object_value)
+            calendar_access.delete_event_with_session_uuid(session_info)
+            # Resend invitation to newly connected user
+        if event.type == messages.DatabaseEvent.DB_UPDATE:
+            print("Update Session Event")
+            # TODO update event linked to the updated session, event_name = 'session'
+            calendar_access = DBManager.calendar_access()
+            session_info = json.loads(event.object_value)
+            calendar_access.update_event_after_session_update(session_info)
+            # Resend invitation to newly connected user
+            pass
 
 
 if __name__ == '__main__':
@@ -102,7 +153,7 @@ if __name__ == '__main__':
     ServiceAccessManager.config_man = config_man
 
     # Create the service
-    service = WebPortalService(config_man, service_info)
+    Globals.service = WebPortalService(config_man, service_info)
 
     # Start App/ reactor events
     reactor.run()

@@ -1,6 +1,6 @@
 from flask_sqlalchemy import event
 from sqlalchemy.engine import Engine
-from sqlite3 import Connection as SQLite3Connection
+# from sqlite3 import Connection as SQLite3Connection
 
 from opentera.config.ConfigManager import ConfigManager
 from opentera.modules.BaseModule import ModuleNames
@@ -8,11 +8,14 @@ from opentera.db.models.TeraParticipant import TeraParticipant
 
 # Must include all Database objects here to be properly initialized and created if needed
 from opentera.modules.BaseModule import BaseModule
-from .DBGlobals import db
+from libwebportal.db.Base import db
 
 # All at once to make sure all files are registered.
+from .DBManagerCalendarAccess import DBManagerCalendarAccess
+from .DBManagerAppAccess import DBManagerAppAccess
 from .models.WebPortalApp import WebPortalApp
 from .models.WebPortalAppConfig import WebPortalAppConfig
+from .models.WebPortalCalendarEvent import WebPortalCalendarEvent
 
 from FlaskModule import flask_app
 
@@ -39,6 +42,8 @@ class DBManager (BaseModule):
 
         self.db_uri = None
 
+
+
     # @staticmethod
     # def userAccess(user: TeraUser):
     #     access = DBManagerTeraUserAccess(user=user)
@@ -50,10 +55,20 @@ class DBManager (BaseModule):
     #     return access
 
     @staticmethod
-    def participantAccess(participant: TeraParticipant):
+    def participant_access(participant: TeraParticipant):
         # access = DBManagerTeraParticipantAccess(participant=participant)
         # return access
         return None
+
+    @staticmethod
+    def calendar_access():
+        access = DBManagerCalendarAccess()
+        return access
+
+    @staticmethod
+    def app_access():
+        access = DBManagerAppAccess()
+        return access
 
     @staticmethod
     def create_defaults():
@@ -64,6 +79,10 @@ class DBManager (BaseModule):
         if WebPortalAppConfig.get_count() == 0:
             print('No app configs - creating defaults')
             WebPortalAppConfig.create_defaults()
+
+        if WebPortalCalendarEvent.get_count() == 0:
+            print('No calendar events - creating defaults')
+            WebPortalCalendarEvent.create_defaults()
 
     def open(self, echo=False):
         self.db_uri = 'postgresql://%(username)s:%(password)s@%(url)s:%(port)s/%(name)s' % self.config.db_config
@@ -162,9 +181,9 @@ class DBManager (BaseModule):
 
 
 # Fix foreign_keys on sqlite
-@event.listens_for(Engine, "connect")
-def _set_sqlite_pragma(dbapi_connection, connection_record):
-    if isinstance(dbapi_connection, SQLite3Connection):
-        cursor = dbapi_connection.cursor()
-        cursor.execute("PRAGMA foreign_keys=ON;")
-        cursor.close()
+# @event.listens_for(Engine, "connect")
+# def _set_sqlite_pragma(dbapi_connection, connection_record):
+#     if isinstance(dbapi_connection, SQLite3Connection):
+#         cursor = dbapi_connection.cursor()
+#         cursor.execute("PRAGMA foreign_keys=ON;")
+#         cursor.close()

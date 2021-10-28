@@ -1,5 +1,4 @@
-from opentera.db.Base import BaseModel
-from libwebportal.db.DBGlobals import db
+from libwebportal.db.Base import db, BaseModel
 
 
 class WebPortalAppConfig(db.Model, BaseModel):
@@ -7,15 +6,18 @@ class WebPortalAppConfig(db.Model, BaseModel):
     id_app_config = db.Column(db.Integer, db.Sequence('id_app_config_sequence'), primary_key=True, autoincrement=True)
     id_app = db.Column(db.Integer, db.ForeignKey('t_apps.id_app', ondelete='cascade'), nullable=False)
     participant_uuid = db.Column(db.String, nullable=False)
-    app_config_url = db.Column(db.String, nullable=False)
+    app_config_url = db.Column(db.String, nullable=False, default='')
+    application = db.relationship('WebPortalApp')
 
     def to_json(self, ignore_fields=None, minimal=False):
         if ignore_fields is None:
             ignore_fields = []
 
-        ignore_fields.extend(['app_config_app'])
-        rval = super().to_json(ignore_fields=ignore_fields)
-        return rval
+        ignore_fields.extend(['application'])
+        json_app_config = super().to_json(ignore_fields=ignore_fields)
+        json_app_config['application'] = self.application.to_json()
+
+        return json_app_config
 
     @staticmethod
     def create_defaults():
