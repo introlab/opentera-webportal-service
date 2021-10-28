@@ -1,0 +1,19 @@
+<mat-form-field appearance="outline" *ngIf="!refreshing">
+  <mat-label>Projet</mat-label>
+  <mat-select (selectionChange)="onValueChanged($event.value)" [value]="selectedProject">
+    <mat-option *ngIf="allOption">Tous</mat-option>
+    <mat-option *ngFor="let project of projects" [value]="project">
+      {{project.project_name}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div class="refreshing">
+  <mat-progress-spinner
+    *ngIf="refreshing"
+    [mode]="'indeterminate'"
+    [value]="50"
+    [diameter]="30"
+    [color]="'primary'">
+  </mat-progress-spinner>
+</div>

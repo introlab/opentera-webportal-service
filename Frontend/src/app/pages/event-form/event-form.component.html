@@ -1,0 +1,60 @@
+<div class="page-container">
+  <h1>{{title}}</h1>
+
+  <form [formGroup]="eventForm">
+    <h4>Informations</h4>
+    <app-user-selector [selectedUserUUID]="selectedUserUUID" [form]="eventForm"></app-user-selector>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nom de l'événement</mat-label>
+      <input matInput formControlName="name" [placeholder]="title">
+      <mat-error>
+        {{required}}
+      </mat-error>
+    </mat-form-field>
+
+    <h4>Date et heures</h4>
+
+    <app-datetime-selector [label]="'Début'" [default]="startTime" [form]="eventForm"
+                           [sessionParticipants]="sessionParticipants"
+                           (overlappingParticipants)="overlappingParticipantsChange($event)"
+                           [controlName]="startTimeControlName" [minDate]="today"></app-datetime-selector>
+    <app-datetime-selector [label]="'Fin'" [default]="endTime" [form]="eventForm" [controlName]="endTimeControlName"
+                           [sessionParticipants]="sessionParticipants"
+                           (overlappingParticipants)="overlappingParticipantsChange($event)"
+                           [minDate]="startTime"></app-datetime-selector>
+
+    <div *ngIf="eventForm.hasError('timesOverlapping')" class="period overlap">
+      <mat-icon>close</mat-icon>
+      Cette période est déjà occupée.
+    </div>
+    <div *ngIf="!eventForm.hasError('timesOverlapping')" class="period free">
+      <mat-icon>check</mat-icon>
+      Cette période est libre.
+    </div>
+
+    <h4>Séance</h4>
+    <app-session-type-selector [idEventSessionType]="session?.id_session_type"
+                               [form]="eventForm"></app-session-type-selector>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Lien externe</mat-label>
+      <input matInput formControlName="url" [placeholder]="'Invitation Teams, Zoom ou autre'">
+    </mat-form-field>
+
+    <app-selected-participants [selectedParticipants]="sessionParticipants"
+                               [overlappingParticipants]="overlappingParticipants"
+                               (participantsChange)="participantsChange($event)"></app-selected-participants>
+  </form>
+
+  <div class="buttons" mat-dialog-actions>
+    <button mat-button [disabled]=!canSave (click)="validate()">
+      <mat-icon mat-list-icon>save</mat-icon>
+      <span>Sauvegarder</span>
+    </button>
+    <button mat-button (click)="cancel()">
+      <mat-icon mat-list-icon>close</mat-icon>
+      <span>Annuler</span>
+    </button>
+  </div>
+</div>

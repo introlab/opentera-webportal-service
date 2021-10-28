@@ -1,0 +1,40 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg,
+  svg-icon {
+    max-width: 600px;
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+
+    & > * {
+      margin: 20px 0;
+    }
+
+    .four-o-four {
+      font-weight: 700;
+      color: var(--accent-color);
+      line-height: 80px;
+      font-size: 80px;
+    }
+
+    .message {
+      font-size: 20px;
+    }
+
+    button {
+      min-width: 150px;
+
+      i {
+        font-size: 14px;
+        height: 14px;
+      }
+    }
+  }
+
+}

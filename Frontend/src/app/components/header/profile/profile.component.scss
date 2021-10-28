@@ -1,0 +1,51 @@
+.profile {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  .dot {
+    cursor: pointer;
+    margin-right: 10px;
+    line-height: 40px;
+    height: 40px;
+    width: 40px;
+    font-weight: 600;
+    color: var(--accent-color);
+    background-color: var(--accent-lighter-color);
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .infos {
+    display: flex;
+    flex-direction: column;
+
+    span {
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    a {
+      cursor: pointer;
+      font-size: 13px;
+    }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .profile {
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 20px;
+
+    .dot {
+      margin-right: 0;
+      line-height: 60px;
+      height: 60px;
+      width: 60px;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+  }
+}

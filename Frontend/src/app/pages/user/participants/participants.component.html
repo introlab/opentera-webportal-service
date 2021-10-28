@@ -1,0 +1,81 @@
+<div class="page-container">
+  <h2>Participants</h2>
+
+  <div class="filter">
+    <mat-form-field appearance="outline">
+      <mat-label>Recherche</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Recherche" #input>
+    </mat-form-field>
+    <app-group-selector [allOption]="true"></app-group-selector>
+    <button mat-flat-button [color]="color" (click)="openForm(null)">Ajouter</button>
+  </div>
+
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="participant_name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
+        <td mat-cell *matCellDef="let row">
+          <h4 class="mobile-label">Nom:</h4>
+          {{row.participant_name}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="group">
+        <th mat-header-cell *matHeaderCellDef>Groupe</th>
+        <td mat-cell *matCellDef="let row">
+          <h4 class="mobile-label">Groupe:</h4>
+          {{row.participant_participant_group?.participant_group_name}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>État</th>
+        <td mat-cell *matCellDef="let row">
+          <h4 class="mobile-label">État:</h4>
+          <span *ngIf="!row.participant_enabled">Inactif</span>
+          <span *ngIf="row.participant_enabled">Actif</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="url">
+        <th mat-header-cell *matHeaderCellDef>Lien de connexion</th>
+        <td mat-cell *matCellDef="let row" (mouseenter)="showCopyButton = row.id_participant"
+            (mouseleave)="showCopyButton = 0">
+          <h4 class="mobile-label">Lien de connexion:</h4>
+          <ng-container *ngIf="!row.participant_token">-</ng-container>
+          <ng-container *ngIf="row.participant_token && showCopyButton !== row.id_participant">
+            {{row.connection_url | truncate: 40}}
+          </ng-container>
+          <button mat-raised-button *ngIf="row.participant_token && showCopyButton === row.id_participant"
+                  (click)="copyUrl(row.connection_url)" [color]="color">Copier
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="controls">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row" class="controls">
+          <mat-icon *ngIf="!row.participant_enabled" (click)="deactivate(row)" [title]="'Supprimer'">
+            delete
+          </mat-icon>
+          <mat-icon *ngIf="row.participant_enabled" (click)="deactivate(row)" [title]="'Désactiver'">
+            visibility_off
+          </mat-icon>
+          <mat-icon (click)="openForm(row)" [title]="'Modifier'">edit</mat-icon>
+          <mat-icon (click)="openCalendar(row)" [title]="'Voir le calendrier'">event</mat-icon>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          [ngClass]="{'inactive-item': !row.participant_enabled }"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">Aucune donnée présente pour "{{input.value}}"</td>
+      </tr>
+
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
+  </div>
+</div>
