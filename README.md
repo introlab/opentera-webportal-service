@@ -1,32 +1,9 @@
-# opentera-webportal-service
+# OpenTera Webportal Service
 
-OpenTera Service managing a customizable webportal
+## What is this service?
+This service provides a customizable web portal to the participants. This webportal can be customized by project and by participant
+by the user, and allows a session calendar, external links to websites and internal links to OpenTera services.
 
-## Setup
-
-```bash
-# Clone GitHub repository with submodules
-git clone https://github.com/introlab/opentera-webportal-service.git --recurse-submodule
-
-# Go to webportal-service directory
-cd opentera-webportal-service directory
-
-# Create a virtual environment
-This supposes Python 3.8.x was correctly installed on the build system.
-
-On Mac/Linux:
-python3 -m venv venv
-
-On Windows:
-python -m venv venv
-
-# Enable venv
-On Mac/Linux:
-source venv/bin/activate
-
-On Windows:
-venv\Scripts\activate.bat
-
-# Install requirements (service)
-pip install -r requirements.txt
-```
+## Project structure
+Frontend folder contains the Angular project.
+Backend folder contains the backend project that runs as a service to OpenTera.
