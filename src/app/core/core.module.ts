@@ -28,6 +28,8 @@ import {UsernameValidator} from '@core/validators/username.validator';
 import {SelectedSourceService} from '@services/selected-source.service';
 import {NGX_MAT_DATE_FORMATS, NgxMatDateFormats} from '@angular-material-components/datetime-picker';
 import {SelectedParticipantService} from '@services/selected-participant.service';
+import {WebsocketService} from '@services/websocket.service';
+import {SessionManagerService} from '@services/session-manager.service';
 
 const INTL_DATE_INPUT_FORMAT = {
   year: 'numeric',
@@ -77,6 +79,8 @@ const MAT_DATE_FORMATS: NgxMatDateFormats = {
     UserService,
     SelectedSourceService,
     UsernameValidator,
+    WebsocketService,
+    SessionManagerService,
     {provide: HTTP_INTERCEPTORS, useClass: ServerErrorInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
     {provide: LOCALE_ID, useValue: 'FR-fr'},

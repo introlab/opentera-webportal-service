@@ -1,12 +1,13 @@
 <header>
-  <app-logo *ngIf="isUser else project" (click)="goHome()"></app-logo>
-  <ng-template #project>
+  <app-logo *ngIf="isUser else project" (click)="goHome()" [hidden]="inSession"></app-logo>
+  <ng-template #project >
     <div class="project">
       {{projectName}}
     </div>
   </ng-template>
-  <app-navigation></app-navigation>
-  <app-profile></app-profile>
-  <app-menu-hamburger></app-menu-hamburger>
+  <app-navigation [hidden]="inSession"></app-navigation>
+  <app-profile [hidden]="inSession"></app-profile>
+  <app-menu-hamburger *ngIf="!inSession"></app-menu-hamburger>
+  <app-in-session-toolbar *ngIf="inSession"></app-in-session-toolbar>
 </header>
 

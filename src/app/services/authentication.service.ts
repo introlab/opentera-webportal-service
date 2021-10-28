@@ -13,6 +13,7 @@ import {SelectedSiteService} from '@services/selected-site.service';
 import {Site} from '@shared/models/site.model';
 import {Project} from '@shared/models/project.model';
 import {PermissionsService} from '@services/permissions.service';
+import {WebsocketService} from '@services/websocket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,7 @@ export class AuthenticationService {
               private selectedProjectService: SelectedProjectService,
               private selectedSiteService: SelectedSiteService,
               private permissionsService: PermissionsService,
+              private websocketService: WebsocketService,
               private router: Router) {
   }
 
@@ -44,7 +46,7 @@ export class AuthenticationService {
   }
 
   login(username: string, password: string, isManager: boolean = false): Observable<any> {
-    const apiUrl = isManager ? `${this.API_URL}user/login` : `${this.API_URL}participant/login`;
+    const apiUrl = isManager ? `${this.API_URL}user/login?with_websocket=true` : `${this.API_URL}participant/login`;
     const headers = new HttpHeaders().set('Authorization', 'Basic ' + btoa(username + ':' + password));
     return this.http.get(apiUrl, {headers}).pipe(
       tap((response: any) => {
@@ -52,6 +54,8 @@ export class AuthenticationService {
         this.isLoggedIn = true;
         this.cookieService.set(this.cookieValue, token, 0.5, '/');
         this.router.navigate([this._lastAuthenticatedPath]);
+        // Connect websocket
+        this.websocketService.connect(response.websocket_url);
         this.startRefreshTokenTimer();
       })
     );
@@ -79,6 +83,7 @@ export class AuthenticationService {
     this.selectedProjectService.setSelectedProject(new Project());
     this.selectedSiteService.setSelectedSite(new Site());
     this.permissionsService.initializePermissions();
+    this.websocketService.close();
     this.stopRefreshTokenTimer();
   }
 
@@ -100,7 +105,7 @@ export class AuthenticationService {
   refreshToken(): Observable<any> {
     return this.accountService.account$().pipe(
       switchMap((account) => {
-        const apiUrl = account.login_type === 'user' ? `${this.API_URL}user/refresh_token` : `${this.API_URL}participant/refresh_token`;
+        const apiUrl = account.login_type === 'user' ? `${this.API_URL}user/refresh_token?with_websocket=true` : `${this.API_URL}participant/refresh_token`;
         return this.http.get<any>(apiUrl)
           .pipe(map((user) => {
             this.startRefreshTokenTimer();

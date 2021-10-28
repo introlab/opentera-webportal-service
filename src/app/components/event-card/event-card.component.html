@@ -35,9 +35,12 @@
     </button>
   </ng-container>
   <ng-container *ngIf="isUser && !isPastEvent && !hasEventURL">
-    <div class="message-connection-user">
+    <!--<div class="message-connection-user">
       <mat-icon>exit_to_app</mat-icon>
       Se connecter avec l'application OpenTeraPlus
-    </div>
+    </div>-->
+    <button mat-stroked-button [color]="'accent'" class="connect" (click)="connect()">
+      Démarrer la séance
+    </button>
   </ng-container>
 </div>

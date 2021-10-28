@@ -24,6 +24,10 @@ export class AccountService {
     this.accountSubject.next(account);
   }
 
+  getAccount(): Account {
+    return this.accountSubject.value;
+  }
+
   getWithToken(): Observable<Account> {
     return this.http.get<Account>(this.API_URL + this.controller).pipe(
       tap((account) => {

@@ -10,6 +10,7 @@ import {Project} from '@shared/models/project.model';
 import {isObjectEmpty, isUser} from '@core/utils/utility-functions';
 import {ServiceService} from '@services/service.service';
 import {filter, switchMap, tap} from 'rxjs/operators';
+import {SessionManagerService} from '@services/session-manager.service';
 
 @Component({
   selector: 'app-app-layout',
@@ -24,18 +25,25 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
   isUser = false;
   showSelectors = false;
   showBackButtonSelectors = false;
+  inSession = false;
   private subscriptions: Subscription[] = [];
 
   constructor(private showNavService: ShowResponsiveNavigationService,
               private accountService: AccountService,
               private serviceService: ServiceService,
               private selectedSiteService: SelectedSiteService,
-              private selectedProjectService: SelectedProjectService) {
+              private selectedProjectService: SelectedProjectService,
+              private sessionManagerService: SessionManagerService) {
   }
 
   ngOnInit(): void {
     this.getService();
     this.getSessionData();
+    this.subscriptions.push(
+      this.sessionManagerService.inSession$().subscribe((sessionState) => {
+        this.inSession = sessionState;
+      })
+    );
   }
 
   private getService(): void {

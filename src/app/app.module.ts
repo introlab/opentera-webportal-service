@@ -38,6 +38,8 @@ registerLocaleData(localeFr, 'fr');
     AppRoutingModule,
   ],
   providers: [],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -1,12 +1,16 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {CookieService} from 'ngx-cookie-service';
 import {AuthenticationService} from '@services/authentication.service';
 import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterEvent} from '@angular/router';
 import {delay} from 'rxjs/operators';
 import {AccountService} from '@services/account.service';
 import {GlobalConstants} from '@core/utils/global-constants';
-import {Subscription} from 'rxjs';
+import {Subscription, throwError} from 'rxjs';
 import {isUser} from '@core/utils/utility-functions';
+import {WebsocketService} from '@services/websocket.service';
+import {Pages} from '@core/utils/pages';
+import {SelectedSourceService} from '@services/selected-source.service';
+import {SessionManagerService} from '@services/session-manager.service';
 
 @Component({
   selector: 'app-root',
@@ -14,14 +18,17 @@ import {isUser} from '@core/utils/utility-functions';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'Promo Santé';
+  title = 'Portail Web';
   loading: boolean;
   private subscription: Subscription;
 
   constructor(private cookieService: CookieService,
               private authService: AuthenticationService,
               private accountService: AccountService,
-              private router: Router) {
+              private webSocketService: WebsocketService,
+              private selectedSourceService: SelectedSourceService,
+              private router: Router,
+              private sessionManagerService: SessionManagerService) {
   }
 
   ngOnInit(): void {
@@ -30,7 +37,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.navigationInterceptor(e);
       }
     });
-    //this.refreshToken();
   }
 
   private refreshToken(): void {
@@ -50,7 +56,23 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Detects page leaving and/or browser refresh
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnload($event: any): void {
+    $event.preventDefault();
+    $event.returnValue = true;
+    // console.log('Leaving site...');
+    // this.authService.reset();
+  }
+
+  @HostListener('window:unload', ['$event'])
+  onUnload($event: any): void {
+    console.log('Leaving site...');
+    this.authService.reset();
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+
 }
