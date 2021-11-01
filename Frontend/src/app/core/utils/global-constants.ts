@@ -8,7 +8,7 @@ export class GlobalConstants {
   static rehabService = 'rehab/';
   static cookieValue = 'WebPortalCookie';
   static serviceKey = 'WebPortalService';
-  static version = '1.0';
+  static version = '1.0.0';
   static organism = 'Centre de Recherche sur le Vieillissement de Sherbrooke - Regroupement INTER - ' + new Date().getFullYear();
 
   static applicationTypes = {external: 0, 'OpenTera Service': 1};
