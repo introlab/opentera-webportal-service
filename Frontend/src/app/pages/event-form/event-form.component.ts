@@ -49,9 +49,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.startTime = roundToNearestQuarter(this.today);
-    this.endTime = roundToNearestQuarter(this.today);
-    this.endTime.setHours(this.endTime.getHours() + 1);
+    this.setNewTime(this.today);
     this.initializeForm();
     this.checkFormChange();
     this.getData();
@@ -136,8 +134,9 @@ export class EventFormComponent implements OnInit, OnDestroy {
 
   private setNewTime(time: Date): void {
     this.startTime = roundToNearestQuarter(time);
+    this.startTime.setHours(this.startTime.getHours() + 9);
     this.endTime = roundToNearestQuarter(time);
-    this.endTime.setHours(this.endTime.getHours() + 1);
+    this.endTime.setHours(this.endTime.getHours() + 10);
   }
 
   validate(): void {
