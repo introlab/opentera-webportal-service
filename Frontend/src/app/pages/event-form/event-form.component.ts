@@ -134,9 +134,18 @@ export class EventFormComponent implements OnInit, OnDestroy {
 
   private setNewTime(time: Date): void {
     this.startTime = roundToNearestQuarter(time);
-    this.startTime.setHours(this.startTime.getHours() + 9);
     this.endTime = roundToNearestQuarter(time);
-    this.endTime.setHours(this.endTime.getHours() + 10);
+    let start_hour = this.startTime.getHours();
+    if (time.getDate() === this.today.getDate()){
+      const current_time = new Date();
+      start_hour = current_time.getHours() + 1;
+    }else{
+      start_hour = start_hour + 9; // Default start time for each day is 9am
+    }
+
+    this.startTime.setHours(start_hour);
+
+    this.endTime.setHours(start_hour + 1);
   }
 
   validate(): void {

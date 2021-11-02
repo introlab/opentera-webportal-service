@@ -23,6 +23,11 @@ export class TimeInputValidator {
     const startTime = new Date(startControl.value);
     const endTime = new Date(endControl.value);
 
+    if (startTime < new Date()){
+      startControl.setErrors({startTimeBeforeNow: true});
+      return null;
+    }
+
     if (startTime >= endTime) {
       startControl.setErrors({startTimeAfterEndTime: true});
       endControl.setErrors({startTimeAfterEndTime: true});
