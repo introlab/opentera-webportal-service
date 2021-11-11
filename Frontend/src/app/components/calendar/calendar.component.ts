@@ -52,7 +52,7 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
   private subscriptions: Subscription[] = [];
   private permissions: Permission;
 
-  private static getPreviousMonday(date: Date): Date {
+  private static getPreviousSunday(date: Date): Date {
     const prevSunday = new Date(date);
     prevSunday.setDate(prevSunday.getDate() - prevSunday.getDay());
     return prevSunday;
@@ -143,7 +143,7 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
         this.getDayData(this.currentDate);
         break;
       case CalendarView.Week:
-        this.getWeekData(this.currentDate);
+        this.getWeekData(CalendarComponent.getPreviousSunday(this.currentDate));
         break;
       case CalendarView.Month:
         this.getMonthData(this.currentDate);
@@ -187,7 +187,7 @@ export class CalendarComponent implements OnInit, OnChanges, OnDestroy {
         this.currentDate = date;
         break;
       case CalendarView.Week:
-        this.currentDate = CalendarComponent.getPreviousMonday(new Date(date));
+        this.currentDate = new Date(date)/*CalendarComponent.getPreviousSunday(new Date(date))*/;
         break;
       case CalendarView.Month:
         this.currentDate = new Date(date);

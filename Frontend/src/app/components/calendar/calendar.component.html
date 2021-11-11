@@ -130,7 +130,7 @@
     <h2>{{events[0].start | date: 'fullDate' }}</h2>
     <div *ngFor="let event of events">
       <div class="event" (click)="showEventInfos(event)"
-           [ngStyle]="event.meta.event.session && {'border-color': event.meta.event.session[0].session_type.session_type_color}">
+           [ngStyle]="event.meta.event.session && {'border-color': event.meta.event.session[0].session_type?.session_type_color}">
         <span>{{event.start | date: 'H:mm'}} - {{event.end | date: 'H:mm'}}</span>: {{ event.title }}
         avec
         <ng-container
@@ -144,7 +144,7 @@
 
 <ng-template #customWeekEvent let-weekEvent="weekEvent">
   <div class="cal-event" (click)="showEventInfos(weekEvent.event)" [style.background-color]="'#fff'"
-       [ngStyle]="weekEvent.meta.event.session && {'border-color': weekEvent.meta.event.session[0].session_type.session_type_color}">
+       [ngStyle]="weekEvent.event.meta.event.session && {'border-color': weekEvent.event.meta.event.session[0].session_type.session_type_color}">
     <div class="event">
       {{weekEvent.event.start | date: 'H:mm'}} - {{weekEvent.event.end | date: 'H:mm'}}: {{weekEvent.event.title}}
       avec

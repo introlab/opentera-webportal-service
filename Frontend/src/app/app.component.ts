@@ -59,8 +59,12 @@ export class AppComponent implements OnInit, OnDestroy {
   // Detects page leaving and/or browser refresh
   @HostListener('window:beforeunload', ['$event'])
   beforeUnload($event: any): void {
-    $event.preventDefault();
-    $event.returnValue = true;
+    if (this.authService.isAuthenticated()) {
+      $event.preventDefault();
+      $event.returnValue = true;
+    }else{
+      $event.returnValue = false;
+    }
     // console.log('Leaving site...');
     // this.authService.reset();
   }
