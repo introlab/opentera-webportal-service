@@ -144,7 +144,6 @@ export class EventFormComponent implements OnInit, OnDestroy {
     }
 
     this.startTime.setHours(start_hour);
-
     this.endTime.setHours(start_hour + 1);
   }
 

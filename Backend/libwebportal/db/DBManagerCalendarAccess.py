@@ -1,5 +1,5 @@
 from sqlalchemy import and_, or_, literal, String, cast
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask_babel import gettext
 from sqlalchemy.dialects.postgresql import ARRAY
@@ -45,6 +45,9 @@ class DBManagerCalendarAccess:
         return []
 
     def query_overlaps(self, start_time, end_time, user_uuid=None, participants_uuids=[], id_event=None):
+        # Add 1 seconds as a buffer for consecutive time slots
+        end_time = end_time - timedelta(seconds=1)
+        start_time = start_time + timedelta(seconds=1)
         queries = [or_(WebPortalCalendarEvent.event_start_datetime.between(start_time, end_time),
                        WebPortalCalendarEvent.event_end_datetime.between(start_time, end_time),
                        literal(start_time).between(WebPortalCalendarEvent.event_start_datetime,

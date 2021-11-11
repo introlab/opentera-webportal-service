@@ -24,11 +24,11 @@
                            (overlappingParticipants)="overlappingParticipantsChange($event)"
                            [minDate]="startTime"></app-datetime-selector>
 
-    <div *ngIf="eventForm.hasError('timesOverlapping')" class="period overlap">
+    <div *ngIf="eventForm.hasError('timesOverlapping') || overlappingParticipants.length>0" class="period overlap">
       <mat-icon>close</mat-icon>
       Cette période est déjà occupée.
     </div>
-    <div *ngIf="!eventForm.hasError('timesOverlapping')" class="period free">
+    <div *ngIf="!eventForm.hasError('timesOverlapping') && overlappingParticipants.length===0" class="period free">
       <mat-icon>check</mat-icon>
       Cette période est libre.
     </div>

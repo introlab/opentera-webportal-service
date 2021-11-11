@@ -33,6 +33,7 @@ export class DatetimeSelectorComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.form.addControl(this.controlName, new FormControl(this.default, [Validators.required]));
     this.dateControl = this.form.controls[this.controlName];
+    this.onTimeChange({value: this.default});
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -47,7 +48,10 @@ export class DatetimeSelectorComponent implements OnInit, OnChanges {
     this.updateEndTime(newTime);
     if (newTime !== new Date(this.dateControl.value)) {
       const startTime = new Date(control.startTime.value);
-      const endTime = new Date(control.endTime.value);
+      let endTime = new Date(control.startTime.value);
+      if (control.endTime !== undefined){
+        endTime = new Date(control.endTime.value);
+      }
       const isoStartDate = dateToISOLikeButLocal(startTime);
       const isoEndDate = dateToISOLikeButLocal(endTime);
       const participantsUUIDs: string[] = this.sessionParticipants.map((part) => part.participant_uuid);
@@ -64,6 +68,9 @@ export class DatetimeSelectorComponent implements OnInit, OnChanges {
   private updateEndTime(newTime: Date): void {
     if (this.controlName === 'startTime') {
       const control = this.form.controls;
+      if (control === undefined || control.endTime === undefined || control.startTime === undefined){
+        return;
+      }
       const startTime = roundToNearestQuarter(newTime);
       const endTime = roundToNearestQuarter(newTime);
       endTime.setHours(endTime.getHours() + 1);
