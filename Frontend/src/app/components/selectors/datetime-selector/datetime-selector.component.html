@@ -18,10 +18,10 @@
       {{required}}
     </mat-error>
     <mat-error class="time-error" *ngIf="dateControl.hasError('startTimeAfterEndTime')">
-      L'heure de début doit être avant l'heure de fin.
+      La date et l'heure de début doivent être avant la date et l'heure de fin.
     </mat-error>
     <mat-error class="time-error" *ngIf="dateControl.hasError('startTimeBeforeNow')">
-      L'heure de début doit être après l'heure actuelle.
+      La date et l'heure de début ne peuvent être dans le passé.
     </mat-error>
   </mat-form-field>
 </form>

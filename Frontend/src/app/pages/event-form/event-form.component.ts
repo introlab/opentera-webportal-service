@@ -161,7 +161,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
 
   enableSave(): void {
     const inPast = this.eventForm.controls.startTime && this.eventForm.controls.startTime.value < this.today;
-    this.canSave = !(this.eventForm.invalid || this.hasNoParticipant() && inPast);
+    this.canSave = !(this.eventForm.invalid || this.hasNoParticipant() || inPast);
   }
 
   hasNoParticipant(): boolean {
