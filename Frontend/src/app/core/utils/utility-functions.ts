@@ -40,7 +40,7 @@ export function isObjectEmpty(object: any): boolean {
 }
 
 export function createParticipantUrl(token: string): string {
-  return `${GlobalConstants.protocol}://${GlobalConstants.hostname}:${GlobalConstants.port}/${Pages.participantConnectionURL}?token=${token}`;
+  return `${GlobalConstants.protocol}://${GlobalConstants.hostname}:${GlobalConstants.port}/${GlobalConstants.psService}${Pages.participantConnectionURL}?token=${token}`;
 }
 
 export function roundToNearestQuarter(date: Date): Date {
