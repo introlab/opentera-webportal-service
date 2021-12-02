@@ -1,0 +1,7 @@
+<app-participant-selector (selectedParticipantChange)="newParticipantSelected($event)"></app-participant-selector>
+<ng-container *ngFor="let participant of selectedParticipants;index as i; trackBy: trackByFn">
+  <div class="row" [ngClass]="{'overlap': overlappingParticipants.includes(participant.participant_uuid)}">
+    {{participant.participant_name}}
+    <mat-icon (click)="remove(participant,i)">close</mat-icon>
+  </div>
+</ng-container>

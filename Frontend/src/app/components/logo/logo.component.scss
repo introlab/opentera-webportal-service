@@ -1,0 +1,34 @@
+.logo-container {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  background: linear-gradient(
+      to right bottom,
+      rgba(255, 255, 255, 0.7),
+      rgb(255, 255, 255, 0.1)
+  );
+  transition: opacity ease-in-out var(--transition);
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  .leaf1 {
+    fill: var(--primary-color);
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    bottom: 5%;
+  }
+
+  .leaf2 {
+    fill: var(--accent-lighter-color);
+    width: 50px;
+    height: 50px;
+  }
+}

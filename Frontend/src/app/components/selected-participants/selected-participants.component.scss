@@ -1,0 +1,20 @@
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+
+  mat-icon {
+    cursor: pointer;
+    color: var(--primary-color);
+    opacity: 0.5;
+    transition: ease-in-out var(--transition) opacity;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.overlap {
+  background-color: var(--warn-lighter-color);
+}

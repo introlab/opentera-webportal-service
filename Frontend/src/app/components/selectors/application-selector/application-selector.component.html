@@ -1,0 +1,14 @@
+<form [formGroup]="form">
+  <ng-container *ngFor="let app of applications;index as i">
+    <div class="application" *ngIf="app.app_type === types.external">
+      <div class="name">{{app.app_name}}</div>
+      <mat-form-field appearance="outline">
+        <mat-label>Lien</mat-label>
+        <input matInput formControlName="{{'app_'+app.app_name}}">
+        <mat-error>
+          {{required}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </ng-container>
+</form>

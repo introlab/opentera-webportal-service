@@ -1,0 +1,14 @@
+.wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  app-logo {
+    position: absolute;
+  }
+
+  mat-progress-spinner {
+    position: absolute;
+  }
+}

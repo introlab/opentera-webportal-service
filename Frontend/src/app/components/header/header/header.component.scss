@@ -1,0 +1,53 @@
+header {
+  height: var(--header-height);
+  background: white;
+  box-sizing: border-box;
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 calc(var(--app-padding) / 2);
+  justify-content: space-between;
+
+  app-logo,
+  app-navigation,
+  app-profile {
+    flex: 1 1 auto;
+  }
+
+  app-navigation {
+    text-align: center;
+  }
+
+  app-menu-hamburger {
+    display: none;
+  }
+
+  .project {
+    padding: 10px 12px;
+    background: var(--accent-lighter-color);
+    font-weight: 700;
+    font-size: 1.1em;
+    border-radius: var(--border-radius);
+  }
+}
+
+@media screen and (max-width: 700px) {
+  header {
+    justify-content: space-between;
+
+    app-logo {
+      width: 80%;
+    }
+
+    app-navigation,
+    app-profile {
+      display: none;
+    }
+
+    app-menu-hamburger {
+      text-align: right;
+      display: block !important;
+    }
+  }
+}

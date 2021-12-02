@@ -1,0 +1,19 @@
+<mat-form-field appearance="outline" *ngIf="!refreshing">
+  <mat-label>Groupe</mat-label>
+  <mat-select (selectionChange)="onValueChanged($event.value)" [value]="selectedGroup">
+    <mat-option *ngIf="allOption" [value]="null">Tous</mat-option>
+    <mat-option *ngFor="let group of groups" [value]="group">
+      {{group.participant_group_name}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div class="refreshing">
+  <mat-progress-spinner
+    *ngIf="refreshing"
+    [mode]="'indeterminate'"
+    [value]="50"
+    [diameter]="30"
+    [color]="'primary'">
+  </mat-progress-spinner>
+</div>

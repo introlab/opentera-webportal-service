@@ -1,0 +1,12 @@
+<ng-template [ngIf]="outsideSource" [ngIfElse]="loading">
+  <iframe class="frame"
+          [src]="outsideSource | safeUrl"
+          title="Frame"
+          allow="camera;microphone"
+          frameborder="0">
+  </iframe>
+</ng-template>
+
+<ng-template #loading>
+  <h3 class="no-content">Aucun contenu à afficher</h3>
+</ng-template>
