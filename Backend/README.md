@@ -1,6 +1,9 @@
-# opentera-webportal-service
+# Opentera Webportal Service
 
 OpenTera Service managing a customizable webportal
+
+## Database pre-configuration
+Create an empty database with the parameters set in the [config file](https://github.com/introlab/opentera-webportal-service/blob/main/Backend/config/WebPortalService.json) (or the parameters that are setup in your configuration)
 
 ## Setup
 
