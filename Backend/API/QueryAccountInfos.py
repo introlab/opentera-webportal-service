@@ -72,8 +72,8 @@ class QueryAccountInfos(Resource):
         if current_login_type == LoginType.USER_LOGIN:
             user = current_user_client.get_user_info()
             account_infos['user'] = user
-            account_infos['username'] = user[0]['user_username']
-            account_infos.update({'sites': user[0]['sites']})
+            account_infos['username'] = user['user_username']
+            account_infos.update({'sites': user['sites']})
             account_infos['login_type'] = 'user'
             account_infos['login_id'] = current_user_client.id_user
             account_infos['login_uuid'] = current_user_client.user_uuid
