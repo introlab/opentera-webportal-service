@@ -63,7 +63,7 @@ export class AppComponent implements OnInit, OnDestroy {
       $event.preventDefault();
       $event.returnValue = true;
     }else{
-      $event.returnValue = false;
+      // $event.returnValue = false;
     }
     // console.log('Leaving site...');
     // this.authService.reset();
