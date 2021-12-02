@@ -14,19 +14,18 @@ cd opentera-webportal-service directory
 # Create a virtual environment
 This supposes Python 3.8.x was correctly installed on the build system.
 
-On Mac/Linux:
+### On Mac/Linux:
+# Automated script
+Just run create_conda_venv.sh
+
+# OR manual installation
 python3 -m venv venv
-
-On Windows:
-python -m venv venv
-
-# Enable venv
-On Mac/Linux:
 source venv/bin/activate
-
-On Windows:
-venv\Scripts\activate.bat
-
-# Install requirements (service)
 pip install -r requirements.txt
+
+### On Windows:
+python -m venv venv
+venv\Scripts\activate.bat
+pip install -r requirements.txt
+
 ```
