@@ -26,7 +26,7 @@
         "app/services/*"
       ]
     },
-    "outDir": "../Backend/frontend",
+    "outDir": "../Backend/static",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "strictNullChecks": false,
