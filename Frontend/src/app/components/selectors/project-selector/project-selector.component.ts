@@ -38,7 +38,7 @@ export class ProjectSelectorComponent implements OnInit, OnDestroy {
 
   private getProjects(): void {
     const selectedSite$ = this.selectedSiteService.getSelectedSite();
-    const service$ = this.serviceService.service$();
+    const service$ = this.serviceService.getByKey();
     const selectedProject$ = this.selectedProjectService.getSelectedProject();
 
     this.subscription = combineLatest([selectedSite$, service$]).pipe(
@@ -46,7 +46,7 @@ export class ProjectSelectorComponent implements OnInit, OnDestroy {
       filter(([selectedSite, service]) => this.isSiteValid(selectedSite)),
       switchMap(([selectedSite, service]) => {
         this.refreshing = true;
-        return combineLatest([selectedProject$, this.projectService.getBySite(selectedSite.id_site, service.id_service)]);
+        return combineLatest([selectedProject$, this.projectService.getBySite(selectedSite.id_site, service[0].id_service)]);
       })
     ).subscribe(([selectedProject, projects]) => {
       this.projects = projects;
