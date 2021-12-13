@@ -54,14 +54,16 @@ class QueryCalendar(Resource):
                 # Find session overlaps for participants
                 start_time = datetime.fromisoformat(args['start_date'])
                 end_time = datetime.fromisoformat(args['end_date'])
-                events = calendar_access.query_overlaps(start_time, end_time, participants_uuids=participant_uuids)
+                events = calendar_access.query_overlaps(start_time, end_time, participants_uuids=participant_uuids,
+                                                        id_event=args['id_event'])
             elif current_user_client:
                 # Find event overlaps for connected user
                 start_time = datetime.fromisoformat(args['start_date'])
                 end_time = datetime.fromisoformat(args['end_date'])
                 # If uuid user specified, check for this user, if not, check for current user
                 uuid_user = args['user_uuid'] if args['user_uuid'] else current_user_client.user_uuid
-                events = calendar_access.query_overlaps(start_time, end_time, user_uuid=uuid_user)
+                events = calendar_access.query_overlaps(start_time, end_time, user_uuid=uuid_user,
+                                                        id_event=args['id_event'])
         elif args['three']:
             if participant_uuids:
                 # Find next three events for participant

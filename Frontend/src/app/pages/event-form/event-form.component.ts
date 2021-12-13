@@ -215,7 +215,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
     const isoStartDate = dateToISOLikeButLocal(startTime);
     const isoEndDate = dateToISOLikeButLocal(endTime);
     const participantsUUIDs: string[] = this.sessionParticipants.map((part) => part.participant_uuid);
-    this.calendarService.checkOverlaps(isoStartDate, isoEndDate, participantsUUIDs).subscribe((res) => {
+    this.calendarService.checkOverlaps(isoStartDate, isoEndDate, participantsUUIDs, '', this.event.id_event).subscribe((res) => {
       this.overlappingParticipants = [];
       res.forEach((event) => {
         this.overlappingParticipants = [...this.overlappingParticipants, ...event.session_participant_uuids];

@@ -17,10 +17,12 @@
 
     <app-datetime-selector [label]="'Début'" [default]="startTime" [form]="eventForm"
                            [sessionParticipants]="sessionParticipants"
+                           [event]="event"
                            (overlappingParticipants)="overlappingParticipantsChange($event)"
                            [controlName]="startTimeControlName" [minDate]="today"></app-datetime-selector>
     <app-datetime-selector [label]="'Fin'" [default]="endTime" [form]="eventForm" [controlName]="endTimeControlName"
                            [sessionParticipants]="sessionParticipants"
+                           [event]="event"
                            (overlappingParticipants)="overlappingParticipantsChange($event)"
                            [minDate]="startTime"></app-datetime-selector>
 
