@@ -69,7 +69,6 @@ export class EventFormComponent implements OnInit, OnDestroy, AfterViewInit {
     combineLatest([account$, routeParam$]).pipe(
       tap(([account, params]) => {
         if (params.participantsUUIDs) {
-          // TODO start form with selected participant
           this.selectedParticipantUUID = params.participantsUUIDs;
         }
         if (params.time) {

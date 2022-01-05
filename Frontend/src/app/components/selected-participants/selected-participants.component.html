@@ -1,4 +1,4 @@
-<app-participant-selector #participantSelector (selectedParticipantChange)="newParticipantSelected($event)">
+<app-participant-selector (selectedParticipantChange)="newParticipantSelected($event)">
 
 </app-participant-selector>
 <ng-container *ngFor="let participant of selectedParticipants;index as i; trackBy: trackByFn">
