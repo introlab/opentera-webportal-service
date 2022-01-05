@@ -37,9 +37,10 @@
 
     <h4>Séance</h4>
     <app-session-type-selector [idEventSessionType]="session?.id_session_type"
-                               [form]="eventForm"></app-session-type-selector>
+                               [form]="eventForm"
+                               (sessionTypeChange)="sessionTypeChange($event)"></app-session-type-selector>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" *ngIf="!serviceSessionType">
       <mat-label>Lien externe</mat-label>
       <input matInput formControlName="url" [placeholder]="'Invitation Teams, Zoom ou autre'">
     </mat-form-field>

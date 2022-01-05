@@ -15,6 +15,7 @@ import {GlobalConstants} from '@core/utils/global-constants';
 import {combineLatest, EMPTY, Subscription} from 'rxjs';
 import {switchMap, tap} from 'rxjs/operators';
 import {Pages} from '@core/utils/pages';
+import {SessionType} from '@shared/models/session-type.model';
 
 @Component({
   selector: 'app-event-form',
@@ -37,6 +38,7 @@ export class EventFormComponent implements OnInit, OnDestroy {
   today = new Date();
   overlappingParticipants: string[] = [];
   selectedUserUUID = '';
+  serviceSessionType = true;
   private account: Account;
   private subscriptions: Subscription[] = [];
 
@@ -100,8 +102,9 @@ export class EventFormComponent implements OnInit, OnDestroy {
       url: new FormControl('')
     }, {
       validators: TimeInputValidator.validateTimes,
-      updateOn: 'blur'
+      updateOn: 'blur',
     });
+    this.eventForm.markAllAsTouched();
   }
 
   private setUpAsyncValidators(): void {
@@ -221,6 +224,11 @@ export class EventFormComponent implements OnInit, OnDestroy {
         this.overlappingParticipants = [...this.overlappingParticipants, ...event.session_participant_uuids];
       });
     });
+  }
+
+  sessionTypeChange(sessionType: SessionType): void {
+    this.serviceSessionType = (sessionType.session_type_service_key !== undefined);
+    console.log(sessionType.session_type_service_key);
   }
 
   overlappingParticipantsChange(UUIDs: string[]): void {
