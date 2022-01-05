@@ -36,7 +36,7 @@
     </div>
 
     <h4>Séance</h4>
-    <app-session-type-selector [idEventSessionType]="session?.id_session_type"
+    <app-session-type-selector #participantSelector [idEventSessionType]="session?.id_session_type"
                                [form]="eventForm"
                                (sessionTypeChange)="sessionTypeChange($event)"></app-session-type-selector>
 

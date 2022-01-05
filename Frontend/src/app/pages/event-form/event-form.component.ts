@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Event} from '@shared/models/event.model';
 import {CalendarService} from '@services/calendar.service';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -16,13 +16,14 @@ import {combineLatest, EMPTY, Subscription} from 'rxjs';
 import {switchMap, tap} from 'rxjs/operators';
 import {Pages} from '@core/utils/pages';
 import {SessionType} from '@shared/models/session-type.model';
+import {SelectedParticipantsComponent} from '@components/selected-participants/selected-participants.component';
 
 @Component({
   selector: 'app-event-form',
   templateUrl: './event-form.component.html',
   styleUrls: ['./event-form.component.scss']
 })
-export class EventFormComponent implements OnInit, OnDestroy {
+export class EventFormComponent implements OnInit, OnDestroy, AfterViewInit {
   event: Event;
   eventForm: FormGroup;
   title: string;
@@ -38,9 +39,11 @@ export class EventFormComponent implements OnInit, OnDestroy {
   today = new Date();
   overlappingParticipants: string[] = [];
   selectedUserUUID = '';
+  selectedParticipantUUID = '';
   serviceSessionType = true;
   private account: Account;
   private subscriptions: Subscription[] = [];
+  @ViewChild(SelectedParticipantsComponent) participantSelector: SelectedParticipantsComponent;
 
   constructor(private calendarService: CalendarService,
               private notificationService: NotificationService,
@@ -66,8 +69,8 @@ export class EventFormComponent implements OnInit, OnDestroy {
     combineLatest([account$, routeParam$]).pipe(
       tap(([account, params]) => {
         if (params.participantsUUIDs) {
-          const uuids = params.participantsUUIDs;
           // TODO start form with selected participant
+          this.selectedParticipantUUID = params.participantsUUIDs;
         }
         if (params.time) {
           const date = new Date(params.time);
@@ -237,5 +240,11 @@ export class EventFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
+  ngAfterViewInit(): void {
+    if (this.selectedParticipantUUID.length > 0){
+      this.participantSelector.selectParticipantByUuid(this.selectedParticipantUUID);
+    }
   }
 }

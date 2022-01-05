@@ -1,5 +1,6 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Participant} from '@shared/models/participant.model';
+import {ParticipantSelectorComponent} from '@components/selectors/participant-selector/participant-selector.component';
 
 @Component({
   selector: 'app-selected-participants',
@@ -11,6 +12,7 @@ export class SelectedParticipantsComponent implements OnInit {
   @Input() selectedParticipantUUID = '';
   @Input() overlappingParticipants: string[] = [];
   @Output() participantsChange = new EventEmitter();
+  @ViewChild(ParticipantSelectorComponent) participantSelector: ParticipantSelectorComponent;
 
   constructor() {
   }
@@ -34,5 +36,12 @@ export class SelectedParticipantsComponent implements OnInit {
 
   trackByFn(index: number, item: Participant): number {
     return item.id_participant;
+  }
+
+  public selectParticipantByUuid(select_uuid: string): void {
+    const selected = this.participantSelector.participants.find((part) => part.participant_uuid === select_uuid);
+    if (selected) {
+      this.newParticipantSelected(selected);
+    }
   }
 }
