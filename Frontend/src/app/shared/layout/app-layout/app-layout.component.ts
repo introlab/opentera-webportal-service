@@ -24,6 +24,7 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
   selectedProject: Project;
   isUser = false;
   showSelectors = false;
+  manualShow = false;
   showBackButtonSelectors = false;
   inSession = false;
   private subscriptions: Subscription[] = [];
@@ -72,7 +73,9 @@ export class AppLayoutComponent implements OnInit, OnDestroy {
           this.selectedProject = selectedProject;
           this.isUser = isUser(account);
           this.showBackButtonSelectors = !isObjectEmpty(selectedSite) && !isObjectEmpty(selectedProject);
-          this.showSelectors = this.isUser && this.showBackButtonSelectors && this.selectedProject.id_site === this.selectedSite.id_site;
+          if (!this.manualShow){
+            this.showSelectors = this.isUser && this.showBackButtonSelectors && this.selectedProject.id_site === this.selectedSite.id_site;
+          }
         })
     );
   }

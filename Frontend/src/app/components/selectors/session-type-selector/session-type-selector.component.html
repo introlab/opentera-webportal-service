@@ -1,7 +1,7 @@
 <div [formGroup]="form">
   <mat-form-field appearance="outline">
     <mat-label>Type de séance</mat-label>
-    <mat-select [value]="selectedType" formControlName="type">
+    <mat-select [value]="selectedType" formControlName="type" (selectionChange)="onValueChanged($event.value)">
       <mat-option *ngFor="let type of types" [value]="type">
         {{type.session_type_name}}
       </mat-option>

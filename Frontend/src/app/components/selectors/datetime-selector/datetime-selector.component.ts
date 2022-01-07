@@ -5,6 +5,7 @@ import {GlobalConstants} from '@core/utils/global-constants';
 import {dateToISOLikeButLocal, roundToNearestQuarter} from '@core/utils/utility-functions';
 import {CalendarService} from '@services/calendar.service';
 import {Participant} from '@shared/models/participant.model';
+import {Event} from '@shared/models/event.model';
 
 @Component({
   selector: 'app-datetime-selector',
@@ -20,12 +21,14 @@ export class DatetimeSelectorComponent implements OnInit, OnChanges {
   @Input() minDate: Date = null;
   @Input() default: Date = new Date();
   @Input() sessionParticipants: Participant[] = [];
+  @Input() event: Event = null;
   dateControl: any;
   stepMinute = 15;
   touchUi = true;
   color: ThemePalette = 'primary';
   showSeconds = false;
   required = GlobalConstants.requiredMessage;
+  loading = true;
 
   constructor(private calendarService: CalendarService) {
   }
@@ -34,6 +37,7 @@ export class DatetimeSelectorComponent implements OnInit, OnChanges {
     this.form.addControl(this.controlName, new FormControl(this.default, [Validators.required]));
     this.dateControl = this.form.controls[this.controlName];
     this.onTimeChange({value: this.default});
+    this.loading = false;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -46,6 +50,9 @@ export class DatetimeSelectorComponent implements OnInit, OnChanges {
     const control = this.form.controls;
     const newTime = new Date(change.value);
     this.updateEndTime(newTime);
+    if (this.loading){
+      return;
+    }
     if (newTime !== new Date(this.dateControl.value)) {
       const startTime = new Date(control.startTime.value);
       let endTime = new Date(control.startTime.value);
@@ -55,7 +62,11 @@ export class DatetimeSelectorComponent implements OnInit, OnChanges {
       const isoStartDate = dateToISOLikeButLocal(startTime);
       const isoEndDate = dateToISOLikeButLocal(endTime);
       const participantsUUIDs: string[] = this.sessionParticipants.map((part) => part.participant_uuid);
-      this.calendarService.checkOverlaps(isoStartDate, isoEndDate, participantsUUIDs).subscribe((overlappingEvents) => {
+      let idEvent = null;
+      if (this.event){
+        idEvent = this.event.id_event;
+      }
+      this.calendarService.checkOverlaps(isoStartDate, isoEndDate, participantsUUIDs, '', idEvent).subscribe((overlappingEvents) => {
         let overlappingParticipants: string[] = [];
         overlappingEvents.forEach((event) => {
           overlappingParticipants = [...overlappingParticipants, ...event.session_participant_uuids];

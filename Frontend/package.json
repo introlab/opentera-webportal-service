@@ -1,6 +1,6 @@
 {
   "name": "opentera-webportal",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -22,6 +22,8 @@
     "@angular/platform-browser": "^12.2.11",
     "@angular/platform-browser-dynamic": "^12.2.11",
     "@angular/router": "^12.2.11",
+    "@ng-idle/core": "^11.1.0",
+    "@ng-idle/keepalive": "^11.0.3",
     "@schematics/angular": "^9.1.15",
     "angular-calendar": "^0.28.28",
     "angular-material": "^1.2.3",

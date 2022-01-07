@@ -43,6 +43,7 @@ export class SiteSelectorComponent implements OnInit, OnChanges, OnDestroy {
         return this.getSitePermission(this.selectedSite);
       })
     ).subscribe();
+    this.refreshSites();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -44,7 +44,8 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
         if (selected) {
           this.calendarName = selected.participant_name;
           this.firstParticipantSelected = selected.participant_uuid;
-          this.participantsUUIDs.push(selected.participant_uuid);
+          // this.participantsUUIDs.push(selected.participant_uuid);
+          this.participantsUUIDs = [selected.participant_uuid];
         }
       })
     );

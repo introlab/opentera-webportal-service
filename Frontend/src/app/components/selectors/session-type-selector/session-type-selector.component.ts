@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, Input, OnChanges} from '@angular/core';
+import {Component, OnDestroy, OnInit, Input, OnChanges, Output, EventEmitter} from '@angular/core';
 import {SessionType} from '@shared/models/session-type.model';
 import {SelectedProjectService} from '@services/selected-project.service';
 import {Subscription} from 'rxjs';
@@ -15,6 +15,7 @@ import {GlobalConstants} from '@core/utils/global-constants';
 export class SessionTypeSelectorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() idEventSessionType: number;
   @Input() form: FormGroup;
+  @Output() sessionTypeChange = new EventEmitter();
   types: SessionType[] = [];
   selectedType: SessionType;
   required = GlobalConstants.requiredMessage;
@@ -27,6 +28,7 @@ export class SessionTypeSelectorComponent implements OnInit, OnChanges, OnDestro
   ngOnInit(): void {
     this.form.addControl('type', new FormControl('', [Validators.required]));
     this.getTypes();
+    this.form.markAllAsTouched();
   }
 
   ngOnChanges(): void {
@@ -48,10 +50,15 @@ export class SessionTypeSelectorComponent implements OnInit, OnChanges, OnDestro
     const alreadySelected = this.types.find(p => p.id_session_type === this.idEventSessionType);
     if (alreadySelected) {
       this.form.controls.type.setValue(alreadySelected);
+      this.sessionTypeChange.emit(alreadySelected);
     }
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  onValueChanged(value: SessionType): void {
+    this.sessionTypeChange.emit(value);
   }
 }

@@ -79,4 +79,11 @@ export class ParticipantSelectorComponent implements OnInit, OnChanges, OnDestro
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
+
+  selectParticipantByUuid(select_uuid: string): void {
+    const selected = this.participants.find((part) => part.participant_uuid === select_uuid);
+    if (selected) {
+      this.selectedParticipant = selected;
+    }
+  }
 }
