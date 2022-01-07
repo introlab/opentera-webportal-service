@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {map, switchMap, tap} from 'rxjs/operators';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {GlobalConstants} from '@core/utils/global-constants';
@@ -23,11 +23,11 @@ export class AuthenticationService {
   private cookieValue = GlobalConstants.cookieValue;
   private API_URL = makeApiURL();
   private refreshTokenTimeout: any;
-  private isLoggedIn = false;
-
-  private _lastAuthenticatedPath: string = this.defaultPath;
+  // private isLoggedIn = false;
+  private isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private m_lastAuthenticatedPath: string = this.defaultPath;
   set lastAuthenticatedPath(value: string) {
-    this._lastAuthenticatedPath = value;
+    this.m_lastAuthenticatedPath = value;
   }
 
   constructor(private http: HttpClient,
@@ -41,8 +41,12 @@ export class AuthenticationService {
   }
 
   isAuthenticated(): boolean {
-    this.isLoggedIn = !!this.cookieService.get(this.cookieValue);
-    return this.isLoggedIn;
+    this.isLoggedIn.next(!!this.cookieService.get(this.cookieValue));
+    return this.isLoggedIn.getValue();
+  }
+
+  loginStateChange(): Observable<boolean> {
+    return this.isLoggedIn.asObservable();
   }
 
   login(username: string, password: string, isManager: boolean = false): Observable<any> {
@@ -51,9 +55,9 @@ export class AuthenticationService {
     return this.http.get(apiUrl, {headers}).pipe(
       tap((response: any) => {
         const token = isManager ? response.user_token : response.participant_token;
-        this.isLoggedIn = true;
+        this.isLoggedIn.next(true);
         this.cookieService.set(this.cookieValue, token, 0.5, '/');
-        this.router.navigate([this._lastAuthenticatedPath]);
+        this.router.navigate([this.m_lastAuthenticatedPath]);
         // Connect websocket
         this.websocketService.connect(response.websocket_url);
         this.startRefreshTokenTimer();
@@ -62,9 +66,9 @@ export class AuthenticationService {
   }
 
   loginWithToken(token: string): void {
-    this.isLoggedIn = true;
+    this.isLoggedIn.next(true);
     this.cookieService.set(this.cookieValue, token, null, '/');
-    this.router.navigate([this._lastAuthenticatedPath]);
+    this.router.navigate([this.m_lastAuthenticatedPath]);
   }
 
   logout(isManager: boolean = false): Observable<any> {
@@ -77,7 +81,7 @@ export class AuthenticationService {
   }
 
   reset(): void {
-    this.isLoggedIn = false;
+    this.isLoggedIn.next(false);
     this.router.navigate([Pages.loginPage]);
     this.cookieService.delete(this.cookieValue, '/');
     this.selectedProjectService.setSelectedProject(new Project());

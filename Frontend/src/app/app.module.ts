@@ -15,6 +15,8 @@ import {ParticipantModule} from '@src/app/modules/participant.module';
 import {HeaderModule} from '@src/app/modules/header.module';
 import {EventDialogComponent} from '@components/event-dialog/event-dialog.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NgIdleKeepaliveModule} from '@ng-idle/keepalive';
+import { InformationComponent } from './components/information/information/information.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -27,6 +29,7 @@ registerLocaleData(localeFr, 'fr');
     ParticipantLayoutComponent,
     NotFoundComponent,
     EventDialogComponent,
+    InformationComponent,
   ],
   imports: [
     SharedModule,
@@ -36,6 +39,7 @@ registerLocaleData(localeFr, 'fr');
     UserModule,
     ParticipantModule,
     AppRoutingModule,
+    NgIdleKeepaliveModule.forRoot(),
   ],
   providers: [],
   exports: [
