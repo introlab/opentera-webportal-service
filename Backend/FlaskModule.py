@@ -240,14 +240,16 @@ class FlaskModule(BaseModule):
         from API.QueryAccountInfos import QueryAccountInfos
         from API.QueryCalendar import QueryCalendar
         from API.QueryPermissions import QueryPermissions
+        from API.QueryRedirectApps import QueryRedirectApps
 
         # Resources
-        default_api_ns.add_resource(QueryVersion, '/version', resource_class_kwargs=kwargs)
-        default_api_ns.add_resource(QueryApps, '/apps', resource_class_kwargs=kwargs)
-        default_api_ns.add_resource(QueryAppConfig, '/app-configs', resource_class_kwargs=kwargs)
-        default_api_ns.add_resource(QueryAccountInfos, '/me', resource_class_kwargs=kwargs)
-        default_api_ns.add_resource(QueryCalendar, '/calendar', resource_class_kwargs=kwargs)
-        default_api_ns.add_resource(QueryPermissions, '/permissions', resource_class_kwargs=kwargs)
+        default_api_ns.add_resource(QueryVersion,       '/version', resource_class_kwargs=kwargs)
+        default_api_ns.add_resource(QueryApps,          '/apps', resource_class_kwargs=kwargs)
+        default_api_ns.add_resource(QueryAppConfig,     '/app-configs', resource_class_kwargs=kwargs)
+        default_api_ns.add_resource(QueryAccountInfos,  '/me', resource_class_kwargs=kwargs)
+        default_api_ns.add_resource(QueryCalendar,      '/calendar', resource_class_kwargs=kwargs)
+        default_api_ns.add_resource(QueryPermissions,   '/permissions', resource_class_kwargs=kwargs)
+        default_api_ns.add_resource(QueryRedirectApps,  '/app-redirect', resource_class_kwargs=kwargs)
 
     def init_views(self):
         from Views.Index import Index

@@ -60,4 +60,9 @@ export class ApplicationSelectorComponent implements OnInit, OnChanges, OnDestro
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+
+  moodleAppHasId(app: Application): boolean {
+    const app_infos = app.app_static_url.split(' ');
+    return !(app_infos[0] === '' || app_infos[0] === 'message');
+  }
 }

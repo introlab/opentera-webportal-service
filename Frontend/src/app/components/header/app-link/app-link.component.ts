@@ -6,6 +6,9 @@ import {Pages} from '@core/utils/pages';
 import {AccountService} from '@services/account.service';
 import {Subscription} from 'rxjs';
 import {Account} from '@shared/models/account.model';
+import {CookieService} from 'ngx-cookie-service';
+import {GlobalConstants} from '@core/utils/global-constants';
+import {makeApiURL} from "@core/utils/make-api-url";
 
 @Component({
   selector: 'app-link',
@@ -20,6 +23,7 @@ export class AppLinkComponent implements OnInit, OnDestroy {
 
   constructor(private selectedSourceService: SelectedSourceService,
               private accountService: AccountService,
+              private cookieService: CookieService,
               private router: Router) {
   }
 
@@ -38,11 +42,20 @@ export class AppLinkComponent implements OnInit, OnDestroy {
       default:
         this.router.navigate([Pages.createPath(Pages.appPage), {app: this.app.app_name?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')}]);
     }
-    if (this.app.app_config.app_config_url && this.app.app_config.app_config_url.length > 0) {
-      this.selectedSourceService.setSelectedSource(this.app.app_config.app_config_url);
-    } else {
-      this.selectedSourceService.setSelectedSource(this.app.app_static_url);
+    let app_url;
+    if (this.app.app_type === GlobalConstants.applicationTypes.Moodle){
+      // Moodle redirector
+      app_url = makeApiURL(true) + 'app-redirect?id_app=' + this.app.id_app + '&token=' +
+        this.cookieService.get(GlobalConstants.cookieValue);
+    }else{
+      if (this.app.app_config.app_config_url !== null && this.app.app_config.app_config_url.length > 0) {
+        app_url = this.app.app_config.app_config_url;
+      } else {
+        app_url = this.app.app_static_url;
+      }
     }
+
+    this.selectedSourceService.setSelectedSource(app_url);
   }
 
   ngOnDestroy(): void {

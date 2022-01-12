@@ -42,9 +42,10 @@
       <span>Type:</span>
       <mat-radio-button [color]="color" value="{{appType.external}}">Externe</mat-radio-button>
       <mat-radio-button [color]="color" value="{{appType['OpenTera Service']}}">Service OpenTera</mat-radio-button>
+      <mat-radio-button [color]="color" value="{{appType.Moodle}}">Intégration Moodle</mat-radio-button>
     </mat-radio-group>
 
-    <mat-form-field appearance="outline" *ngIf="!isOpenTeraServiceApp">
+    <mat-form-field appearance="outline" *ngIf="!isOpenTeraServiceApp && !isMoodleApp">
       <mat-label>Lien</mat-label>
       <input matInput formControlName="url" [placeholder]="urlExample">
       <mat-error>
@@ -59,6 +60,28 @@
           {{service.service_name}}
         </mat-option>
       </mat-select>
+      <mat-error>
+        {{required}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" *ngIf="isMoodleApp">
+      <mat-label>Section Moodle</mat-label>
+      <mat-select formControlName="moodle" (selectionChange)="changeMoodleType($event.value)">
+        <mat-option value="">Tableau de bord</mat-option>
+        <mat-option value="message">Messages</mat-option>
+        <mat-option value="course">Cours</mat-option>
+        <mat-option value="forum">Forum de discussion</mat-option>
+        <mat-option value="chat">Conversation (chat)</mat-option>
+      </mat-select>
+      <mat-error>
+        {{required}}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" *ngIf="needsMoodleId">
+      <mat-label>ID</mat-label>
+      <input matInput type="number" formControlName="moodle_id">
       <mat-error>
         {{required}}
       </mat-error>

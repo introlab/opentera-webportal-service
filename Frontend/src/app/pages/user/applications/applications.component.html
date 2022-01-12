@@ -35,6 +35,7 @@
           <span *ngIf="row.app_type == applicationTypes['OpenTera Service'] && row.service">
             Service Opentera - {{row.service[0]?.service_name}}
           </span>
+          <span *ngIf="row.app_type == applicationTypes.Moodle">Moodle - {{getMoodleAppInfos(row)}}</span>
         </td>
       </ng-container>
 

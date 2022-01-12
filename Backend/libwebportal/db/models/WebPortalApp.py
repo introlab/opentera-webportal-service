@@ -16,7 +16,7 @@ class WebPortalApp(db.Model, BaseModel):
     id_project = db.Column(db.Integer, nullable=False)
     app_name = db.Column(db.String, nullable=False)
     app_icon = db.Column(db.String, nullable=False)
-    app_type = db.Column(db.Integer, nullable=False)  # App type - 0 = External, 1 = OpenTera Service
+    app_type = db.Column(db.Integer, nullable=False)  # App type - 0 = External, 1 = OpenTera Service, 2 = Moodle
     app_static_url = db.Column(db.String, nullable=True)
     app_service_key = db.Column(db.String, nullable=True)
     app_enabled = db.Column(db.Boolean, nullable=False, default=True)

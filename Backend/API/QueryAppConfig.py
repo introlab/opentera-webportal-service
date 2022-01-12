@@ -64,17 +64,32 @@ class QueryAppConfig(Resource):
             # Do the update
             if config_json['id_app_config'] > 0:
                 # Already existing
-                try:
-                    WebPortalAppConfig.update(config_json['id_app_config'], config_json)
-                except exc.SQLAlchemyError as e:
-                    import sys
-                    print(sys.exc_info())
-                    self.module.logger.log_error(self.module.module_name,
-                                                 QueryAppConfig.__name__,
-                                                 'post', 500, 'Database error', str(e))
-                    return gettext('Database error'), 500
+                # If empty app_config_url, we must delete it!
+                if 'app_config_url' not in config_json or not config_json['app_config_url']:
+                    try:
+                        WebPortalAppConfig.delete(config_json['id_app_config'])
+                    except exc.SQLAlchemyError as e:
+                        import sys
+                        print(sys.exc_info())
+                        self.module.logger.log_error(self.module.module_name,
+                                                     QueryAppConfig.__name__,
+                                                     'post', 500, 'Database error', str(e))
+                        return gettext('Database error'), 500
+                else:
+                    try:
+                        WebPortalAppConfig.update(config_json['id_app_config'], config_json)
+                    except exc.SQLAlchemyError as e:
+                        import sys
+                        print(sys.exc_info())
+                        self.module.logger.log_error(self.module.module_name,
+                                                     QueryAppConfig.__name__,
+                                                     'post', 500, 'Database error', str(e))
+                        return gettext('Database error'), 500
+                    updated_app_configs_json.append(config_json)
             else:
                 # New
+                if 'app_config_url' not in config_json or not config_json['app_config_url']:
+                    continue  # Skip this one - no need to add an empty config!
                 try:
                     new_app_config = WebPortalAppConfig()
                     new_app_config.from_json(config_json)
@@ -89,6 +104,6 @@ class QueryAppConfig(Resource):
                                                  'post', 500, 'Database error', str(e))
                     return gettext('Database error'), 500
 
-            updated_app_configs_json.append(config_json)
+                updated_app_configs_json.append(config_json)
 
         return jsonify(updated_app_configs_json)

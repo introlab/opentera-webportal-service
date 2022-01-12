@@ -10,5 +10,15 @@
         </mat-error>
       </mat-form-field>
     </div>
+    <div class="application" *ngIf="app.app_type === types.Moodle && moodleAppHasId(app)">
+      <div class="name">{{app.app_name}}</div>
+      <mat-form-field appearance="outline">
+        <mat-label>ID</mat-label>
+        <input matInput type="number" formControlName="{{'app_'+app.app_name}}">
+        <mat-error>
+          {{required}}
+        </mat-error>
+      </mat-form-field>
+    </div>
   </ng-container>
 </form>
