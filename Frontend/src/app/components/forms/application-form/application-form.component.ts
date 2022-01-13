@@ -98,7 +98,8 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
   private setValues(): void {
     this.appForm.controls.name.setValue(this.app.app_name);
     this.appForm.controls.order.setValue(this.app.app_order);
-    this.appForm.controls.enable.setValue(this.app.app_enabled)
+    this.appForm.controls.enable.setValue(this.app.app_enabled);
+    this.appForm.controls.url.setValue(this.app.app_static_url);
     this.setAppType();
     this.setSelectedIcon();
     if (!!this.app.service) {
@@ -112,9 +113,9 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
       this.changeType(this.app.app_type);
 
       // No URL for OpenTera Service and Moodle
-      if (!this.isOpenTeraServiceApp && !this.isMoodleApp){
-        this.appForm.controls.url.setValue(this.app.app_static_url);
-      }
+      // if (!this.isOpenTeraServiceApp && !this.isMoodleApp){
+      // this.appForm.controls.url.setValue(this.app.app_static_url);
+      // }
 
       // Set correct values for Moodle app
       if (this.isMoodleApp){
