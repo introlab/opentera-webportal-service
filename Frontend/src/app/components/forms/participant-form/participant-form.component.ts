@@ -95,10 +95,12 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
   private initializeForm(): void {
     this.participantForm = this.fb.group({
       name: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.email]),
+      email: new FormControl('', [Validators.email, Validators.required]),
       connectionUrl: new FormControl({value: '', disabled: true}),
       enable: new FormControl(true),
     });
+
+    this.participantForm.markAllAsTouched();
   }
 
   private setValues(): void {

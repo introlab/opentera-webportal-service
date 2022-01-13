@@ -23,5 +23,9 @@
 		"port": 5432,
 		"username": "webportal",
 		"password": "webportal"
+	},
+	"Moodle": {
+		"url": "https://moodle.org",
+		"token": ""
 	}
 }

@@ -43,28 +43,30 @@ class DBManagerAppAccess:
     def query_app_config(self, apps_json):
         for app in apps_json:
             part_uuid = current_participant_client.participant_uuid
-            app_config = WebPortalAppConfig.get_app_config_for_participant(part_uuid, app['id_app'])
-            app_config_json = None
-            if app_config:
-                app_config_json = app_config.to_json(ignore_fields=['id_app', 'participant_uuid'])
-                if app['app_type'] == WebPortalApp.WebPortalAppType.OPENTERA_SERVICE.value \
-                        and app['app_service_key'] is not None:
-                    # Create url for that service
-                    params = {'service_key': app['app_service_key'], 'with_base_url': True}
-                    endpoint = '/api/service/services'
-                    response = Globals.service.get_from_opentera(endpoint, params)
+            app_config_json = {}
+            if app['app_type'] == WebPortalApp.WebPortalAppType.OPENTERA_SERVICE.value \
+                    and app['app_service_key'] is not None:
+                # Create url for that service
+                params = {'service_key': app['app_service_key'], 'with_base_url': True}
+                endpoint = '/api/service/services'
+                response = Globals.service.get_from_opentera(endpoint, params)
 
-                    if response.status_code == 200:
-                        service = response.json()
-                        if len(service) > 0:
-                            service = service[0]
-                            # "https://" + server_url.host() + ":" + QString::number(server_url.port()) +
-                            # service.getFieldValue("service_clientendpoint").toString() +
-                            # participant_endpoint + "?token=" +
-                            # participant_token;
-                            app_config_json['app_config_url'] = service['service_base_url'] + \
-                                service['service_endpoint_participant'] + \
-                                '?token=' + current_participant_client.participant_token
+                if response.status_code == 200:
+                    service = response.json()
+                    if len(service) > 0:
+                        service = service[0]
+                        # "https://" + server_url.host() + ":" + QString::number(server_url.port()) +
+                        # service.getFieldValue("service_clientendpoint").toString() +
+                        # participant_endpoint + "?token=" +
+                        # participant_token;
+                        app_config_json['app_config_url'] = service['service_base_url'] + \
+                                                            service['service_endpoint_participant'] + \
+                                                            '?token=' + current_participant_client.participant_token
+            else:
+                app_config = WebPortalAppConfig.get_app_config_for_participant(part_uuid, app['id_app'])
+                app_config_json = None
+                if app_config:
+                    app_config_json = app_config.to_json(ignore_fields=['id_app', 'participant_uuid'])
 
             app['app_config'] = app_config_json
         return apps_json

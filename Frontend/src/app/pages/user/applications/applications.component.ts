@@ -76,6 +76,31 @@ export class ApplicationsComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
+  getMoodleAppInfos(app: Application): string {
+    const app_infos = app.app_static_url.split(' ');
+    let app_str = '';
+    if (app_infos[0] === ''){
+      return 'Tableau de bord';
+    }
+    if (app_infos[0] === 'message'){
+      return 'Messagerie';
+    }
+    if (app_infos[0] === 'course'){
+      app_str = 'Cours';
+    }
+    if (app_infos[0] === 'chat'){
+      app_str = 'Conversation (chat)';
+    }
+    if (app_infos[0] === 'forum'){
+      app_str = 'Forum de discussion';
+    }
+
+    if (app_infos[1] !== undefined){
+      app_str += ' ID ' + String(app_infos[1]);
+    }
+    return app_str;
+  }
+
   private setDataSource(): void {
     this.dataSource = new MatTableDataSource(this.applications);
     this.dataSource.paginator = this.paginator;

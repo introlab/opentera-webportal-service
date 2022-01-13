@@ -27,6 +27,8 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
   selectedIcon: Icon;
   icons = icons;
   isOpenTeraServiceApp = false;
+  isMoodleApp = false;
+  needsMoodleId = false;
   appType = GlobalConstants.applicationTypes;
   positions: number[] = [1, 2, 3, 4, 5, 6];
   required = GlobalConstants.requiredMessage;
@@ -87,15 +89,16 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
       order: new FormControl(this.positions[0], Validators.required),
       type: new FormControl(GlobalConstants.applicationTypes.external.toString(), Validators.required),
       service: new FormControl(''),
-      url: new FormControl('')
+      url: new FormControl(''),
+      moodle: new FormControl(''),
+      moodle_id: new FormControl('')
     });
   }
 
   private setValues(): void {
     this.appForm.controls.name.setValue(this.app.app_name);
     this.appForm.controls.order.setValue(this.app.app_order);
-    this.appForm.controls.enable.setValue(this.app.app_enabled);
-    this.appForm.controls.url.setValue(this.app.app_static_url);
+    this.appForm.controls.enable.setValue(this.app.app_enabled)
     this.setAppType();
     this.setSelectedIcon();
     if (!!this.app.service) {
@@ -107,6 +110,23 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
     if (this.app.app_type) {
       this.appForm.controls.type.setValue(this.app.app_type.toString());
       this.changeType(this.app.app_type);
+
+      // No URL for OpenTera Service and Moodle
+      if (!this.isOpenTeraServiceApp && !this.isMoodleApp){
+        this.appForm.controls.url.setValue(this.app.app_static_url);
+      }
+
+      // Set correct values for Moodle app
+      if (this.isMoodleApp){
+        if (this.app.app_static_url !== undefined) {
+          const app_infos = this.app.app_static_url.split(' ');
+          this.appForm.controls.moodle.setValue(app_infos[0]);
+          this.changeMoodleType(app_infos[0]);
+          if (app_infos[1] !== undefined){
+            this.appForm.controls.moodle_id.setValue(Number(app_infos[1]));
+          }
+        }
+      }
     } else {
       this.appForm.controls.type.setValue(GlobalConstants.applicationTypes.external.toString());
     }
@@ -137,14 +157,36 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
 
   changeType(value: any): void {
     this.isOpenTeraServiceApp = Number(value) === GlobalConstants.applicationTypes['OpenTera Service'];
+    this.isMoodleApp = Number(value) === GlobalConstants.applicationTypes.Moodle;
+
+    // Clear all validators
+    this.appForm.controls.moodle.clearValidators();
+    // this.appForm.controls.moodle_id.clearValidators();
+    this.appForm.controls.url.clearValidators();
+    this.appForm.controls.service.clearValidators();
+
+    // Set appropriate required validators
     if (this.isOpenTeraServiceApp) {
-      this.appForm.controls.url.clearValidators();
       this.appForm.controls.service.setValidators([Validators.required]);
     } else {
-      this.appForm.controls.service.clearValidators();
-      this.appForm.controls.url.setValidators([Validators.required]);
+      // Standard app or Moodle
+      if (!this.isMoodleApp){
+        this.appForm.controls.url.setValidators([Validators.required]);
+      }else{
+        // this.appForm.controls.moodle.setValidators([Validators.required]);
+      }
     }
     this.appForm.controls.service.updateValueAndValidity();
+  }
+
+  changeMoodleType(value: any): void {
+    this.needsMoodleId = String(value) !== '' && String(value) !== 'message';
+
+    if (this.needsMoodleId){
+      this.appForm.controls.moodle_id.setValidators([Validators.required]);
+    }else{
+      this.appForm.controls.moodle_id.clearValidators();
+    }
   }
 
   private createApp(): void {
@@ -159,8 +201,12 @@ export class ApplicationFormComponent implements OnInit, OnDestroy {
       this.app.app_service_key = controls.service.value.service_key;
       this.app.app_static_url = '';
     } else {
-      this.app.app_static_url = controls.url.value;
       this.app.app_service_key = '';
+      if (this.isMoodleApp){
+        this.app.app_static_url = String(controls.moodle.value) + ' ' + String(controls.moodle_id.value);
+      }else{
+        this.app.app_static_url = controls.url.value;
+      }
     }
   }
 
