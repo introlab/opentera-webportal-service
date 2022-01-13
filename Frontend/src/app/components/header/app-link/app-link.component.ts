@@ -48,7 +48,7 @@ export class AppLinkComponent implements OnInit, OnDestroy {
       app_url = makeApiURL(true) + 'app-redirect?id_app=' + this.app.id_app + '&token=' +
         this.cookieService.get(GlobalConstants.cookieValue);
     }else{
-      if (this.app.app_config.app_config_url !== null && this.app.app_config.app_config_url.length > 0) {
+      if (this.app.app_config !== null && this.app.app_config.app_config_url !== null && this.app.app_config.app_config_url.length > 0) {
         app_url = this.app.app_config.app_config_url;
       } else {
         app_url = this.app.app_static_url;
