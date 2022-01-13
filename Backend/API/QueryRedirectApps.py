@@ -83,7 +83,10 @@ class QueryRedirectApps(Resource):
             username = participant['participant_username']
             if not username:
                 # No username for that participant, generate it!
-                username = ''.join(e for e in participant['participant_name'] if e.isalnum())
+                username = ''.join(e for e in participant['participant_name'] if e.isalnum()).lower()
+                import text_unidecode
+                username = text_unidecode.unidecode(username)
+
             email = participant['participant_email']
             if not email:
                 email = username + '@opentera.com'
@@ -124,8 +127,8 @@ class QueryRedirectApps(Resource):
                         login_url += '&wantsurl=' + target_url
                     return redirect(login_url, 302)
                 else:
-                    print(response.text())
+                    print(response.text)
             else:
-                print(response.text())
+                print(response.text)
 
         return 'Unable to connect', 500
