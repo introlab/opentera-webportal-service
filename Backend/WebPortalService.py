@@ -35,6 +35,8 @@ class WebPortalService(ServiceOpenTera):
     def __init__(self, config_man: ConfigManager, service_info: dict):
         ServiceOpenTera.__init__(self, config_man, service_info)
 
+        self.config_man = config_man
+
         # Create REST backend
         self.flaskModule = FlaskModule(config_man)
 
@@ -53,6 +55,10 @@ class WebPortalService(ServiceOpenTera):
         # Need to register to events produced by UserManagerModule
         ret1 = yield self.subscribe_pattern_with_callback(create_module_event_topic_from_name(
             ModuleNames.DATABASE_MODULE_NAME, 'session'), self.database_event_received)
+
+        yield self.subscribe_pattern_with_callback(create_module_event_topic_from_name(ModuleNames.DATABASE_MODULE_NAME,
+                                                                                       'participant'),
+                                                   self.database_event_received)
 
         print(ret1)
 
@@ -80,21 +86,33 @@ class WebPortalService(ServiceOpenTera):
     def handle_database_event(self, event: messages.DatabaseEvent):
         print('WebPortalService.handle_database_event', event)
 
-        if event.type == messages.DatabaseEvent.DB_DELETE:
-            print("Delete Session Event")
-            # TODO delete event linked to the deleted session, event_name = 'session'
-            calendar_access = DBManager.calendar_access()
-            session_info = json.loads(event.object_value)
-            calendar_access.delete_event_with_session_uuid(session_info)
-            # Resend invitation to newly connected user
-        if event.type == messages.DatabaseEvent.DB_UPDATE:
-            print("Update Session Event")
-            # TODO update event linked to the updated session, event_name = 'session'
-            calendar_access = DBManager.calendar_access()
-            session_info = json.loads(event.object_value)
-            calendar_access.update_event_after_session_update(session_info)
-            # Resend invitation to newly connected user
-            pass
+        if event.object_type == 'session':
+            if event.type == messages.DatabaseEvent.DB_DELETE:
+                print("Delete Session Event")
+                # TODO delete event linked to the deleted session, event_name = 'session'
+                calendar_access = DBManager.calendar_access()
+                session_info = json.loads(event.object_value)
+                calendar_access.delete_event_with_session_uuid(session_info)
+            if event.type == messages.DatabaseEvent.DB_UPDATE:
+                print("Update Session Event")
+                # TODO update event linked to the updated session, event_name = 'session'
+                calendar_access = DBManager.calendar_access()
+                session_info = json.loads(event.object_value)
+                calendar_access.update_event_after_session_update(session_info)
+        if event.object_type == 'participant':
+            if event.type == messages.DatabaseEvent.DB_CREATE:
+                # Check if that participant projects has external apps (such as Moodle) where we need to create an
+                # account
+                participant_info = json.loads(event.object_value)
+                from libwebportal.db.models.WebPortalApp import WebPortalApp
+                apps = WebPortalApp.get_apps_for_project(participant_info['id_project'])
+
+                for app in apps:
+                    if app.app_type == WebPortalApp.WebPortalAppType.MOODLE.value:  # Moodle app - must create account
+                        from libwebportal.libmoodle import LibMoodle
+                        moodler = LibMoodle(self.config_man)
+                        response = moodler.get_login_url_for_participant(participant=participant_info)
+                        break  # No other app type to check for now!
 
 
 if __name__ == '__main__':
