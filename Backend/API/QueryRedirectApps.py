@@ -1,6 +1,6 @@
 from flask_restx import Resource, reqparse, inputs
 from flask import redirect
-from Backend.libwebportal.libmoodle import LibMoodle
+from libwebportal.libmoodle import LibMoodle
 
 from opentera.services.ServiceAccessManager import ServiceAccessManager
 from opentera.services.ServiceAccessManager import ServiceAccessManager, current_login_type, \
