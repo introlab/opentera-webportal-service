@@ -1,6 +1,6 @@
 from flask_restx import Resource, reqparse, inputs
 from flask import redirect
-from requests import post
+from Backend.libwebportal.libmoodle import LibMoodle
 
 from opentera.services.ServiceAccessManager import ServiceAccessManager
 from opentera.services.ServiceAccessManager import ServiceAccessManager, current_login_type, \
@@ -74,26 +74,9 @@ class QueryRedirectApps(Resource):
             if not participant:
                 return 'Error loading participant infos', 500
 
-            participant_names = participant['participant_name'].split(' ', 1)
-            firstname = participant_names[0]
-            if len(participant_names) > 1:
-                lastname = participant_names[-1].replace('#', '')
-            else:
-                lastname = 'x'
-            username = participant['participant_username']
-            if not username:
-                # No username for that participant, generate it!
-                username = ''.join(e for e in participant['participant_name'] if e.isalnum()).lower()
-                import text_unidecode
-                username = text_unidecode.unidecode(username)
-
-            email = participant['participant_email']
-            if not email:
-                email = username + '@opentera.com'
-
             # Prepare redirection URL
             wanted_section = app.app_static_url.split(' ', 1)
-            target_url = None
+            target_url = ''
             if wanted_section and len(wanted_section) > 0:
                 if wanted_section[0] != '':  # Not the dashboard
                     target_url = ServiceAccessManager.config_man.moodle_config['url']
@@ -111,14 +94,8 @@ class QueryRedirectApps(Resource):
                         target_url += '/' + wanted_section[0] + '/view.php?id=' + target_id
 
             # Process login request
-            redirect_url = ServiceAccessManager.config_man.moodle_config['url'] + \
-                           '/webservice/rest/server.php?wstoken=' + \
-                           ServiceAccessManager.config_man.moodle_config['token'] + \
-                           '&wsfunction=auth_userkey_request_login_url&moodlewsrestformat=json&user[idnumber]=' + \
-                           uuid + '&user[username]=' + username + '&user[email]=' + email + '&user[firstname]=' + \
-                           firstname + '&user[lastname]=' + lastname
-
-            response = post(redirect_url)
+            moodler = LibMoodle(ServiceAccessManager.config_man)
+            response = moodler.get_login_url_for_participant(participant)
             if response.status_code == 200:
                 response_json = response.json()
                 if "loginurl" in response_json:

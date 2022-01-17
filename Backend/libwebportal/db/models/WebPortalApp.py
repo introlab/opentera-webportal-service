@@ -7,6 +7,7 @@ class WebPortalApp(db.Model, BaseModel):
     class WebPortalAppType(Enum):
         EXTERNAL = 0
         OPENTERA_SERVICE = 1
+        MOODLE = 2
 
         def describe(self):
             return self.name, self.value
