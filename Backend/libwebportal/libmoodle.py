@@ -1,4 +1,4 @@
-from Backend.ConfigManager import ConfigManager
+from ConfigManager import ConfigManager
 from requests import post, Response
 
 

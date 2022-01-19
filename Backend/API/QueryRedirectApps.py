@@ -1,6 +1,6 @@
 from flask_restx import Resource, reqparse, inputs
 from flask import redirect
-from Backend.libwebportal.libmoodle import LibMoodle
+from libwebportal.libmoodle import LibMoodle
 
 from opentera.services.ServiceAccessManager import ServiceAccessManager
 from opentera.services.ServiceAccessManager import ServiceAccessManager, current_login_type, \
@@ -81,7 +81,7 @@ class QueryRedirectApps(Resource):
                 if wanted_section[0] != '':  # Not the dashboard
                     target_url = ServiceAccessManager.config_man.moodle_config['url']
                     if wanted_section[0] == 'message':
-                        target_url += '/message'
+                        target_url += '/message/'
                     else:
                         target_id = wanted_section[-1]
                         # If we have a specific config for that app and participant, the ID stored in URL has priority

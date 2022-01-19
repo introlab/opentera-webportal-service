@@ -96,7 +96,7 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
     this.participantForm = this.fb.group({
       name: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.email, Validators.required]),
-      connectionUrl: new FormControl({value: '', disabled: true}),
+      // connectionUrl: new FormControl({value: '', disabled: true}),
       enable: new FormControl(true),
     });
 
@@ -107,7 +107,7 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
     this.participantForm.controls.name.setValue(this.participant.participant_name);
     this.participantForm.controls.enable.setValue(this.participant.participant_enabled);
     this.participantForm.controls.email.setValue(this.participant.participant_email);
-    this.participantForm.controls.connectionUrl.setValue(createParticipantUrl(this.participant.participant_token));
+    // this.participantForm.controls.connectionUrl.setValue(createParticipantUrl(this.participant.participant_token));
   }
 
   validate(): void {
