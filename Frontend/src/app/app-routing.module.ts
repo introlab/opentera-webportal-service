@@ -14,7 +14,7 @@ import {EventFormComponent} from '@pages/event-form/event-form.component';
 const routes: Routes = [
   {path: '', redirectTo: Pages.calendarPage, pathMatch: 'full'},
   {path: Pages.participantConnectionURL, component: CallbackComponent},
-  {path: 'rehab/user', component: CallbackComponent},
+  // {path: 'rehab/user', component: CallbackComponent},
   {
     path: '',
     component: AppLayoutComponent,
@@ -41,7 +41,8 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      useHash: false
+      useHash: false,
+      onSameUrlNavigation: 'reload'
     })
   ],
   providers: [AuthGuardService],

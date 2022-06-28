@@ -57,7 +57,7 @@ export class AuthenticationService {
         const token = isManager ? response.user_token : response.participant_token;
         this.isLoggedIn.next(true);
         this.cookieService.set(this.cookieValue, token, 0.5, '/');
-        this.router.navigate([this.m_lastAuthenticatedPath]);
+        this.router.navigate([this.m_lastAuthenticatedPath]).then();
         // Connect websocket
         this.websocketService.connect(response.websocket_url);
         this.startRefreshTokenTimer();
@@ -65,10 +65,10 @@ export class AuthenticationService {
     );
   }
 
-  loginWithToken(token: string): void {
+  loginWithToken(login_token: string): void {
     this.isLoggedIn.next(true);
-    this.cookieService.set(this.cookieValue, token, null, '/');
-    this.router.navigate([this.m_lastAuthenticatedPath]);
+    this.cookieService.set(this.cookieValue, login_token, null, '/');
+    this.router.navigate([this.m_lastAuthenticatedPath], {queryParams: {token: login_token} }).then();
   }
 
   logout(isManager: boolean = false): Observable<any> {
