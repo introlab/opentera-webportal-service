@@ -2,6 +2,7 @@
   <mat-label>Groupe</mat-label>
   <mat-select (selectionChange)="onValueChanged($event.value)" [value]="selectedGroup">
     <mat-option *ngIf="allOption" [value]="null">Tous</mat-option>
+    <mat-option *ngIf="noneOption" [value]="null">Aucun</mat-option>
     <mat-option *ngFor="let group of groups" [value]="group">
       {{group.participant_group_name}}
     </mat-option>

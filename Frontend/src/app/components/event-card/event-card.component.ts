@@ -30,7 +30,9 @@ export class EventCardComponent implements OnInit, OnDestroy {
   duration: string;
   isUser = false;
   isLive = false;
+  isInvited = false;
   isPastEvent = true;
+  isOpenTeraEvent = false;
   hasEventURL = false;
   permissions: Permission;
   private subscription: Subscription;
@@ -48,11 +50,11 @@ export class EventCardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.session = this.event.session && this.event.session.length > 0 ? this.event.session[0] : null;
+    this.getAccount();
     this.checkIfEventIsLive();
     this.checkIfEventIsPassed();
     this.checkIfEventURL();
     this.getDuration();
-    this.getAccount();
   }
 
   private getAccount(): void {
@@ -62,6 +64,11 @@ export class EventCardComponent implements OnInit, OnDestroy {
       this.permissions = permissions;
       this.account = account;
       this.isUser = isUser(account);
+      if (this.isUser) {
+        this.isInvited = (this.event.user_uuid === account.user.user_uuid);
+      }else{
+        this.isInvited = (this.event.session_participant_uuids.indexOf(account.login_uuid) >= 0);
+      }
     });
   }
 
@@ -79,7 +86,10 @@ export class EventCardComponent implements OnInit, OnDestroy {
   }
 
   private checkIfEventURL(): void {
-    this.hasEventURL = this.event.event_static_url && this.event.event_static_url.length > 0;
+    this.isOpenTeraEvent = this.session.session_type.session_type_service_key === 'VideoRehabService';
+    // console.log(this.event.event_name + ' - OpenTera? = ' + this.isOpenTeraEvent);
+    this.hasEventURL = (this.event.event_static_url && this.event.event_static_url.length > 0);
+    // console.log(this.event.event_name + ' - hasEventURL? = ' + this.hasEventURL);
   }
 
   private getDuration(): void {
@@ -119,7 +129,7 @@ export class EventCardComponent implements OnInit, OnDestroy {
       if (videoRehabApp && videoRehabApp.app_config) {
         this.selectedSourceService.setSelectedSource(videoRehabApp.app_config.app_config_url);
         const app = videoRehabApp.app_name?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        this.router.navigate([Pages.createPath(Pages.appPage), {app}]);
+        this.router.navigate([Pages.createPath(Pages.appPage), {app}]).then();
       }
     }else{ // isUser
       // User connect
@@ -127,12 +137,12 @@ export class EventCardComponent implements OnInit, OnDestroy {
         + this.event.session_uuid;
       console.log('Loading session lobby at ' + url);
       this.selectedSourceService.setSelectedSource(url);
-      this.router.navigate([Pages.createPath(Pages.appPage)]);
+      this.router.navigate([Pages.createPath(Pages.appPage)]).then();
     }
   }
 
   openForm(idEvent: number): void {
-    this.router.navigate([Pages.eventFormPage, {idEvent}]);
+    this.router.navigate([Pages.eventFormPage, {idEvent}]).then();
   }
 
   ngOnDestroy(): void {

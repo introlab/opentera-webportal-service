@@ -34,13 +34,14 @@ export class AppLinkComponent implements OnInit, OnDestroy {
   showApp(): void {
     switch (this.app.app_name.toLocaleLowerCase()) {
       case 'calendrier':
-        this.router.navigate([Pages.calendarPage]);
+        this.router.navigate([Pages.calendarPage]).then();
         break;
       case 'courriel':
-        this.router.navigate([Pages.createPath(Pages.emailPage)]);
+        this.router.navigate([Pages.createPath(Pages.emailPage)]).then();
         break;
       default:
-        this.router.navigate([Pages.createPath(Pages.appPage), {app: this.app.app_name?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')}]);
+        this.router.navigate([Pages.createPath(Pages.appPage),
+          {app: this.app.app_name?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')}]).then();
     }
     let app_url;
     if (this.app.app_type === GlobalConstants.applicationTypes.Moodle){

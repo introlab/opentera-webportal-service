@@ -29,12 +29,12 @@
       {{participant.participant_name}} <span *ngIf="!last">-</span>
     </ng-container>
   </div>
-  <ng-container *ngIf="!isPastEvent && (hasEventURL || !isUser)">
+  <ng-container *ngIf="!isUser && (!isPastEvent && (hasEventURL || isOpenTeraEvent) && isInvited)">
     <button mat-raised-button [color]="'primary'" class="connect" (click)="connect()">
       Se connecter à la séance
     </button>
   </ng-container>
-  <ng-container *ngIf="isUser && !isPastEvent && !hasEventURL">
+  <ng-container *ngIf="isUser && (!isPastEvent && (hasEventURL || (!hasEventURL && isOpenTeraEvent)) && isInvited)">
     <!--<div class="message-connection-user">
       <mat-icon>exit_to_app</mat-icon>
       Se connecter avec l'application OpenTeraPlus

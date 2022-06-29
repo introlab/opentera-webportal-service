@@ -109,7 +109,8 @@
       </div>
     </div>
     <div class="month-event" *ngFor="let event of day.events.slice(0, 3);"
-         [ngStyle]="{'background-color': event.meta.event.session[0].session_type.session_type_color + '22'}">
+         [ngStyle]="{'background-color': event.meta.event.session[0].session_type?
+         event.meta.event.session[0].session_type.session_type_color + '22' : 'red'}">
       <span
         [ngStyle]="event.meta.event.session && {'border-color': event.meta.event.session[0].session_type.session_type_color}">
         {{event.start | date: 'H:mm'}}

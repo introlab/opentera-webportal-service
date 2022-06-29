@@ -13,6 +13,7 @@ import {PasswordFormComponent} from '@components/forms/password-form/password-fo
 import {ProfileFormComponent} from '@components/forms/profile-form/profile-form.component';
 import {SelectedParticipantsComponent} from '@components/selected-participants/selected-participants.component';
 import {UserRoutingModule} from '@src/app/modules/user-routing.module';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 
 @NgModule({
@@ -28,12 +29,13 @@ import {UserRoutingModule} from '@src/app/modules/user-routing.module';
     PasswordFormComponent,
     SelectedParticipantsComponent,
   ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    MaterialModule,
-    UserRoutingModule,
-  ]
+    imports: [
+        CommonModule,
+        SharedModule,
+        MaterialModule,
+        UserRoutingModule,
+        MatSlideToggleModule,
+    ]
 })
 export class UserModule {
 }

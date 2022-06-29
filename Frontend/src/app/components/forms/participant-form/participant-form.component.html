@@ -5,9 +5,9 @@
     <mat-tab label="Général">
       <form [formGroup]="participantForm">
         <mat-checkbox formControlName="enable" [color]="'accent'">Actif</mat-checkbox>
-        <app-site-selector></app-site-selector>
-        <app-project-selector></app-project-selector>
-        <app-group-selector></app-group-selector>
+        <app-site-selector [hideIfOnlyOne]="true"></app-site-selector>
+        <app-project-selector [hideIfOnlyOne]="true"></app-project-selector>
+        <app-group-selector [noneOption]="true"></app-group-selector>
 
         <mat-form-field appearance="outline">
           <mat-label>Nom</mat-label>

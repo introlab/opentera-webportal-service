@@ -15,6 +15,12 @@ import {ApplicationConfig} from '@shared/models/application-config.model';
   styleUrls: ['./application-selector.component.scss']
 })
 export class ApplicationSelectorComponent implements OnInit, OnChanges, OnDestroy {
+
+  constructor(private router: Router,
+              private appService: ApplicationService,
+              private selectedProjectService: SelectedProjectService) {
+  }
+  static ignore_apps = ['courriel', 'calendrier'];
   @Input() appConfigs: ApplicationConfig[] = [];
   @Input() form: FormGroup;
   @Output() selectedAppsChange = new EventEmitter();
@@ -23,11 +29,6 @@ export class ApplicationSelectorComponent implements OnInit, OnChanges, OnDestro
   types = GlobalConstants.applicationTypes;
   required = GlobalConstants.requiredMessage;
   private subscription: Subscription;
-
-  constructor(private router: Router,
-              private appService: ApplicationService,
-              private selectedProjectService: SelectedProjectService) {
-  }
 
   ngOnInit(): void {
   }
@@ -42,13 +43,13 @@ export class ApplicationSelectorComponent implements OnInit, OnChanges, OnDestro
         return this.appService.getByProject(selectedProject.id_project);
       })
     ).subscribe((applications) => {
-      this.applications = applications;
+      this.applications = applications.filter(a => !ApplicationSelectorComponent.ignore_apps.includes(a.app_name.toLowerCase()));
       this.refreshing = false;
       this.applications.forEach((app) => {
-        this.form.addControl('app_' + app.app_name, new FormControl(''));
+          this.form.addControl('app_' + app.app_name, new FormControl(''));
       });
       this.appConfigs.forEach((config) => {
-        this.form.controls['app_' + config.application.app_name].setValue(config.app_config_url);
+          this.form.controls['app_' + config.application.app_name].setValue(config.app_config_url);
       });
     });
   }

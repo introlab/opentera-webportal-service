@@ -75,7 +75,8 @@ export class CalendarService {
     );
   }
 
-  checkOverlaps(isoStartDate: string, isoEndDate: string, participantsUUIDs: string[] = [], userUUID: string = '', id_event: number = null): Observable<Event[]> {
+  checkOverlaps(isoStartDate: string, isoEndDate: string, participantsUUIDs: string[] = [], userUUID: string = '',
+                id_event: number = null): Observable<Event[]> {
     let UUIDs = '';
     participantsUUIDs.forEach((uuid) => {
       UUIDs += '&participant_uuid=' + uuid;

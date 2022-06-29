@@ -16,6 +16,7 @@ import {Permission} from '@shared/models/permission.model';
 export class SiteSelectorComponent implements OnInit, OnChanges, OnDestroy {
   sites: Site[] = [];
   selectedSite: Site;
+  @Input() hideIfOnlyOne = false;
   private subscription: Subscription;
 
   constructor(private router: Router,
@@ -72,6 +73,10 @@ export class SiteSelectorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   manageSites(): boolean {
-    return !!this.sites && this.sites.length > 0;
+    let targetSiteNum = 0;
+    if (this.hideIfOnlyOne){
+      targetSiteNum = 1;
+    }
+    return !!this.sites && this.sites.length > targetSiteNum;
   }
 }

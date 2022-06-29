@@ -27,6 +27,20 @@
     }
   }
 
+  .bottom {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.5em;
+    flex-direction: row-reverse;
+
+    button {
+      min-width: 20em;
+      margin: .25em 0 1.59em 10px;
+    }
+  }
+
   table {
     width: 100%;
   }

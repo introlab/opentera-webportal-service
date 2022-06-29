@@ -7,7 +7,8 @@
       <input matInput (keyup)="applyFilter($event)" placeholder="Recherche" #input>
     </mat-form-field>
     <app-group-selector [allOption]="true"></app-group-selector>
-    <button mat-flat-button [color]="color" (click)="openForm(null)">Ajouter</button>
+    <mat-slide-toggle color="primary" [checked]="showInactive" (change)="toggleInactive($event)">
+      Afficher inactifs</mat-slide-toggle>
   </div>
 
   <div class="mat-elevation-z8">
@@ -77,5 +78,9 @@
     </table>
 
     <mat-paginator [pageSizeOptions]="[10, 20, 30]"></mat-paginator>
+  </div>
+
+  <div class="bottom">
+    <button mat-flat-button [color]="color" (click)="openForm(null)">Ajouter</button>
   </div>
 </div>
