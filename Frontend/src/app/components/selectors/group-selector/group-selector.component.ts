@@ -14,6 +14,7 @@ import {Group} from '@shared/models/group.model';
 })
 export class GroupSelectorComponent implements OnInit, OnDestroy {
   @Input() allOption: boolean;
+  @Input() noneOption: boolean;
   @Output() selectedProjectChange = new EventEmitter();
   groups: Group[] = [];
   refreshing: boolean;
@@ -50,12 +51,12 @@ export class GroupSelectorComponent implements OnInit, OnDestroy {
 
   private checkIfUniqueGroup(): void {
     if (!!this.groups && this.groups.length === 1) {
-      this.onValueChanged(this.groups[0]);
+      // this.onValueChanged(this.groups[0]);
     }
   }
 
   onValueChanged(selected: Group): void {
-    if (this.isDifferentGroup(selected)) {
+    if (this.isDifferentGroup(selected) || selected === null) {
       if (!!selected) {
         this.selectedGroupService.setSelectedGroup(selected);
       } else {
@@ -65,7 +66,7 @@ export class GroupSelectorComponent implements OnInit, OnDestroy {
   }
 
   private isDifferentGroup(group: Group): boolean {
-    return this.selectedGroup?.id_participant_group !== group?.id_participant_group;
+    return this.selectedGroup ? this.selectedGroup.id_participant_group !== group?.id_participant_group : true;
   }
 
   private setSelectedGroup(selectedGroup: Group): void {
@@ -74,6 +75,8 @@ export class GroupSelectorComponent implements OnInit, OnDestroy {
       if (alreadySelected) {
         this.selectedGroup = alreadySelected;
       }
+    }else{
+      this.selectedGroup = null;
     }
   }
 

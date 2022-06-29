@@ -36,7 +36,7 @@ export class ParticipantSelectorComponent implements OnInit, OnChanges, OnDestro
     const selected$ = this.selectedParticipantService.getSelectedParticipant();
     this.subscriptions.push(
       combineLatest([participants$, selected$]).subscribe(([participants, selectedParticipant]) => {
-        this.participants = participants;
+        this.participants = participants.filter(p => p.participant_enabled);
         // this.onValueChanged(selectedParticipant);
       })
     );
@@ -66,9 +66,11 @@ export class ParticipantSelectorComponent implements OnInit, OnChanges, OnDestro
     if (this.isDifferentParticipant(selected)) {
       if (!!selected) {
         this.selectedParticipantChange.emit(selected);
-      } else {
-        this.selectedParticipantChange.emit(null);
       }
+    }else{
+        if (selected === null){
+          this.selectedParticipantChange.emit(null);
+        }
     }
   }
 

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
@@ -18,6 +18,7 @@ import {createParticipantUrl, isObjectEmpty} from '@core/utils/utility-functions
 import {ThemePalette} from '@angular/material/core';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {SelectedParticipantService} from '@services/selected-participant.service';
+import {MatSlideToggleChange} from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-participants',
@@ -32,6 +33,7 @@ export class ParticipantsComponent implements OnInit, OnDestroy, AfterViewInit {
   displayedColumns: string[] = ['participant_name', 'group', 'status', 'url', 'controls'];
   showCopyButton = 0;
   color: ThemePalette = 'primary';
+  showInactive = false;
   private subscriptions: Subscription[] = [];
 
   constructor(private notificationService: NotificationService,
@@ -91,6 +93,8 @@ export class ParticipantsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dataSource = new MatTableDataSource(this.participants);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.dataSource.filterPredicate = this.doFiltering;
+    this.applyInactiveFilter();
   }
 
   ngAfterViewInit(): void {
@@ -101,7 +105,7 @@ export class ParticipantsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.dataSource.filter = JSON.stringify({target: 'name', filter: filterValue.trim()});
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -184,5 +188,29 @@ export class ParticipantsComponent implements OnInit, OnDestroy, AfterViewInit {
   copyUrl(url: string): void {
     this.clipboard.copy(url);
     this.notificationService.showSuccess('Le lien a été copié.');
+  }
+
+  toggleInactive(toggleEvent: MatSlideToggleChange): void {
+    this.showInactive = toggleEvent.checked;
+    this.applyInactiveFilter();
+  }
+
+  applyInactiveFilter(): void{
+    this.dataSource.filter = JSON.stringify({target: 'disabled_only', filter: this.showInactive});
+  }
+
+  doFiltering(data: Participant, filter: string): boolean {
+    const filter_details = JSON.parse(filter);
+    if (filter_details.target === 'name'){
+      return data.participant_name.toLowerCase().includes(filter_details.filter.toLowerCase());
+    }
+    if (filter_details.target === 'disabled_only'){
+      if (filter_details.filter){
+        return true;
+      }else{
+        return data.participant_enabled;
+      }
+    }
+    return true; // Default: no filter
   }
 }

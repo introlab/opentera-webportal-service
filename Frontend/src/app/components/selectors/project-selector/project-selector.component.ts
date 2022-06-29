@@ -18,6 +18,7 @@ import {ServiceService} from '@services/service.service';
 })
 export class ProjectSelectorComponent implements OnInit, OnDestroy {
   @Input() allOption: boolean;
+  @Input() hideIfOnlyOne = false;
   @Output() selectedProjectChange = new EventEmitter();
   projects: Project[] = [];
   selectedProject: Project;
@@ -59,7 +60,7 @@ export class ProjectSelectorComponent implements OnInit, OnDestroy {
   private isSiteValid(site: Site): boolean {
     const isSiteValid = !!site && !!site.id_site;
     if (!isSiteValid) {
-      this.router.navigate([Pages.homePage]);
+      this.router.navigate([Pages.homePage]).then();
     }
     return isSiteValid;
   }
@@ -96,5 +97,12 @@ export class ProjectSelectorComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  manageProjects(): boolean {
+    if (this.hideIfOnlyOne){
+      return (!!this.projects && this.projects.length > 1);
+    }
+    return true; // Show all by default
   }
 }

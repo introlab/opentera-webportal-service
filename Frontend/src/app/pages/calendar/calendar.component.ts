@@ -14,8 +14,8 @@ import {SelectedParticipantService} from '@services/selected-participant.service
 @Component({
   selector: 'app-calendar-page',
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./calendar.component.scss']/*,
+  changeDetection: ChangeDetectionStrategy.OnPush*/
 })
 export class CalendarPageComponent implements OnInit, OnDestroy {
   isUser = false;
@@ -36,6 +36,17 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getSelectedParticipant();
     this.getSessionData();
+    this.subscribeCalendarEvents();
+  }
+
+  private subscribeCalendarEvents(): void{
+    this.subscriptions.push(
+      this.calendarService.events$().subscribe( events => {
+        this.getNextThreeEvents().subscribe((three) => {
+          this.nextEvents = three;
+        });
+      })
+    );
   }
 
   private getSelectedParticipant(): void {

@@ -12,7 +12,6 @@ import {Group} from '@shared/models/group.model';
 import {SelectedGroupService} from '@services/selected-group.service';
 import {Application} from '@shared/models/application.model';
 import {validateAllFields} from '@core/utils/validate-form';
-import {createParticipantUrl} from '@core/utils/utility-functions';
 import {ApplicationService} from '@services/application.service';
 import {ApplicationConfig} from '@shared/models/application-config.model';
 import {ParticipantService} from '@services/participant/participant.service';
@@ -21,6 +20,7 @@ import {NotificationService} from '@services/notification.service';
 import {Router} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {ApplicationConfigService} from '@services/application-config.service';
+import {ApplicationSelectorComponent} from '@components/selectors/application-selector/application-selector.component';
 
 @Component({
   selector: 'app-participant-form',
@@ -40,6 +40,7 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
   private selectedGroup: Group;
   private subscriptions: Subscription[] = [];
   private applications: Application[] = [];
+  private initialized = false;
 
   constructor(public dialogRef: MatDialogRef<ParticipantFormComponent>,
               private fb: FormBuilder,
@@ -64,6 +65,7 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
       this.title = 'Nouveau participant';
     }
     this.getServices();
+    // this.setValues();
     this.canSave = false;
   }
 
@@ -90,14 +92,15 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
         this.setValues();
       })
     );
+
   }
 
   private initializeForm(): void {
     this.participantForm = this.fb.group({
       name: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.email, Validators.required]),
+      email: new FormControl('', [Validators.email/*, Validators.required*/]),
       // connectionUrl: new FormControl({value: '', disabled: true}),
-      enable: new FormControl(true),
+      enable: new FormControl(true)
     });
 
     this.participantForm.markAllAsTouched();
@@ -108,6 +111,13 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
     this.participantForm.controls.enable.setValue(this.participant.participant_enabled);
     this.participantForm.controls.email.setValue(this.participant.participant_email);
     // this.participantForm.controls.connectionUrl.setValue(createParticipantUrl(this.participant.participant_token));
+    if (this.participant.id_participant && !this.initialized){
+      this.initialized = true;
+      if (this.participant.participant_participant_group){
+        this.selectedGroupService.setSelectedGroup(this.participant.participant_participant_group);
+      }
+      // this.selectedGroup = this.participant.participant_participant_group;
+    }
   }
 
   validate(): void {
@@ -134,14 +144,14 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
       temp.participant_email = controls.email.value;
     }
     temp.id_project = this.selectedProject.id_project;
-    temp.id_participant_group = this.selectedGroup.id_participant_group;
+    temp.id_participant_group = this.selectedGroup ? this.selectedGroup.id_participant_group : null;
     temp.id_participant = this.participant.id_participant;
     return temp;
   }
 
   private save(participant: Participant): void {
     this.participantService.update(participant).pipe(switchMap((updated) => {
-      this.router.navigate([Pages.createPath(Pages.participantsPage, true)]);
+      this.router.navigate([Pages.createPath(Pages.participantsPage, true)]).then();
       this.notificationService.showSuccess('Le participant ' + updated[0].participant_name + ' a été sauvegardé.');
       const appConfigs = this.createAppConfig(updated[0].participant_uuid);
       return this.appConfigsService.update(appConfigs);
@@ -152,11 +162,13 @@ export class ParticipantFormComponent implements OnInit, OnDestroy {
     const controls = this.participantForm.controls;
     const configs: ApplicationConfig[] = [];
     this.applications.forEach((app) => {
-      const config = new ApplicationConfig();
-      config.id_app = app.id_app;
-      config.participant_uuid = participantUUID;
-      config.app_config_url = controls['app_' + app.app_name].value;
-      configs.push(config);
+      if (!ApplicationSelectorComponent.ignore_apps.includes(app.app_name.toLowerCase())){
+        const config = new ApplicationConfig();
+        config.id_app = app.id_app;
+        config.participant_uuid = participantUUID;
+        config.app_config_url = controls['app_' + app.app_name].value;
+        configs.push(config);
+      }
     });
     return configs;
   }

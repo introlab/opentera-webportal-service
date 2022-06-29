@@ -22,7 +22,7 @@ export class CallbackComponent implements OnInit {
       if (!!params.token) {
         this.authenticationService.loginWithToken(token);
       } else {
-        this.router.navigate([Pages.loginPage]);
+        this.router.navigate([Pages.loginPage]).then();
       }
     });
   }

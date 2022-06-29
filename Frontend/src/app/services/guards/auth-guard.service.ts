@@ -11,7 +11,12 @@ export class AuthGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     if (!this.authService.isAuthenticated()) {
-      this.router.navigate([Pages.loginPage]);
+      if (route.queryParams.token){
+        // Allow connection from any page if token is in the URL
+        this.authService.loginWithToken(route.queryParams.token);
+      }else{
+        this.router.navigate([Pages.loginPage]).then();
+      }
       return false;
     }
     return true;

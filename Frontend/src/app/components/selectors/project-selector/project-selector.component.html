@@ -1,4 +1,4 @@
-<mat-form-field appearance="outline" *ngIf="!refreshing">
+<mat-form-field appearance="outline" *ngIf="!refreshing && manageProjects()">
   <mat-label>Projet</mat-label>
   <mat-select (selectionChange)="onValueChanged($event.value)" [value]="selectedProject">
     <mat-option *ngIf="allOption">Tous</mat-option>

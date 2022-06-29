@@ -3,9 +3,16 @@
           [src]="outsideSource | safeUrl"
           title="Frame"
           allow="camera;microphone;fullscreen"
-          frameborder="0">
+          frameborder="0"
+          (load)="iframeLoadedCallBack()"
+          [hidden]="frameLoading"
+  >
   </iframe>
 </ng-template>
+
+<div class="loading-overlay" [hidden]="!frameLoading">
+  <app-spinner></app-spinner>
+</div>
 
 <ng-template #loading>
   <h3 class="no-content">Aucun contenu à afficher</h3>

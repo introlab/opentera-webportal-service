@@ -2,6 +2,6 @@
   <router-outlet></router-outlet>
 </ng-container>
 
-<div class="loading-overlay" *ngIf="loading">
+<div class="loading-overlay" [hidden]="!loading">
   <app-spinner></app-spinner>
 </div>
