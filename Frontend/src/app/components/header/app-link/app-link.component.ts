@@ -55,7 +55,6 @@ export class AppLinkComponent implements OnInit, OnDestroy {
         app_url = this.app.app_static_url;
       }
     }
-
     this.selectedSourceService.setSelectedSource(app_url);
   }
 

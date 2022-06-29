@@ -49,7 +49,9 @@ export class ApplicationSelectorComponent implements OnInit, OnChanges, OnDestro
           this.form.addControl('app_' + app.app_name, new FormControl(''));
       });
       this.appConfigs.forEach((config) => {
-          this.form.controls['app_' + config.application.app_name].setValue(config.app_config_url);
+          if (this.applications.find(app => app.id_app === config.id_app)){
+            this.form.controls['app_' + config.application.app_name].setValue(config.app_config_url);
+          }
       });
     });
   }
