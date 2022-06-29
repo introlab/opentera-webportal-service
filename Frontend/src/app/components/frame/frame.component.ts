@@ -11,6 +11,7 @@ export class FrameComponent implements OnInit, OnDestroy {
   outsideSource = '';
   private subscription: Subscription;
   frameLoading = false;
+  private firstLoad = true;
 
   constructor(private selectedSourceService: SelectedSourceService) {
   }
@@ -31,6 +32,10 @@ export class FrameComponent implements OnInit, OnDestroy {
   }
 
   iframeLoadedCallBack(): void {
+    if (this.firstLoad){
+      this.firstLoad = false;
+      return;
+    }
     console.log('Frame loaded!');
     this.frameLoading = false;
   }
